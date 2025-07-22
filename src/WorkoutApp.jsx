@@ -1,3 +1,4 @@
+
 import React, { useState, useReducer } from 'react';
 // 🏗️ WA-005.1: App refactorisé avec imports modulaires
 // Référence Clean Code: "Organize imports - keep related things together"
@@ -18,7 +19,24 @@ import {
   formatTime,
   canStartWorkout,
   canPauseResume
-} from './reducers/workoutReducer.js';
+} from './reducers/workoutReducer';
+
+// 🚀 WA-006: Import des actions
+import { 
+  loadWorkoutAction,
+  startWorkoutAction,
+  pauseWorkoutAction,
+  resumeWorkoutAction,
+  stopWorkoutAction,
+  nextExerciseAction,
+  updateTimerAction,
+  resetWorkoutAction,
+  togglePauseAction,
+  safeStartWorkoutAction,
+  startWorkoutWithLogging,
+  stopWorkoutWithLogging,
+  ActionFactory
+} from './actions/workoutActions';
 
 /**
  * 🎨 Header réutilisable
@@ -66,10 +84,10 @@ const HomeView = ({ onSelectPlan, onNavigate }) => (
     <div style={{ backgroundColor: '#e8f5e8', border: '2px solid #4CAF50', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
       <h3>📋 Status du développement</h3>
       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-        {['WA-001: Setup', 'WA-002: Données', 'WA-003: Layout', 'WA-004: Tests', 'WA-005: useReducer', 'WA-005.1: Refactor'].map((item, index) => (
+        {['WA-001: Setup', 'WA-002: Données', 'WA-003: Layout', 'WA-004: Tests', 'WA-005: useReducer', 'WA-005.1: Refactor', 'WA-006: Actions'].map((item, index) => (
           <span key={index} style={{ backgroundColor: '#4CAF50', color: 'white', padding: '5px 10px', borderRadius: '5px', fontSize: '12px' }}>✅ {item}</span>
         ))}
-        <span style={{ backgroundColor: '#9E9E9E', color: 'white', padding: '5px 10px', borderRadius: '5px', fontSize: '12px' }}>⏳ WA-006: Actions</span>
+        <span style={{ backgroundColor: '#9E9E9E', color: 'white', padding: '5px 10px', borderRadius: '5px', fontSize: '12px' }}>⏳ WA-007: Configuration</span>
       </div>
     </div>
     
@@ -249,22 +267,40 @@ const TestComponentsView = () => {
 const WorkoutDemoView = () => {
   const [workoutState, dispatchWorkout] = useReducer(workoutReducer, initialWorkoutState);
   
-  // Actions du workout (utilisation du reducer importé)
+  // 🚀 WA-006: Actions refactorisées avec fonctions propres
   const loadWorkout = (planId) => {
     const plan = WORKOUT_PLANS[planId];
-    dispatchWorkout({
-      type: WORKOUT_ACTIONS.LOAD_WORKOUT,
-      payload: { workoutPlan: plan }
-    });
+    try {
+      dispatchWorkout(loadWorkoutAction(plan));
+    } catch (error) {
+      console.error('Erreur lors du chargement:', error.message);
+      alert(`Erreur: ${error.message}`);
+    }
   };
 
-  const startWorkout = () => dispatchWorkout({ type: WORKOUT_ACTIONS.START_WORKOUT });
-  const pauseWorkout = () => dispatchWorkout({ type: WORKOUT_ACTIONS.PAUSE_WORKOUT });
-  const resumeWorkout = () => dispatchWorkout({ type: WORKOUT_ACTIONS.RESUME_WORKOUT });
-  const stopWorkout = () => dispatchWorkout({ type: WORKOUT_ACTIONS.STOP_WORKOUT });
-  const nextExercise = () => dispatchWorkout({ type: WORKOUT_ACTIONS.NEXT_EXERCISE });
-  const updateTimer = () => dispatchWorkout({ type: WORKOUT_ACTIONS.UPDATE_TIMER });
-  const resetWorkout = () => dispatchWorkout({ type: WORKOUT_ACTIONS.RESET_WORKOUT });
+  const startWorkout = () => {
+    try {
+      dispatchWorkout(safeStartWorkoutAction(workoutState));
+      dispatchWorkout(startWorkoutWithLogging(workoutState.workoutPlan));
+    } catch (error) {
+      console.error('Erreur lors du démarrage:', error.message);
+      alert(`Erreur: ${error.message}`);
+    }
+  };
+
+  const pauseWorkout = () => dispatchWorkout(ActionFactory.pause());
+  const resumeWorkout = () => dispatchWorkout(ActionFactory.resume());
+  const stopWorkout = () => {
+    dispatchWorkout(stopWorkoutWithLogging(workoutState));
+  };
+  const nextExercise = () => dispatchWorkout(ActionFactory.next());
+  const updateTimer = () => dispatchWorkout(ActionFactory.update());
+  const resetWorkout = () => dispatchWorkout(ActionFactory.reset());
+
+  // 🎯 Nouvelle fonction: Toggle pause/resume intelligent
+  const togglePause = () => {
+    dispatchWorkout(togglePauseAction(workoutState.isPaused));
+  };
 
   return (
     <div style={{ backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '8px', padding: '20px' }}>
@@ -371,7 +407,7 @@ const WorkoutDemoView = () => {
         </button>
 
         <button
-          onClick={workoutState.isPaused ? resumeWorkout : pauseWorkout}
+          onClick={togglePause}
           disabled={!canPauseResume(workoutState)}
           style={{
             padding: '12px',
@@ -455,17 +491,20 @@ const WorkoutDemoView = () => {
         </button>
       </div>
 
-      {/* Info du refactoring */}
+      {/* Info des améliorations WA-006 */}
       <div style={{ backgroundColor: '#d1ecf1', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #bee5eb' }}>
-        <h4>✨ Refactoring WA-005.1 - Améliorations</h4>
+        <h4>🚀 WA-006 - Actions de base améliorées</h4>
         <ul style={{ margin: '10px 0', paddingLeft: '20px' }}>
-          <li>✅ <strong>Reducer séparé</strong> : <code>src/reducers/workoutReducer.js</code></li>
-          <li>✅ <strong>Données modulaires</strong> : <code>src/data/exercises.js</code> + <code>workoutPlans.js</code></li>
-          <li>✅ <strong>Constantes centralisées</strong> : <code>src/constants/workoutStates.js</code></li>
-          <li>✅ <strong>Fonctions utilitaires</strong> : <code>formatTime</code>, <code>getCurrentExercise</code>, etc.</li>
-          <li>✅ <strong>App.jsx allégé</strong> : Passé de ~400 lignes à ~200 lignes</li>
-          <li>✅ <strong>Imports organisés</strong> : Séparés par type (data, constants, reducer)</li>
+          <li>✅ <strong>Actions encapsulées</strong> : <code>src/actions/workoutActions.js</code></li>
+          <li>✅ <strong>Validation intégrée</strong> : <code>safeStartWorkoutAction</code> avec error handling</li>
+          <li>✅ <strong>Logging automatique</strong> : <code>startWorkoutWithLogging</code> + console logs</li>
+          <li>✅ <strong>Actions composées</strong> : <code>togglePauseAction</code> (smart pause/resume)</li>
+          <li>✅ <strong>ActionFactory pattern</strong> : <code>ActionFactory.pause()</code> simplifié</li>
+          <li>✅ <strong>Error handling</strong> : Try/catch avec messages utilisateur</li>
         </ul>
+        <div style={{ marginTop: '10px', padding: '8px', backgroundColor: '#b8daff', borderRadius: '4px', fontSize: '14px' }}>
+          <strong>🧪 Test :</strong> Essaie de démarrer sans charger de plan → Voir l'erreur !
+        </div>
       </div>
 
       {/* Debug du state */}
@@ -514,7 +553,7 @@ const WorkoutApp = () => {
       </main>
 
       <footer style={{ marginTop: '40px', padding: '15px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #ddd', textAlign: 'center', fontSize: '14px', color: '#666' }}>
-        <strong>✨ WA-005.1 Refactor terminé!</strong> Architecture modulaire + Code propre | Prochaine étape: <strong>WA-006 - Actions de base</strong>
+        <strong>🚀 WA-006 terminé!</strong> Actions encapsulées + Validation + Logging | Prochaine étape: <strong>WA-007 - État de configuration</strong>
       </footer>
     </div>
   );
