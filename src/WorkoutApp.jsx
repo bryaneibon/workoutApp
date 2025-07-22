@@ -533,7 +533,7 @@ const HomeView = ({ onSelectPlan, onNavigate }) => (
         <div style={{ backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
       <h2>🚀 Démarrage rapide</h2>
       <p style={{ color: '#666', marginBottom: '20px' }}>
-        Choisissez un plan d'entraînement prédéfini ou créez le vôtre
+       {`Choisissez un plan d'entraînement prédéfini ou créez le vôtre`}
       </p>
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '15px' }}>
@@ -578,7 +578,7 @@ const WorkoutConfigView = () => (
       </ul>
     </div>
     <div style={{ fontSize: '48px', margin: '20px 0' }}>🚧</div>
-    <p style={{ fontStyle: 'italic', color: '#666' }}>"First make it work, then make it right" - Clean Code</p>
+    <p style={{ fontStyle: 'italic', color: '#666' }}>{`"First make it work, then make it right" - Clean Code`}</p>
   </div>
 );
 
