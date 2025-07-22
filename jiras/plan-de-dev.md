@@ -6,7 +6,7 @@
 | Ticket | Priorité | Complexité | Description |
 |--------|----------|------------|-------------|
 | **WA-001** | 🔴 Critical | S | Setup projet React + structure dossiers |
-| **WA-002** | 🔴 Critical | S | Types TypeScript de base + données statiques |
+| **WA-002** | 🔴 Critical | S | Types javaScript de base + données statiques |
 | **WA-003** | 🔴 Critical | M | Layout principal + navigation basique |
 | **WA-004** | 🟡 High | S | Composant de test simple |
 
