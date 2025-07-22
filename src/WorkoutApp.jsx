@@ -1,8 +1,8 @@
 import './App.css'
 
-import React from 'react';
+import React, { useState } from 'react';
 
-// 🏗️ WA-001: Setup initial avec structure de dossiers
+// 🏗️ WA-003: Layout principal avec navigation
 // Référence Clean Code: "The first rule of functions is that they should be small"
 
 const WorkoutApp = () => {
@@ -175,183 +175,310 @@ const WORKOUT_STATES = {
 };
 
 /**
- * Composant de test pour WA-002
+ * Énumérations des vues de l'application
+ * Pragmatic Programmer: "Use meaningful names"
+ */
+const APP_VIEWS = {
+  HOME: 'home',
+  WORKOUT_CONFIG: 'workout-config',
+  WORKOUT_ACTIVE: 'workout-active',
+  WORKOUT_SUMMARY: 'workout-summary'
+};
+
+/**
+ * Header réutilisable
+ * Clean Code: "Small functions are easier to understand"
+ */
+const AppHeader = ({ currentView, onNavigate }) => (
+  <header style={{
+    backgroundColor: '#2c3e50',
+    color: 'white',
+    padding: '15px 20px',
+    borderRadius: '10px',
+    marginBottom: '20px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap'
+  }}>
+    <div>
+      <h1 style={{ margin: 0, fontSize: '24px' }}>🏋️ WorkoutApp</h1>
+      <p style={{ margin: '5px 0 0 0', fontSize: '14px', opacity: 0.8 }}>
+        {currentView === APP_VIEWS.HOME && 'Choisissez votre entraînement'}
+        {currentView === APP_VIEWS.WORKOUT_CONFIG && 'Configuration de la séance'}
+        {currentView === APP_VIEWS.WORKOUT_ACTIVE && 'Séance en cours'}
+        {currentView === APP_VIEWS.WORKOUT_SUMMARY && 'Résumé de la séance'}
+      </p>
+    </div>
+    
+    {/* Navigation simple */}
+    <nav style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+      <button
+        onClick={() => onNavigate(APP_VIEWS.HOME)}
+        style={{
+          padding: '8px 15px',
+          border: 'none',
+          borderRadius: '5px',
+          backgroundColor: currentView === APP_VIEWS.HOME ? '#3498db' : 'rgba(255,255,255,0.2)',
+          color: 'white',
+          cursor: 'pointer',
+          fontSize: '14px'
+        }}
+      >
+        🏠 Accueil
+      </button>
+      <button
+        onClick={() => onNavigate(APP_VIEWS.WORKOUT_CONFIG)}
+        style={{
+          padding: '8px 15px',
+          border: 'none',
+          borderRadius: '5px',
+          backgroundColor: currentView === APP_VIEWS.WORKOUT_CONFIG ? '#3498db' : 'rgba(255,255,255,0.2)',
+          color: 'white',
+          cursor: 'pointer',
+          fontSize: '14px'
+        }}
+      >
+        ⚙️ Configuration
+      </button>
+    </nav>
+  </header>
+);
+
+/**
+ * Vue Accueil - Sélection rapide
+ */
+const HomeView = ({ onSelectPlan, onNavigate }) => (
+  <div>
+    <div style={{
+      backgroundColor: '#e8f5e8',
+      border: '2px solid #4CAF50',
+      borderRadius: '8px',
+      padding: '15px',
+      marginBottom: '20px'
+    }}>
+      <h3>📋 Status du développement</h3>
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        {['WA-001: Setup', 'WA-002: Données', 'WA-003: Layout'].map((item, index) => (
+          <span key={index} style={{ 
+            backgroundColor: '#4CAF50', 
+            color: 'white', 
+            padding: '5px 10px', 
+            borderRadius: '5px',
+            fontSize: '12px'
+          }}>
+            ✅ {item}
+          </span>
+        ))}
+        <span style={{ 
+          backgroundColor: '#9E9E9E', 
+          color: 'white', 
+          padding: '5px 10px', 
+          borderRadius: '5px',
+          fontSize: '12px'
+        }}>
+          ⏳ WA-004: Timer
+        </span>
+      </div>
+    </div>
+
+    <div style={{
+      backgroundColor: 'white',
+      border: '1px solid #ddd',
+      borderRadius: '8px',
+      padding: '20px',
+      marginBottom: '20px'
+    }}>
+      <h2>🚀 Démarrage rapide</h2>
+      <p style={{ color: '#666', marginBottom: '20px' }}>
+        Choisissez un plan d'entraînement prédéfini ou créez le vôtre
+      </p>
+      
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '15px' }}>
+        {Object.values(WORKOUT_PLANS).map(plan => (
+          <div
+            key={plan.id}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '8px',
+              padding: '20px',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              backgroundColor: 'white'
+            }}
+            onMouseOver={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+            onMouseOut={(e) => e.target.style.backgroundColor = 'white'}
+            onClick={() => onSelectPlan(plan)}
+          >
+            <h3 style={{ margin: '0 0 10px 0', color: '#2c3e50' }}>{plan.name}</h3>
+            <p style={{ color: '#666', fontSize: '14px', margin: '0 0 15px 0' }}>
+              {plan.description}
+            </p>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+              <span style={{ 
+                backgroundColor: '#007bff', 
+                color: 'white', 
+                padding: '4px 8px', 
+                borderRadius: '4px',
+                fontSize: '12px'
+              }}>
+                {plan.difficulty}
+              </span>
+              <span style={{ fontSize: '14px', color: '#666' }}>
+                ⏱️ {plan.estimatedDuration} min
+              </span>
+            </div>
+            
+            <div style={{ fontSize: '12px', color: '#666' }}>
+              <strong>Exercices:</strong> {plan.exercises.map(id => EXERCISES_DATABASE[id].name).join(', ')}
+            </div>
+            
+            <button style={{
+              width: '100%',
+              marginTop: '15px',
+              padding: '10px',
+              backgroundColor: '#28a745',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}>
+              🚀 Démarrer ce plan
+            </button>
+          </div>
+        ))}
+      </div>
+      
+      <div style={{ textAlign: 'center', marginTop: '30px' }}>
+        <button
+          onClick={() => onNavigate(APP_VIEWS.WORKOUT_CONFIG)}
+          style={{
+            padding: '15px 30px',
+            fontSize: '16px',
+            backgroundColor: '#3498db',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          ⚙️ Créer un workout personnalisé
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+/**
+ * Vue Configuration - Placeholder pour plus tard
+ */
+const WorkoutConfigView = () => (
+  <div style={{
+    backgroundColor: 'white',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    padding: '40px',
+    textAlign: 'center'
+  }}>
+    <h2>⚙️ Configuration du Workout</h2>
+    <p style={{ color: '#666', marginBottom: '30px' }}>
+      Cette section sera développée dans les prochains tickets (WA-013 à WA-016)
+    </p>
+    
+    <div style={{
+      backgroundColor: '#fff3cd',
+      border: '1px solid #ffc107',
+      borderRadius: '8px',
+      padding: '20px',
+      margin: '20px 0'
+    }}>
+      <h4>🎯 Fonctionnalités à venir :</h4>
+      <ul style={{ textAlign: 'left', maxWidth: '400px', margin: '0 auto' }}>
+        <li>Sélection des exercices</li>
+        <li>Configuration des temps (travail/repos)</li>
+        <li>Nombre de rounds</li>
+        <li>Niveau de difficulté</li>
+        <li>Prévisualisation en temps réel</li>
+      </ul>
+    </div>
+    
+    <div style={{ fontSize: '48px', margin: '20px 0' }}>🚧</div>
+    <p style={{ fontStyle: 'italic', color: '#666' }}>
+      "First make it work, then make it right" - Clean Code
+    </p>
+  </div>
+);
+
+/**
+ * Composant principal avec navigation
+ * Pragmatic Programmer: "Orthogonality - components should be independent"
  */
 const WorkoutDataTest = () => {
-  const [selectedPlan, setSelectedPlan] = React.useState(null);
-  const [selectedExercise, setSelectedExercise] = React.useState(null);
+  const [currentView, setCurrentView] = useState(APP_VIEWS.HOME);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+
+  const handleSelectPlan = (plan) => {
+    setSelectedPlan(plan);
+    alert(`🎯 Plan sélectionné: ${plan.name}\n\nProchaine étape: Développer le timer (WA-009)`);
+  };
+
+  const handleNavigate = (view) => {
+    setCurrentView(view);
+  };
 
   return (
     <div style={{ 
       fontFamily: 'Arial, sans-serif',
-      maxWidth: '800px',
+      maxWidth: '1000px',
       margin: '0 auto',
       padding: '20px',
       backgroundColor: '#f5f5f5',
       minHeight: '100vh'
     }}>
-      {/* Header */}
-      <header style={{
-        textAlign: 'center',
-        marginBottom: '30px',
-        padding: '20px',
-        backgroundColor: '#2c3e50',
-        color: 'white',
-        borderRadius: '10px'
-      }}>
-        <h1>🏋️ WorkoutApp</h1>
-        <p>WA-002: Test des données statiques</p>
-      </header>
+      <AppHeader 
+        currentView={currentView} 
+        onNavigate={handleNavigate} 
+      />
 
-      {/* Status */}
-      <div style={{
-        backgroundColor: '#e8f5e8',
-        border: '2px solid #4CAF50',
-        borderRadius: '8px',
-        padding: '15px',
-        marginBottom: '20px'
-      }}>
-        <h3>📋 Status du développement</h3>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ backgroundColor: '#4CAF50', color: 'white', padding: '5px 10px', borderRadius: '5px', fontSize: '12px' }}>
-            ✅ WA-001: Setup
-          </span>
-          <span style={{ backgroundColor: '#4CAF50', color: 'white', padding: '5px 10px', borderRadius: '5px', fontSize: '12px' }}>
-            ✅ WA-002: Données
-          </span>
-          <span style={{ backgroundColor: '#9E9E9E', color: 'white', padding: '5px 10px', borderRadius: '5px', fontSize: '12px' }}>
-            ⏳ WA-003: Layout
-          </span>
-        </div>
-      </div>
-
-      {/* Test des exercices */}
-      <div style={{
-        backgroundColor: 'white',
-        border: '1px solid #ddd',
-        borderRadius: '8px',
-        padding: '20px',
-        marginBottom: '20px'
-      }}>
-        <h3>🏋️ Base de données d'exercices ({Object.keys(EXERCISES_DATABASE).length} exercices)</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginBottom: '15px' }}>
-          {Object.values(EXERCISES_DATABASE).map(exercise => (
-            <div 
-              key={exercise.id}
-              style={{
-                border: selectedExercise?.id === exercise.id ? '2px solid #007bff' : '1px solid #ddd',
-                borderRadius: '5px',
-                padding: '10px',
-                cursor: 'pointer',
-                textAlign: 'center',
-                backgroundColor: selectedExercise?.id === exercise.id ? '#f0f8ff' : 'white'
-              }}
-              onClick={() => setSelectedExercise(exercise)}
-            >
-              <div style={{ fontSize: '24px', marginBottom: '5px' }}>
-                {exercise.images.start} → {exercise.images.end}
-              </div>
-              <strong>{exercise.name}</strong>
-              <div style={{ fontSize: '12px', color: '#666' }}>
-                {exercise.muscleGroup} • {exercise.defaultDuration}s
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {selectedExercise && (
-          <div style={{ 
-            backgroundColor: '#f8f9fa', 
-            padding: '15px', 
-            borderRadius: '5px',
-            border: '1px solid #dee2e6'
-          }}>
-            <h4>📋 Détails: {selectedExercise.name}</h4>
-            <p><strong>Groupe musculaire:</strong> {selectedExercise.muscleGroup}</p>
-            <p><strong>Muscles secondaires:</strong> {selectedExercise.secondaryMuscles.join(', ')}</p>
-            <p><strong>Difficulté:</strong> {selectedExercise.difficulty}</p>
-            <p><strong>Instructions:</strong></p>
-            <ol>
-              {selectedExercise.instructions.map((instruction, index) => (
-                <li key={index}>{instruction}</li>
-              ))}
-            </ol>
-          </div>
+      <main>
+        {currentView === APP_VIEWS.HOME && (
+          <HomeView 
+            onSelectPlan={handleSelectPlan}
+            onNavigate={handleNavigate}
+          />
         )}
-      </div>
-
-      {/* Test des plans d'entraînement */}
-      <div style={{
-        backgroundColor: 'white',
-        border: '1px solid #ddd',
-        borderRadius: '8px',
-        padding: '20px',
-        marginBottom: '20px'
-      }}>
-        <h3>📋 Plans d'entraînement prédéfinis ({Object.keys(WORKOUT_PLANS).length} plans)</h3>
-        <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: '15px' }}>
-          {Object.values(WORKOUT_PLANS).map(plan => (
-            <div
-              key={plan.id}
-              style={{
-                border: selectedPlan?.id === plan.id ? '2px solid #28a745' : '1px solid #ddd',
-                borderRadius: '8px',
-                padding: '15px',
-                cursor: 'pointer',
-                minWidth: '250px',
-                backgroundColor: selectedPlan?.id === plan.id ? '#f0fff0' : 'white'
-              }}
-              onClick={() => setSelectedPlan(plan)}
-            >
-              <h4>{plan.name}</h4>
-              <p style={{ fontSize: '14px', color: '#666' }}>{plan.description}</p>
-              <div style={{ fontSize: '12px' }}>
-                <span style={{ backgroundColor: '#007bff', color: 'white', padding: '2px 6px', borderRadius: '3px', marginRight: '5px' }}>
-                  {plan.difficulty}
-                </span>
-                <span>{plan.estimatedDuration} min</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {selectedPlan && (
-          <div style={{ 
-            backgroundColor: '#f8f9fa', 
-            padding: '15px', 
-            borderRadius: '5px',
-            border: '1px solid #dee2e6'
-          }}>
-            <h4>🎯 Configuration: {selectedPlan.name}</h4>
-            <p><strong>Exercices:</strong> {selectedPlan.exercises.map(id => EXERCISES_DATABASE[id].name).join(' → ')}</p>
-            <p><strong>Timing:</strong> {selectedPlan.timing.workTime}s travail / {selectedPlan.timing.restTime}s repos</p>
-            <p><strong>Rounds:</strong> {selectedPlan.timing.rounds} tours</p>
-          </div>
-        )}
-      </div>
-
-      {/* Configuration par défaut */}
-      <div style={{
-        backgroundColor: '#fff3cd',
-        border: '1px solid #ffc107',
-        borderRadius: '8px',
-        padding: '15px'
-      }}>
-        <h3>⚙️ Configuration par défaut</h3>
-        <pre style={{ 
-          backgroundColor: '#f8f9fa', 
-          padding: '10px', 
-          borderRadius: '5px',
-          fontSize: '14px',
-          overflow: 'auto'
-        }}>
-          {JSON.stringify(DEFAULT_WORKOUT_CONFIG, null, 2)}
-        </pre>
         
-        <div style={{ marginTop: '15px' }}>
-          <strong>🎯 Prochaine étape:</strong> WA-003 - Layout principal avec navigation
-        </div>
-      </div>
+        {currentView === APP_VIEWS.WORKOUT_CONFIG && (
+          <WorkoutConfigView />
+        )}
+        
+        {/* Autres vues à développer plus tard */}
+        {currentView === APP_VIEWS.WORKOUT_ACTIVE && (
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <h2>🏃 Séance Active</h2>
+            <p>À développer avec le timer (WA-009+)</p>
+          </div>
+        )}
+      </main>
+
+      {/* Footer informatif */}
+      <footer style={{
+        marginTop: '40px',
+        padding: '15px',
+        backgroundColor: 'white',
+        borderRadius: '8px',
+        border: '1px solid #ddd',
+        textAlign: 'center',
+        fontSize: '14px',
+        color: '#666'
+      }}>
+        <strong>🎯 Prochaine étape:</strong> WA-004 - Composant de test simple | 
+        <strong> Puis:</strong> Phase 2 - useReducer et gestion d'état
+      </footer>
     </div>
   );
 };

@@ -31,3 +31,7 @@ dist/
 build/
 .DS_Store
 *.log
+
+# Exclude project instructions and to-do files
+jiras/
+*.md
