@@ -43,35 +43,59 @@ import {
  * Clean Code: "Small functions are easier to understand"
  */
 const AppHeader = ({ currentView, onNavigate }) => (
-  <header style={{
-    backgroundColor: '#2c3e50',
-    color: 'white',
-    padding: '15px 20px',
-    borderRadius: '10px',
-    marginBottom: '20px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexWrap: 'wrap'
-  }}>
-    <div>
-      <h1 style={{ margin: 0, fontSize: '24px' }}>🏋️ WorkoutApp</h1>
-      <p style={{ margin: '5px 0 0 0', fontSize: '14px', opacity: 0.8 }}>
-        {currentView === APP_VIEWS.HOME && 'Choisissez votre entraînement'}
-        {currentView === APP_VIEWS.WORKOUT_CONFIG && 'Configuration de la séance'}
-        {currentView === APP_VIEWS.WORKOUT_ACTIVE && 'Séance en cours'}
-        {currentView === APP_VIEWS.WORKOUT_SUMMARY && 'Résumé de la séance'}
-        {currentView === APP_VIEWS.TEST_COMPONENTS && 'Tests de validation'}
-        {currentView === APP_VIEWS.WORKOUT_DEMO && 'Démo useReducer'}
-      </p>
+  <header className="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 text-white rounded-xl shadow-lg mb-6 overflow-hidden">
+    <div className="px-6 py-4 flex flex-wrap justify-between items-center">
+      <div className="flex-1 min-w-0">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+          🏋️ WorkoutApp
+        </h1>
+        <p className="text-sm text-slate-300 mt-1">
+          {currentView === APP_VIEWS.HOME && 'Choisissez votre entraînement'}
+          {currentView === APP_VIEWS.WORKOUT_CONFIG && 'Configuration de la séance'}
+          {currentView === APP_VIEWS.WORKOUT_ACTIVE && 'Séance en cours'}
+          {currentView === APP_VIEWS.WORKOUT_SUMMARY && 'Résumé de la séance'}
+          {currentView === APP_VIEWS.TEST_COMPONENTS && 'Tests de validation'}
+          {currentView === APP_VIEWS.WORKOUT_DEMO && 'Démo useReducer'}
+        </p>
+      </div>
+      
+      <nav className="flex gap-2 mt-3 sm:mt-0 flex-wrap">
+        {[
+          { view: APP_VIEWS.HOME, icon: '🏠', label: 'Accueil' },
+          { view: APP_VIEWS.WORKOUT_CONFIG, icon: '⚙️', label: 'Config' },
+          { view: APP_VIEWS.TEST_COMPONENTS, icon: '🧪', label: 'Tests' },
+          { view: APP_VIEWS.WORKOUT_DEMO, icon: '🧠', label: 'Démo' }
+        ].map(({ view, icon, label }) => (
+          <button
+            key={view}
+            onClick={() => onNavigate(view)}
+            className={`
+              px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 
+              focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-800
+              ${currentView === view 
+                ? 'bg-blue-500 text-white shadow-lg transform scale-105' 
+                : 'bg-slate-600/50 text-slate-200 hover:bg-slate-500 hover:text-white hover:scale-105'
+              }
+            `}
+          >
+            <span className="hidden sm:inline">{icon} {label}</span>
+            <span className="sm:hidden">{icon}</span>
+          </button>
+        ))}
+      </nav>
     </div>
     
-    <nav style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
-      <button onClick={() => onNavigate(APP_VIEWS.HOME)} style={{ padding: '6px 12px', border: 'none', borderRadius: '4px', backgroundColor: currentView === APP_VIEWS.HOME ? '#3498db' : 'rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer', fontSize: '12px' }}>🏠</button>
-      <button onClick={() => onNavigate(APP_VIEWS.WORKOUT_CONFIG)} style={{ padding: '6px 12px', border: 'none', borderRadius: '4px', backgroundColor: currentView === APP_VIEWS.WORKOUT_CONFIG ? '#3498db' : 'rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer', fontSize: '12px' }}>⚙️</button>
-      <button onClick={() => onNavigate(APP_VIEWS.TEST_COMPONENTS)} style={{ padding: '6px 12px', border: 'none', borderRadius: '4px', backgroundColor: currentView === APP_VIEWS.TEST_COMPONENTS ? '#3498db' : 'rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer', fontSize: '12px' }}>🧪</button>
-      <button onClick={() => onNavigate(APP_VIEWS.WORKOUT_DEMO)} style={{ padding: '6px 12px', border: 'none', borderRadius: '4px', backgroundColor: currentView === APP_VIEWS.WORKOUT_DEMO ? '#3498db' : 'rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer', fontSize: '12px' }}>🧠</button>
-    </nav>
+    {/* Barre de progression en bas du header */}
+    <div className="h-1 bg-slate-600">
+      <div 
+        className="h-full bg-gradient-to-r from-blue-400 to-emerald-400 transition-all duration-500 ease-out"
+        style={{ 
+          width: `${Math.min(100, (
+            ['WA-001', 'WA-002', 'WA-003', 'WA-004', 'WA-005', 'WA-005.1', 'WA-006'].length / 12
+          ) * 100)}%` 
+        }}
+      />
+    </div>
   </header>
 );
 
@@ -536,25 +560,28 @@ const WorkoutApp = () => {
   };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '1000px', margin: '0 auto', padding: '20px', backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-      <AppHeader currentView={currentView} onNavigate={handleNavigate} />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 font-sans">
+      <div className="max-w-6xl mx-auto p-6">
+        <AppHeader currentView={currentView} onNavigate={handleNavigate} />
 
-      <main>
-        {currentView === APP_VIEWS.HOME && (<HomeView onSelectPlan={handleSelectPlan} onNavigate={handleNavigate} />)}
-        {currentView === APP_VIEWS.WORKOUT_CONFIG && (<WorkoutConfigView />)}
-        {currentView === APP_VIEWS.TEST_COMPONENTS && (<TestComponentsView />)}
-        {currentView === APP_VIEWS.WORKOUT_DEMO && (<WorkoutDemoView />)}
-        {currentView === APP_VIEWS.WORKOUT_ACTIVE && (
-          <div style={{ textAlign: 'center', padding: '50px' }}>
-            <h2>🏃 Séance Active</h2>
-            <p>À développer avec le timer automatique (WA-009+)</p>
-          </div>
-        )}
-      </main>
+        <main className="space-y-6">
+          {currentView === APP_VIEWS.HOME && (<HomeView onSelectPlan={handleSelectPlan} onNavigate={handleNavigate} />)}
+          {currentView === APP_VIEWS.WORKOUT_CONFIG && (<WorkoutConfigView />)}
+          {currentView === APP_VIEWS.TEST_COMPONENTS && (<TestComponentsView />)}
+          {currentView === APP_VIEWS.WORKOUT_DEMO && (<WorkoutDemoView />)}
+          {currentView === APP_VIEWS.WORKOUT_ACTIVE && (
+            <div className="workout-card text-center py-16">
+              <h2 className="text-3xl font-bold text-slate-700 mb-4">🏃 Séance Active</h2>
+              <p className="text-slate-600">À développer avec le timer automatique (WA-009+)</p>
+            </div>
+          )}
+        </main>
 
-      <footer style={{ marginTop: '40px', padding: '15px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #ddd', textAlign: 'center', fontSize: '14px', color: '#666' }}>
-        <strong>🚀 WA-006 terminé!</strong> Actions encapsulées + Validation + Logging | Prochaine étape: <strong>WA-007 - État de configuration</strong>
-      </footer>
+        <footer className="mt-12 p-6 bg-white/50 backdrop-blur rounded-xl border border-slate-200 text-center text-sm text-slate-600">
+          <strong className="text-blue-600">🚀 WA-006 terminé!</strong> Actions encapsulées + Validation + Logging | 
+          <strong className="text-emerald-600"> Prochaine étape: WA-007 - État de configuration</strong>
+        </footer>
+      </div>
     </div>
   );
 };
