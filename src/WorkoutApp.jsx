@@ -1,14 +1,14 @@
-
 import React, { useState, useReducer } from 'react';
+
 // 🏗️ WA-005.1: App refactorisé avec imports modulaires
 // Référence Clean Code: "Organize imports - keep related things together"
 
 // Imports des données
-import { EXERCISES_DATABASE } from './data/exercices';
+import { EXERCISES_DATABASE } from './data/exercices.js';
 import { WORKOUT_PLANS } from './data/workoutPlans';
 
 // Imports des constantes
-import { APP_VIEWS, WORKOUT_STATUS, WORKOUT_ACTIONS } from './constants/workoutStates';
+import { APP_VIEWS, WORKOUT_STATUS } from './constants/workoutStates';
 
 // Imports du reducer et utilitaires
 import { 
@@ -21,7 +21,7 @@ import {
   canPauseResume
 } from './reducers/workoutReducer';
 
-// 🚀 WA-006: Import des actions
+// 🚀 WA-007: Import des actions de configuration
 import { 
   loadWorkoutAction,
   startWorkoutAction,
@@ -38,8 +38,23 @@ import {
   ActionFactory
 } from './actions/workoutActions';
 
+import {
+  configReducer,
+  initialConfigState,
+  CONFIG_ACTIONS,
+  configToWorkoutPlan,
+  canSaveConfig,
+  getConfigSummary
+} from './reducers/configReducer';
+
+import {
+  ConfigActionFactory,
+  TIMING_PRESETS,
+  applyTimingPresetAction
+} from './actions/configActions';
+
 /**
- * 🎨 Header réutilisable
+ * 🎨 Header réutilisable avec Tailwind CSS
  * Clean Code: "Small functions are easier to understand"
  */
 const AppHeader = ({ currentView, onNavigate }) => (
@@ -108,10 +123,10 @@ const HomeView = ({ onSelectPlan, onNavigate }) => (
     <div style={{ backgroundColor: '#e8f5e8', border: '2px solid #4CAF50', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
       <h3>📋 Status du développement</h3>
       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-        {['WA-001: Setup', 'WA-002: Données', 'WA-003: Layout', 'WA-004: Tests', 'WA-005: useReducer', 'WA-005.1: Refactor', 'WA-006: Actions'].map((item, index) => (
+        {['WA-001: Setup', 'WA-002: Données', 'WA-003: Layout', 'WA-004: Tests', 'WA-005: useReducer', 'WA-005.1: Refactor', 'WA-006: Actions', 'WA-007: Config'].map((item, index) => (
           <span key={index} style={{ backgroundColor: '#4CAF50', color: 'white', padding: '5px 10px', borderRadius: '5px', fontSize: '12px' }}>✅ {item}</span>
         ))}
-        <span style={{ backgroundColor: '#9E9E9E', color: 'white', padding: '5px 10px', borderRadius: '5px', fontSize: '12px' }}>⏳ WA-007: Configuration</span>
+        <span className="px-3 py-1 bg-slate-400 text-white rounded-lg text-xs">⏳ WA-008: Hook useWorkout</span>
       </div>
     </div>
     
@@ -144,27 +159,392 @@ const HomeView = ({ onSelectPlan, onNavigate }) => (
 );
 
 /**
- * ⚙️ Vue Configuration - Placeholder
- * Pragmatic Programmer: "Program close to the problem domain"
+ * ⚙️ Vue Configuration - Interface moderne avec Tailwind
+ * WA-007: Configuration complète du workout
  */
-const WorkoutConfigView = () => (
-  <div style={{ backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '8px', padding: '40px', textAlign: 'center' }}>
-    <h2>⚙️ Configuration du Workout</h2>
-    <p style={{ color: '#666', marginBottom: '30px' }}>Cette section sera développée dans les prochains tickets (WA-013 à WA-016)</p>
-    <div style={{ backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '8px', padding: '20px', margin: '20px 0' }}>
-      <h4>🎯 Fonctionnalités à venir :</h4>
-      <ul style={{ textAlign: 'left', maxWidth: '400px', margin: '0 auto' }}>
-        <li>Sélection des exercices</li>
-        <li>Configuration des temps (travail/repos)</li>
-        <li>Nombre de rounds</li>
-        <li>Niveau de difficulté</li>
-        <li>Prévisualisation en temps réel</li>
-      </ul>
+const WorkoutConfigView = () => {
+  const [configState, dispatchConfig] = useReducer(configReducer, initialConfigState);
+  const [currentStep, setCurrentStep] = useState(1);
+
+  // Actions de configuration
+  const setWorkTime = (seconds) => {
+    dispatchConfig(ConfigActionFactory.timing.work(seconds));
+  };
+
+  const setRestTime = (seconds) => {
+    dispatchConfig(ConfigActionFactory.timing.rest(seconds));
+  };
+
+  const setRounds = (rounds) => {
+    dispatchConfig(ConfigActionFactory.structure.rounds(rounds));
+  };
+
+  const addExercise = (exerciseId) => {
+    dispatchConfig(ConfigActionFactory.exercises.add(exerciseId));
+  };
+
+  const removeExercise = (exerciseId) => {
+    dispatchConfig(ConfigActionFactory.exercises.remove(exerciseId));
+  };
+
+  const applyPreset = (presetName) => {
+    const actions = applyTimingPresetAction(presetName);
+    actions.forEach(action => dispatchConfig(action));
+  };
+
+  const resetConfig = () => {
+    dispatchConfig(ConfigActionFactory.workflow.reset());
+    setCurrentStep(1);
+  };
+
+  const summary = getConfigSummary(configState);
+
+  return (
+    <div className="space-y-6">
+      {/* Header de progression */}
+      <div className="workout-card">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-slate-800">⚙️ Configuration du Workout</h2>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-slate-600">Étape {currentStep}/3</span>
+            <div className="w-32 h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 transition-all duration-300"
+                style={{ width: `${(currentStep / 3) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation des étapes */}
+        <div className="flex space-x-1 mb-6">
+          {[
+            { step: 1, icon: '⏱️', label: 'Timing', desc: 'Temps de travail et repos' },
+            { step: 2, icon: '🏋️', label: 'Exercices', desc: 'Sélection des mouvements' },
+            { step: 3, icon: '✅', label: 'Validation', desc: 'Vérification finale' }
+          ].map(({ step, icon, label, desc }) => (
+            <button
+              key={step}
+              onClick={() => setCurrentStep(step)}
+              className={`
+                flex-1 p-4 rounded-lg text-left transition-all duration-200
+                ${currentStep === step 
+                  ? 'bg-blue-500 text-white shadow-lg transform scale-105' 
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }
+              `}
+            >
+              <div className="flex items-center space-x-2">
+                <span className="text-lg">{icon}</span>
+                <div>
+                  <div className="font-medium">{label}</div>
+                  <div className="text-xs opacity-75">{desc}</div>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Étape 1: Configuration du timing */}
+      {currentStep === 1 && (
+        <div className="workout-card">
+          <h3 className="text-xl font-semibold text-slate-800 mb-6">⏱️ Configuration des temps</h3>
+          
+          {/* Presets rapides */}
+          <div className="mb-8">
+            <h4 className="font-medium text-slate-700 mb-3">🚀 Presets populaires</h4>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {Object.entries(TIMING_PRESETS).map(([key, preset]) => (
+                <button
+                  key={key}
+                  onClick={() => applyPreset(key)}
+                  className="p-3 bg-slate-100 hover:bg-blue-500 hover:text-white rounded-lg transition-all duration-200 text-center"
+                >
+                  <div className="font-medium capitalize">{key}</div>
+                  <div className="text-xs opacity-75">{preset.workTime}s / {preset.restTime}s</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Configuration manuelle */}
+          <div className="grid md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                💪 Temps de travail
+              </label>
+              <div className="space-y-2">
+                <input
+                  type="range"
+                  min="10"
+                  max="180"
+                  value={configState.workTime}
+                  onChange={(e) => setWorkTime(parseInt(e.target.value))}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider"
+                />
+                <div className="flex justify-between text-xs text-slate-500">
+                  <span>10s</span>
+                  <span className="font-semibold text-blue-600">{configState.workTime}s</span>
+                  <span>3min</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                😴 Temps de repos
+              </label>
+              <div className="space-y-2">
+                <input
+                  type="range"
+                  min="5"
+                  max="120"
+                  value={configState.restTime}
+                  onChange={(e) => setRestTime(parseInt(e.target.value))}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider"
+                />
+                <div className="flex justify-between text-xs text-slate-500">
+                  <span>5s</span>
+                  <span className="font-semibold text-emerald-600">{configState.restTime}s</span>
+                  <span>2min</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                🔁 Nombre de rounds
+              </label>
+              <div className="space-y-2">
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={configState.rounds}
+                  onChange={(e) => setRounds(parseInt(e.target.value))}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider"
+                />
+                <div className="flex justify-between text-xs text-slate-500">
+                  <span>1</span>
+                  <span className="font-semibold text-purple-600">{configState.rounds} rounds</span>
+                  <span>10</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Aperçu en temps réel */}
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-emerald-50 rounded-lg border border-blue-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h5 className="font-medium text-slate-800">📊 Aperçu de la configuration</h5>
+                <p className="text-sm text-slate-600 mt-1">
+                  Durée estimée: <span className="font-semibold text-blue-600">{configState.estimatedDuration} minutes</span>
+                </p>
+              </div>
+              <button
+                onClick={() => setCurrentStep(2)}
+                disabled={configState.errors.length > 0}
+                className="workout-button-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Suivant: Exercices →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Étape 2: Sélection des exercices */}
+      {currentStep === 2 && (
+        <div className="workout-card">
+          <h3 className="text-xl font-semibold text-slate-800 mb-6">🏋️ Sélection des exercices</h3>
+          
+          {/* Exercices sélectionnés */}
+          <div className="mb-6">
+            <h4 className="font-medium text-slate-700 mb-3">
+              📋 Exercices sélectionnés ({configState.exercises.length})
+            </h4>
+            {configState.exercises.length === 0 ? (
+              <div className="p-6 bg-slate-50 rounded-lg text-center text-slate-500">
+                Aucun exercice sélectionné. Choisissez des exercices ci-dessous.
+              </div>
+            ) : (
+              <div className="grid gap-3">
+                {configState.exercises.map((exerciseId, index) => {
+                  const exercise = EXERCISES_DATABASE[exerciseId];
+                  return (
+                    <div key={exerciseId} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">{exercise.images.start}</span>
+                        <div>
+                          <div className="font-medium text-slate-800">{exercise.name}</div>
+                          <div className="text-sm text-slate-600">{exercise.muscleGroup}</div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => removeExercise(exerciseId)}
+                        className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Exercices disponibles */}
+          <div>
+            <h4 className="font-medium text-slate-700 mb-3">💪 Exercices disponibles</h4>
+            <div className="grid md:grid-cols-2 gap-3">
+              {Object.values(EXERCISES_DATABASE).map(exercise => (
+                <button
+                  key={exercise.id}
+                  onClick={() => addExercise(exercise.id)}
+                  disabled={configState.exercises.includes(exercise.id)}
+                  className={`
+                    p-4 rounded-lg text-left transition-all duration-200
+                    ${configState.exercises.includes(exercise.id)
+                      ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                      : 'bg-white border border-slate-200 hover:border-blue-300 hover:shadow-md'
+                    }
+                  `}
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{exercise.images.start}</span>
+                    <div>
+                      <div className="font-medium text-slate-800">{exercise.name}</div>
+                      <div className="text-sm text-slate-600">{exercise.muscleGroup}</div>
+                      <div className="text-xs text-slate-500">{exercise.difficulty}</div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-6 flex justify-between">
+            <button
+              onClick={() => setCurrentStep(1)}
+              className="workout-button bg-slate-500 text-white hover:bg-slate-600"
+            >
+              ← Retour: Timing
+            </button>
+            <button
+              onClick={() => setCurrentStep(3)}
+              disabled={configState.exercises.length === 0}
+              className="workout-button-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Suivant: Validation →
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Étape 3: Validation et création */}
+      {currentStep === 3 && (
+        <div className="workout-card">
+          <h3 className="text-xl font-semibold text-slate-800 mb-6">✅ Validation et création</h3>
+          
+          {/* Résumé du workout */}
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="space-y-4">
+              <h4 className="font-medium text-slate-700">📊 Résumé</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Exercices:</span>
+                  <span className="font-medium">{summary.totalExercises}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Rounds:</span>
+                  <span className="font-medium">{summary.totalRounds}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Durée estimée:</span>
+                  <span className="font-medium text-blue-600">{summary.estimatedDuration} min</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Groupes musculaires:</span>
+                  <span className="font-medium">{summary.muscleGroups.length}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="font-medium text-slate-700">⚠️ Validation</h4>
+              <div className="space-y-2">
+                {configState.errors.length > 0 && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="text-sm font-medium text-red-800 mb-1">Erreurs à corriger:</div>
+                    {configState.errors.map((error, index) => (
+                      <div key={index} className="text-xs text-red-600">• {error}</div>
+                    ))}
+                  </div>
+                )}
+                
+                {configState.warnings.length > 0 && (
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="text-sm font-medium text-yellow-800 mb-1">Avertissements:</div>
+                    {configState.warnings.map((warning, index) => (
+                      <div key={index} className="text-xs text-yellow-600">• {warning}</div>
+                    ))}
+                  </div>
+                )}
+
+                {configState.isValid && (
+                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="text-sm font-medium text-green-800">✅ Configuration valide !</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Actions finales */}
+          <div className="flex justify-between items-center">
+            <div className="space-x-3">
+              <button
+                onClick={() => setCurrentStep(2)}
+                className="workout-button bg-slate-500 text-white hover:bg-slate-600"
+              >
+                ← Retour: Exercices
+              </button>
+              <button
+                onClick={resetConfig}
+                className="workout-button bg-red-500 text-white hover:bg-red-600"
+              >
+                🔄 Recommencer
+              </button>
+            </div>
+            
+            <button
+              disabled={!configState.isValid}
+              className="workout-button-success disabled:opacity-50 disabled:cursor-not-allowed px-8 py-3 text-lg"
+              onClick={() => {
+                const workoutPlan = configToWorkoutPlan(configState);
+                alert(`🎉 Workout créé: ${workoutPlan.name}\n\nDurée: ${workoutPlan.estimatedDuration}min\nExercices: ${workoutPlan.exercises.length}`);
+              }}
+            >
+              🚀 Créer le Workout
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Debug de la configuration (en développement) */}
+      <div className="workout-card">
+        <h3 className="text-lg font-semibold text-slate-800 mb-4">🔍 Debug Configuration (WA-007)</h3>
+        <div className="bg-slate-50 p-4 rounded-lg">
+          <pre className="text-xs text-slate-600 overflow-auto max-h-40">
+            {JSON.stringify({ summary, configState }, null, 2)}
+          </pre>
+        </div>
+      </div>
     </div>
-    <div style={{ fontSize: '48px', margin: '20px 0' }}>🚧</div>
-    <p style={{ fontStyle: 'italic', color: '#666' }}>"First make it work, then make it right" - Clean Code</p>
-  </div>
-);
+  );
+};
 
 /**
  * 🧪 Vue Tests - Validation des composants
@@ -578,8 +958,8 @@ const WorkoutApp = () => {
         </main>
 
         <footer className="mt-12 p-6 bg-white/50 backdrop-blur rounded-xl border border-slate-200 text-center text-sm text-slate-600">
-          <strong className="text-blue-600">🚀 WA-006 terminé!</strong> Actions encapsulées + Validation + Logging | 
-          <strong className="text-emerald-600"> Prochaine étape: WA-007 - État de configuration</strong>
+          <strong className="text-blue-600">🎨 WA-007 terminé!</strong> Configuration complète + Interface moderne | 
+          <strong className="text-emerald-600"> Prochaine étape: WA-008 - Hook useWorkout</strong>
         </footer>
       </div>
     </div>
