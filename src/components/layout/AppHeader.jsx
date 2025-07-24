@@ -14,7 +14,8 @@ const navigationItems = [
   { view: APP_VIEWS.HOME, icon: '🏠', label: 'Accueil', shortLabel: 'Home' },
   { view: APP_VIEWS.WORKOUT_CONFIG, icon: '⚙️', label: 'Configuration', shortLabel: 'Config' },
   { view: APP_VIEWS.TEST_COMPONENTS, icon: '🧪', label: 'Tests', shortLabel: 'Tests' },
-  { view: APP_VIEWS.WORKOUT_DEMO, icon: '🧠', label: 'Démo', shortLabel: 'Démo' }
+  { view: APP_VIEWS.WORKOUT_DEMO, icon: '🧠', label: 'Démo', shortLabel: 'Démo' },
+  { view: APP_VIEWS.WORKOUT_ACTIVE, icon: '⏰', label: 'Timer Auto', shortLabel: 'Timer' } // 🆕 WA-009
 ];
 
 /**
@@ -67,7 +68,7 @@ const AppHeader = ({ currentView, onNavigate }) => {
         
         {/* Navigation */}
         <nav className="flex gap-2 mt-3 sm:mt-0 flex-wrap" role="navigation">
-          {navigationItems.map(({ view, icon, label, /* shortLabel */ }) => (
+          {navigationItems.map(({ view, icon, label, shortLabel }) => (
             <Button
               key={view}
               variant={currentView === view ? 'primary' : 'ghost'}
