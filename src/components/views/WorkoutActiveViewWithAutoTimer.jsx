@@ -9,7 +9,7 @@ import Button, { StartButton, PauseButton, StopButton, NextButton, ResetButton }
 import ProgressBar, { CircularProgress, WorkoutProgress, TimerProgress } from '../ui/ProgressBar.jsx';
 
 // 🚀 WA-009: Import du hook avec timer automatique
-import { useWorkoutWithAutoTimer } from '../../hooks/useWorkoutTimer.js';
+import { useWorkoutWithAutoTimer } from '../../hooks/useWorkoutWithTimer.js';
 import { WORKOUT_PLANS } from '../../data/workoutPlans.js';
 
 /**
@@ -268,6 +268,18 @@ const AutoTimerControls = ({ workout }) => {
             </div>
           </div>
         )}
+        {process.env.NODE_ENV === 'development' && (
+          <Button
+            variant="outline"
+            onClick={() => {
+              console.log('🏥 Health Check:');
+              workout.utils.timerHealthCheck();
+              console.log('📊 Timer Stats:', timer.stats);
+            }}
+          >
+            🏥 Debug Timer
+          </Button>
+      )}
       </CardBody>
     </Card>
   );
