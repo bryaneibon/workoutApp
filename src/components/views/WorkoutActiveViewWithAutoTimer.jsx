@@ -1,5 +1,5 @@
 // src/components/views/WorkoutActiveViewWithAutoTimer.jsx
-// 🏃 WA-009: Vue de séance active avec timer automatique
+// 🏃 WA-010: Vue de séance active avec progression automatique d'exercice
 // Référence Clean Code: "Separate concerns - UI reacts to business logic"
 
 import React from 'react';
@@ -7,8 +7,9 @@ import PropTypes from 'prop-types';
 import Card, { CardHeader, CardBody, CardFooter, StatsCard } from '../ui/Card.jsx';
 import Button, { StartButton, PauseButton, StopButton, NextButton, ResetButton } from '../ui/Button.jsx';
 import ProgressBar, { CircularProgress, WorkoutProgress, TimerProgress } from '../ui/ProgressBar.jsx';
+import PhaseNotifications from '../ui/PhaseNotifications.jsx'; // 🆕 WA-010
 
-// 🚀 WA-009: Import du hook avec timer automatique
+// 🚀 WA-010: Import du hook avec progression automatique
 import { useWorkoutWithAutoTimer } from '../../hooks/useWorkoutWithTimer.js';
 import { WORKOUT_PLANS } from '../../data/workoutPlans.js';
 
@@ -18,8 +19,8 @@ import { WORKOUT_PLANS } from '../../data/workoutPlans.js';
 const QuickWorkoutSelector = ({ workout }) => (
   <Card variant="gradient">
     <CardHeader 
-      title="🚀 Démarrage rapide avec Timer Auto"
-      description="Sélectionnez et démarrez un workout avec timer automatique"
+      title="🚀 Démarrage rapide avec Progression Automatique - WA-010"
+      description="Timer automatique + progression d'exercice + notifications de phase"
     />
     <CardBody>
       <div className="grid md:grid-cols-2 gap-4">
@@ -29,10 +30,9 @@ const QuickWorkoutSelector = ({ workout }) => (
             variant={workout.state.workoutPlan?.id === plan.id ? 'info' : 'outlined'}
             className="p-4 cursor-pointer hover:shadow-lg transition-all"
             onClick={() => {
-              // 🐛 FIX: Seulement charger, pas d'auto-start
               const result = workout.actions.loadWorkout(plan.id);
               if (result.success) {
-                console.log(`✅ Plan ${plan.name} chargé - Cliquez Start Auto pour démarrer`);
+                console.log(`✅ Plan ${plan.name} chargé - Prêt pour progression automatique`);
               }
             }}
           >
@@ -52,7 +52,7 @@ const QuickWorkoutSelector = ({ workout }) => (
               </div>
               {workout.state.workoutPlan?.id === plan.id && (
                 <div className="mt-3 text-blue-600 font-semibold">
-                  ✅ Plan sélectionné - Cliquez Start !
+                  ✅ Plan sélectionné - Progression automatique prête !
                 </div>
               )}
             </div>
@@ -64,6 +64,83 @@ const QuickWorkoutSelector = ({ workout }) => (
 );
 
 QuickWorkoutSelector.propTypes = {
+  workout: PropTypes.object.isRequired
+};
+
+/**
+ * 🆕 WA-010: Composant d'information sur la progression automatique
+ */
+const AutoProgressionInfo = ({ workout }) => {
+  const { timer } = workout;
+  const progressionInfo = timer.progression;
+
+  return (
+    <Card variant="success" className="mb-4">
+      <CardHeader 
+        title="🔄 Progression Automatique Active"
+        icon="⚡"
+        action={
+          <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium ${
+            progressionInfo.isAutoProgressing 
+              ? 'bg-green-100 text-green-800' 
+              : 'bg-slate-100 text-slate-600'
+          }`}>
+            <div className={`w-2 h-2 rounded-full ${
+              progressionInfo.isAutoProgressing ? 'bg-green-500' : 'bg-slate-400'
+            }`}></div>
+            <span>{progressionInfo.isAutoProgressing ? 'ACTIF' : 'INACTIF'}</span>
+          </div>
+        }
+      />
+      <CardBody>
+        <div className="grid md:grid-cols-4 gap-4 text-center">
+          <div className="bg-emerald-50 p-3 rounded-lg">
+            <div className="text-lg font-bold text-emerald-600">
+              {progressionInfo.nextPhaseIn}s
+            </div>
+            <div className="text-xs text-emerald-700">Prochaine phase</div>
+          </div>
+          
+          <div className="bg-blue-50 p-3 rounded-lg">
+            <div className="text-lg font-bold text-blue-600">
+              {progressionInfo.currentPhase}
+            </div>
+            <div className="text-xs text-blue-700">Phase actuelle</div>
+          </div>
+          
+          <div className="bg-purple-50 p-3 rounded-lg">
+            <div className="text-lg font-bold text-purple-600">
+              {progressionInfo.progressionInfo?.currentExercise || 'Aucun'}
+            </div>
+            <div className="text-xs text-purple-700">Exercice actuel</div>
+          </div>
+          
+          <div className="bg-amber-50 p-3 rounded-lg">
+            <div className="text-lg font-bold text-amber-600">
+              {progressionInfo.progressionInfo?.nextExercise || 'Terminé'}
+            </div>
+            <div className="text-xs text-amber-700">Prochain exercice</div>
+          </div>
+        </div>
+        
+        {/* Barre de progression vers prochaine phase */}
+        <div className="mt-4">
+          <ProgressBar
+            value={workout.computed.currentPhaseTime - progressionInfo.nextPhaseIn}
+            max={workout.computed.currentPhaseTime}
+            variant="success"
+            size="md"
+            animated
+            showLabel
+            label="Progression vers prochaine phase"
+          />
+        </div>
+      </CardBody>
+    </Card>
+  );
+};
+
+AutoProgressionInfo.propTypes = {
   workout: PropTypes.object.isRequired
 };
 
@@ -100,6 +177,12 @@ const MainTimerDisplay = ({ workout }) => {
               <div className={`text-xs px-3 py-1 rounded-full bg-${computed.statusInfo.color}-100 text-${computed.statusInfo.color}-800`}>
                 {computed.statusInfo.icon} {computed.statusInfo.text}
               </div>
+              {/* 🆕 WA-010: Indication de progression automatique */}
+              {workout.timer.progression.isAutoProgressing && (
+                <div className="text-xs text-emerald-600 mt-2 font-medium">
+                  🔄 Auto-progression active
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -201,7 +284,7 @@ CurrentExerciseInfo.propTypes = {
 };
 
 /**
- * Composant de contrôles principaux avec timer automatique
+ * 🆕 WA-010: Composant de contrôles enrichis avec progression automatique
  */
 const AutoTimerControls = ({ workout }) => {
   const { actions, capabilities, timer } = workout;
@@ -209,18 +292,26 @@ const AutoTimerControls = ({ workout }) => {
   return (
     <Card>
       <CardHeader 
-        title="🎮 Contrôles avec Timer Automatique" 
+        title="🎮 Contrôles avec Progression Automatique - WA-010" 
         action={
-          <div className="flex items-center space-x-2">
-            <div className={`w-3 h-3 rounded-full ${timer.isRunning ? 'bg-green-500' : 'bg-slate-300'}`}></div>
-            <span className="text-sm text-slate-600">
-              Timer {timer.isRunning ? 'actif' : 'arrêté'} ({timer.tickCount} ticks)
-            </span>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <div className={`w-3 h-3 rounded-full ${timer.isRunning ? 'bg-green-500' : 'bg-slate-300'}`}></div>
+              <span className="text-sm text-slate-600">
+                Timer {timer.isRunning ? 'actif' : 'arrêté'}
+              </span>
+            </div>
+            <div className="text-sm text-slate-600">
+              Ticks: {timer.tickCount}
+            </div>
+            <div className="text-sm text-slate-600">
+              Notifications: {timer.notifications.count}
+            </div>
           </div>
         }
       />
       <CardBody>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
           <StartButton
             onClick={actions.startWorkout}
             disabled={!capabilities.canStart}
@@ -251,6 +342,16 @@ const AutoTimerControls = ({ workout }) => {
             ⏭️ Skip
           </NextButton>
 
+          {/* 🆕 WA-010: Bouton de progression forcée */}
+          <Button
+            variant="secondary"
+            onClick={actions.forceNextPhase}
+            disabled={!capabilities.canNext}
+            title="Force la progression vers la phase suivante"
+          >
+            ⚡ Force
+          </Button>
+
           <ResetButton
             onClick={actions.resetWorkout}
           >
@@ -258,28 +359,63 @@ const AutoTimerControls = ({ workout }) => {
           </ResetButton>
         </div>
         
-        {/* Debug du timer (dev only) */}
+        {/* 🆕 WA-010: Contrôles des notifications */}
+        <div className="mt-4 pt-4 border-t border-slate-200">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-slate-600">
+              🔔 Notifications actives: {timer.notifications.count}
+              {timer.notifications.latest && (
+                <span className="ml-2 text-slate-500">
+                  • {timer.notifications.latest.message.slice(0, 30)}...
+                </span>
+              )}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={actions.clearNotifications}
+              disabled={timer.notifications.count === 0}
+            >
+              🗑️ Effacer notifications
+            </Button>
+          </div>
+        </div>
+        
+        {/* Debug du système (dev only) */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mt-4 p-3 bg-slate-50 rounded-lg">
-            <div className="text-xs text-slate-600">
-              <strong>Timer Debug:</strong> Running: {timer.isRunning.toString()}, 
-              Ticks: {timer.tickCount}, 
-              Healthy: {timer.utils.isHealthy().toString()}
+            <div className="text-xs text-slate-600 mb-2">
+              <strong>WA-010 System Debug:</strong>
+            </div>
+            <div className="text-xs text-slate-600 space-y-1">
+              <div>Timer: {timer.isRunning ? '✅' : '❌'} | Ticks: {timer.tickCount}</div>
+              <div>Auto-progression: {timer.progression.isAutoProgressing ? '✅' : '❌'}</div>
+              <div>Notifications: {timer.notifications.count} actives</div>
+              <div>Phase: {timer.progression.currentPhase} → {timer.progression.progressionInfo?.nextExercise || 'Fin'}</div>
+            </div>
+            <div className="mt-2 flex space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const diagnostic = workout.utils.getSystemDiagnostic();
+                  console.log('🏥 WA-010 System Diagnostic:', diagnostic);
+                }}
+              >
+                🏥 System Check
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  workout.utils.systemHealthCheck();
+                }}
+              >
+                🔍 Health Check
+              </Button>
             </div>
           </div>
         )}
-        {process.env.NODE_ENV === 'development' && (
-          <Button
-            variant="outline"
-            onClick={() => {
-              console.log('🏥 Health Check:');
-              workout.utils.timerHealthCheck();
-              console.log('📊 Timer Stats:', timer.stats);
-            }}
-          >
-            🏥 Debug Timer
-          </Button>
-      )}
       </CardBody>
     </Card>
   );
@@ -290,34 +426,43 @@ AutoTimerControls.propTypes = {
 };
 
 /**
- * Composant principal - WorkoutActiveViewWithAutoTimer
+ * Composant principal - WorkoutActiveViewWithAutoTimer Enhanced WA-010
  */
 const WorkoutActiveViewWithAutoTimer = () => {
-  // 🚀 WA-009: Une seule ligne pour avoir workout + timer automatique !
+  // 🚀 WA-010: Hook avec timer + progression automatique !
   const workout = useWorkoutWithAutoTimer();
 
   return (
     <div className="space-y-6">
-      {/* Header avec indication timer automatique */}
+      {/* 🆕 WA-010: Notifications de changement de phase */}
+      <PhaseNotifications
+        notifications={workout.notifications.history}
+        maxVisible={3}
+        position="top-right"
+        showHistory={process.env.NODE_ENV === 'development'}
+        onClearAll={workout.actions.clearNotifications}
+      />
+
+      {/* Header avec indication progression automatique */}
       <Card variant="success">
         <CardHeader 
-          title="⏰ Séance Active avec Timer Automatique - WA-009"
-          description="Timer qui se met à jour automatiquement toutes les secondes"
+          title="⚡ Séance Active avec Progression Automatique - WA-010 COMPLETED!"
+          description="Timer automatique + progression d'exercice + notifications en temps réel"
           icon="🚀"
         />
         <CardBody>
           <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
-            <h4 className="font-semibold text-emerald-800 mb-2">🎉 Timer Automatique Intégré!</h4>
+            <h4 className="font-semibold text-emerald-800 mb-2">🎉 Progression Automatique Intégrée!</h4>
             <div className="grid md:grid-cols-2 gap-4 text-sm text-emerald-700">
               <ul className="space-y-1">
-                <li>✅ <strong>setInterval automatique:</strong> 1 sec précise</li>
-                <li>✅ <strong>Pause/Resume intelligent:</strong> Timer suit l'état</li>
-                <li>✅ <strong>Cleanup automatique:</strong> Pas de memory leaks</li>
+                <li>✅ <strong>Timer automatique:</strong> 1 sec précise avec setInterval</li>
+                <li>✅ <strong>Progression auto:</strong> Exercices changent automatiquement</li>
+                <li>✅ <strong>Notifications:</strong> Sons + vibrations + messages</li>
               </ul>
               <ul className="space-y-1">
-                <li>✅ <strong>Notifications de phase:</strong> work/rest/prep</li>
-                <li>✅ <strong>Performance optimisée:</strong> useCallback/useRef</li>
-                <li>✅ <strong>Interface enrichie:</strong> Actions + Timer</li>
+                <li>✅ <strong>Détection phases:</strong> PREP → WORK → REST → NEXT</li>
+                <li>✅ <strong>Completion auto:</strong> Workout se termine automatiquement</li>
+                <li>✅ <strong>Interface enrichie:</strong> Progression temps réel</li>
               </ul>
             </div>
           </div>
@@ -341,6 +486,9 @@ const WorkoutActiveViewWithAutoTimer = () => {
               Round {workout.state.currentRound} sur {workout.state.totalRounds}
             </p>
           </Card>
+
+          {/* 🆕 WA-010: Informations sur la progression automatique */}
+          <AutoProgressionInfo workout={workout} />
 
           {/* Layout principal */}
           <div className="grid lg:grid-cols-2 gap-6">
@@ -370,10 +518,10 @@ const WorkoutActiveViewWithAutoTimer = () => {
               trend={workout.computed.progressPercentage > 0 ? 'up' : null}
             />
             <StatsCard
-              title="Timer Ticks"
+              title="Auto-Ticks"
               value={workout.timer.tickCount}
-              icon="⏰"
-              trend={workout.timer.isRunning ? 'up' : null}
+              icon="⚡"
+              trend={workout.timer.progression.isAutoProgressing ? 'up' : null}
             />
           </div>
 
@@ -386,12 +534,14 @@ const WorkoutActiveViewWithAutoTimer = () => {
                 totalExercises={workout.state.totalExercises}
               />
               <div className="mt-4 text-sm text-slate-600 text-center">
-                {workout.computed.progressPercentage}% complété • Timer: {workout.timer.isRunning ? '🟢 Actif' : '🔴 Arrêté'}
+                {workout.computed.progressPercentage}% complété • 
+                Progression: {workout.timer.progression.isAutoProgressing ? '🟢 Automatique' : '🔴 Manuelle'} • 
+                Notifications: {workout.notifications.count}
               </div>
             </CardBody>
           </Card>
 
-          {/* Contrôles */}
+          {/* Contrôles enrichis */}
           <AutoTimerControls workout={workout} />
         </>
       )}
