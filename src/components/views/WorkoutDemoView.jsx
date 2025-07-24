@@ -1,8 +1,9 @@
 // src/components/views/WorkoutDemoView.jsx
-// 🧠 WA-008.2: Démo useReducer avec composants UI modernes
+// 🧠 WA-008.5: Démo useReducer avec PropTypes (Clean Code compliance)
 // Référence Clean Code: "Separate concerns - UI logic from business logic"
 
 import React, { useReducer } from 'react';
+import PropTypes from 'prop-types';
 import Card, { CardHeader, CardBody, CardFooter, StatsCard } from '../ui/Card.jsx';
 import Button, { StartButton, PauseButton, StopButton, NextButton, ResetButton } from '../ui/Button.jsx';
 import ProgressBar, { CircularProgress, WorkoutProgress, TimerProgress } from '../ui/ProgressBar.jsx';
@@ -15,7 +16,8 @@ import {
   getProgressPercentage,
   formatTime,
   canStartWorkout,
-  canPauseResume
+  canPauseResume,
+  getCurrentPhaseTime // 🐛 FIX: Import de la nouvelle fonction
 } from '../../reducers/workoutReducer.js';
 
 import { 
@@ -80,6 +82,19 @@ const WorkoutSelector = ({ currentPlan, onLoadWorkout }) => (
     </CardBody>
   </Card>
 );
+WorkoutSelector.propTypes = {
+    currentPlan: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        description: PropTypes.string,
+        exercises: PropTypes.array.isRequired,
+        timing: PropTypes.shape({
+            rounds: PropTypes.number.isRequired,
+        }),
+        estimatedDuration: PropTypes.number,
+    }),
+    onLoadWorkout: PropTypes.func.isRequired,
+};
 
 /**
  * Composant d'affichage de l'état du workout
@@ -157,13 +172,36 @@ const WorkoutStatus = ({ workoutState }) => {
           {workoutState.isActive && (
             <TimerProgress
               timeRemaining={workoutState.timeRemaining}
-              totalTime={workoutState.status === WORKOUT_STATUS.WORKING ? workoutState.workTime : workoutState.restTime}
+              totalTime={getCurrentPhaseTime(workoutState)} // 🐛 FIX: Utilisation de currentPhaseTime
             />
           )}
         </div>
       </CardBody>
     </Card>
   );
+};
+
+// PropTypes pour WorkoutStatus
+WorkoutStatus.propTypes = {
+  /** État actuel du workout depuis le reducer */
+  workoutState: PropTypes.shape({
+    status: PropTypes.string.isRequired,
+    timeRemaining: PropTypes.number.isRequired,
+    totalElapsed: PropTypes.number.isRequired,
+    currentExerciseIndex: PropTypes.number.isRequired,
+    exercises: PropTypes.array.isRequired,
+    currentRound: PropTypes.number.isRequired,
+    totalRounds: PropTypes.number.isRequired,
+    completedExercises: PropTypes.number.isRequired,
+    totalExercises: PropTypes.number.isRequired,
+    isActive: PropTypes.bool.isRequired,
+    isPaused: PropTypes.bool,
+    completedExercises: PropTypes.number,
+    workTime: PropTypes.number.isRequired,
+    restTime: PropTypes.number.isRequired,
+    startTime: PropTypes.number.isRequired,
+    currentPhaseTime: PropTypes.number // 🐛 FIX: Ajout de currentPhaseTime
+  }).isRequired
 };
 
 /**
@@ -227,6 +265,24 @@ const WorkoutControls = ({ workoutState, actions }) => {
     </Card>
   );
 };
+// PropTypes pour WorkoutControls
+WorkoutControls.propTypes = {
+  /** État actuel du workout */
+  workoutState: PropTypes.shape({
+    status: PropTypes.string.isRequired,
+    isActive: PropTypes.bool.isRequired,
+    isPaused: PropTypes.bool.isRequired
+  }).isRequired,
+  /** Actions disponibles pour contrôler le workout */
+  actions: PropTypes.shape({
+    start: PropTypes.func.isRequired,
+    togglePause: PropTypes.func.isRequired,
+    stop: PropTypes.func.isRequired,
+    next: PropTypes.func.isRequired,
+    updateTimer: PropTypes.func.isRequired,
+    reset: PropTypes.func.isRequired
+  }).isRequired
+};
 
 /**
  * Composant principal WorkoutDemoView
@@ -243,7 +299,7 @@ const WorkoutDemoView = () => {
         if (!plan) throw new Error(`Plan ${planId} introuvable`);
         
         dispatchWorkout(loadWorkoutAction(plan));
-        console.log(`📋 Workout chargé: ${plan.name}`);
+        console.log(`📋 Workout chargé:`, plan);
       } catch (error) {
         console.error('❌ Erreur lors du chargement:', error.message);
         alert(`Erreur: ${error.message}`);
@@ -345,16 +401,6 @@ const WorkoutDemoView = () => {
             <div>
               <h4 className="font-medium text-slate-800 mb-3">📊 Résumé de l'état</h4>
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Status:</span>
-                  <span className="font-medium">{workoutState.status}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Actif:</span>
-                  <span className={workoutState.isActive ? 'text-green-600' : 'text-red-600'}>
-                    {workoutState.isActive ? '✅ Oui' : '❌ Non'}
-                  </span>
-                </div>
                 <div className="flex justify-between">
                   <span>En pause:</span>
                   <span className={workoutState.isPaused ? 'text-yellow-600' : 'text-slate-600'}>
@@ -458,5 +504,8 @@ const WorkoutDemoView = () => {
     </div>
   );
 };
+
+// 🎯 PropTypes pour WorkoutDemoView (pas de props requises)
+WorkoutDemoView.propTypes = {};
 
 export default WorkoutDemoView;

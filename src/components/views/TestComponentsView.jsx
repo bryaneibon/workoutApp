@@ -1,8 +1,9 @@
 // src/components/views/TestComponentsView.jsx
-// 🧪 WA-008.1: Vue Tests refactorisée avec composants UI
+// 🧪 WA-008.5: Vue Tests avec PropTypes (Clean Code compliance)
 // Référence Clean Code: "Test code is just as important as production code"
 
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Card, { CardHeader, CardBody, CardFooter, StatsCard } from '../ui/Card.jsx';
 import Button from '../ui/Button.jsx';
 import ProgressBar from '../ui/ProgressBar.jsx';
@@ -89,6 +90,24 @@ const TestResult = ({ test, result }) => {
       </div>
     </Card>
   );
+};
+
+// PropTypes pour TestResult
+TestResult.propTypes = {
+  /** Configuration du test */
+  test: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    color: PropTypes.string
+  }).isRequired,
+  /** Résultat du test */
+  result: PropTypes.shape({
+    passed: PropTypes.bool.isRequired,
+    details: PropTypes.string.isRequired,
+    timestamp: PropTypes.string.isRequired,
+    duration: PropTypes.number
+  })
 };
 
 /**
@@ -430,5 +449,8 @@ const TestComponentsView = () => {
     </div>
   );
 };
+
+// 🎯 PropTypes pour TestComponentsView (pas de props requises)
+TestComponentsView.propTypes = {};
 
 export default TestComponentsView;

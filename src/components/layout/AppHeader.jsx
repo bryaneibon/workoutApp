@@ -1,8 +1,9 @@
 // src/components/layout/AppHeader.jsx
-// 🎨 WA-007.1: Header moderne séparé avec navigation
-// Référence Clean Code: "Small functions are easier to understand"
+// 🎨 WA-008.5: Header moderne avec PropTypes (Clean Code compliance)
+// Référence Clean Code: "Use meaningful names" + "Functions should be small"
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { APP_VIEWS } from '../../constants/workoutStates.js';
 import Button from '../ui/Button.jsx';
 
@@ -34,7 +35,7 @@ const contextMessages = {
 const getProgressPercentage = () => {
   const completedTickets = [
     'WA-001', 'WA-002', 'WA-003', 'WA-004', 
-    'WA-005', 'WA-005.1', 'WA-006', 'WA-007'
+    'WA-005', 'WA-005.1', 'WA-006', 'WA-007', 'WA-008'
   ];
   const totalTickets = 12; // Estimation totale
   
@@ -66,7 +67,7 @@ const AppHeader = ({ currentView, onNavigate }) => {
         
         {/* Navigation */}
         <nav className="flex gap-2 mt-3 sm:mt-0 flex-wrap" role="navigation">
-          {navigationItems.map(({ view, icon, label, shortLabel }) => (
+          {navigationItems.map(({ view, icon, label, /* shortLabel */ }) => (
             <Button
               key={view}
               variant={currentView === view ? 'primary' : 'ghost'}
@@ -97,6 +98,14 @@ const AppHeader = ({ currentView, onNavigate }) => {
       </div>
     </header>
   );
+};
+
+// 🎯 PropTypes pour validation et documentation
+AppHeader.propTypes = {
+  /** Vue actuelle de l'application */
+  currentView: PropTypes.oneOf(Object.values(APP_VIEWS)).isRequired,
+  /** Fonction appelée lors de la navigation vers une nouvelle vue */
+  onNavigate: PropTypes.func.isRequired
 };
 
 export default AppHeader;

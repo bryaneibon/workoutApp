@@ -1,8 +1,9 @@
 // src/components/views/HomeView.jsx
-// 🎨 WA-007.1: Vue Accueil modernisée avec composants réutilisables
+// 🎨 WA-008.5: Vue Accueil avec PropTypes (Clean Code compliance)
 // Référence Clean Code: "Use meaningful names"
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { EXERCISES_DATABASE } from '../../data/exercices.js';
 import { WORKOUT_PLANS } from '../../data/workoutPlans.js';
 import { APP_VIEWS } from '../../constants/workoutStates.js';
@@ -22,7 +23,8 @@ const DevelopmentStatus = () => {
     'WA-005.1: Refactor', 
     'WA-006: Actions', 
     'WA-007: Config',
-    'WA-007.1: Architecture'
+    'WA-007.1: Architecture',
+    'WA-008: PropTypes'
   ];
 
   return (
@@ -50,7 +52,7 @@ const DevelopmentStatus = () => {
 
       <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
         <p className="text-sm text-emerald-700">
-          <strong>🏗️ Architecture modulaire réussie !</strong> De 969 lignes → Structure professionnelle
+          <strong>🏗️ Architecture modulaire + PropTypes réussie !</strong> Code professionnel avec validation des types
         </p>
       </div>
     </Card>
@@ -65,7 +67,7 @@ const QuickStartSection = ({ onSelectPlan, onNavigate }) => (
     <div className="mb-6">
       <h2 className="text-2xl font-bold text-slate-800 mb-2">🚀 Démarrage rapide</h2>
       <p className="text-slate-600">
-        Choisissez un plan d'entraînement prédéfini ou créez le vôtre
+        {`Choisissez un plan d'entraînement prédéfini ou créez le vôtre`}
       </p>
     </div>
     
@@ -91,6 +93,14 @@ const QuickStartSection = ({ onSelectPlan, onNavigate }) => (
     </div>
   </Card>
 );
+
+// PropTypes pour QuickStartSection
+QuickStartSection.propTypes = {
+  /** Fonction appelée lors de la sélection d'un plan */
+  onSelectPlan: PropTypes.func.isRequired,
+  /** Fonction de navigation vers une vue */
+  onNavigate: PropTypes.func.isRequired
+};
 
 /**
  * Section de statistiques rapides
@@ -198,6 +208,12 @@ const QuickActions = ({ onNavigate }) => (
   </Card>
 );
 
+// PropTypes pour QuickActions
+QuickActions.propTypes = {
+  /** Fonction de navigation vers une vue */
+  onNavigate: PropTypes.func.isRequired
+};
+
 /**
  * Composant principal HomeView
  * @param {Object} props - Propriétés du composant
@@ -217,6 +233,14 @@ const HomeView = ({ onSelectPlan, onNavigate }) => {
       <QuickActions onNavigate={onNavigate} />
     </div>
   );
+};
+
+// 🎯 PropTypes pour HomeView
+HomeView.propTypes = {
+  /** Fonction appelée lors de la sélection d'un plan d'entraînement */
+  onSelectPlan: PropTypes.func.isRequired,
+  /** Fonction de navigation vers une autre vue de l'application */
+  onNavigate: PropTypes.func.isRequired
 };
 
 export default HomeView;

@@ -1,8 +1,10 @@
 // src/components/layout/AppLayout.jsx
-// 🎨 WA-007.1: Layout principal avec structure moderne
+// 🎨 WA-008.5: Layout principal avec PropTypes (Clean Code compliance)
 // Référence Clean Code: "Organize around the architecture, not the framework"
 
 import React from 'react';
+import PropTypes from 'prop-types';
+import { APP_VIEWS } from '../../constants/workoutStates.js';
 import AppHeader from './AppHeader.jsx';
 
 /**
@@ -11,8 +13,8 @@ import AppHeader from './AppHeader.jsx';
 const getFooterMessage = () => {
   const messages = [
     { 
-      phase: 'WA-007.1 Refactoring terminé!', 
-      status: 'Architecture modulaire + Design uniforme',
+      phase: 'WA-008 PropTypes terminé!', 
+      status: 'Architecture modulaire + Validation des types',
       next: 'WA-008 - Hook useWorkout',
       color: 'text-blue-600'
     }
@@ -62,7 +64,7 @@ const AppLayout = ({ children, currentView, onNavigate }) => {
           {/* Indicateurs de développement */}
           <div className="mt-3 flex items-center justify-center space-x-2 text-xs">
             <span className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded">
-              ✅ 969 lignes → Architecture modulaire
+              ✅ Architecture modulaire + PropTypes
             </span>
             <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded">
               🎨 Design system uniforme
@@ -75,6 +77,16 @@ const AppLayout = ({ children, currentView, onNavigate }) => {
       </div>
     </div>
   );
+};
+
+// 🎯 PropTypes pour AppLayout
+AppLayout.propTypes = {
+  /** Contenu principal à afficher dans le layout */
+  children: PropTypes.node.isRequired,
+  /** Vue actuelle de l'application */
+  currentView: PropTypes.oneOf(Object.values(APP_VIEWS)).isRequired,
+  /** Fonction appelée lors de la navigation vers une nouvelle vue */
+  onNavigate: PropTypes.func.isRequired
 };
 
 export default AppLayout;

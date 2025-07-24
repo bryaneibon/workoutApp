@@ -217,20 +217,20 @@ const WorkoutActiveView = () => {
             <div className="grid md:grid-cols-2 gap-4 text-sm text-amber-700">
               <ul className="space-y-2">
                 <li>• <strong>WA-009:</strong> Timer automatique avec setInterval</li>
-                <li>• <strong>WA-010:</strong> Progression automatique d'exercice</li>
+                <li>• <strong>WA-010:</strong> {`Progression automatique d'exercice`}</li>
                 <li>• <strong>WA-011:</strong> Gestion des phases (travail/repos)</li>
               </ul>
               <ul className="space-y-2">
                 <li>• <strong>WA-017:</strong> Affichage dynamique des exercices</li>
-                <li>• <strong>WA-018:</strong> Images d'exercices réelles</li>
+                <li>• <strong>WA-018:</strong>{`Images d'exercices réelles`}</li>
                 <li>• <strong>WA-019:</strong> Animations entre exercices</li>
               </ul>
             </div>
             <div className="bg-amber-50 p-3 rounded-lg border border-amber-200 mt-4">
               <p className="text-xs text-amber-600">
-                <strong>Clean Code:</strong> On crée d'abord une structure propre, puis on ajoute les fonctionnalités.
+                <strong>Clean Code:</strong>{`On crée d'abord une structure propre, puis on ajoute les fonctionnalités.`}
                 <br />
-                <strong>Pragmatic Programmer:</strong> "Don't live with broken windows" - même un placeholder doit être bien fait.
+                <strong>Pragmatic Programmer:</strong> {`"Don't live with broken windows" - même un placeholder doit être bien fait.`}
               </p>
             </div>
           </div>

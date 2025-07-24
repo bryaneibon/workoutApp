@@ -1,18 +1,19 @@
 // src/components/views/WorkoutConfigView.jsx
-// ⚙️ WA-008.3: Interface de configuration moderne avec Tailwind
+// ⚙️ WA-008.5: Interface de configuration avec PropTypes (Clean Code compliance)
 // Référence Clean Code: "Use meaningful names" + "Functions should be small"
 
 import React, { useReducer, useState } from 'react';
+import PropTypes from 'prop-types';
 import Card, { CardHeader, CardBody, CardFooter, ExerciseCard } from '../ui/Card.jsx';
 import Button from '../ui/Button.jsx';
-import ProgressBar, { SteppedProgress } from '../ui/ProgressBar.jsx';
+import /* ProgressBar, */ { SteppedProgress } from '../ui/ProgressBar.jsx';
 
 // Import des reducers et actions
 import {
   configReducer,
   initialConfigState,
   configToWorkoutPlan,
-  canSaveConfig,
+//   canSaveConfig,
   getConfigSummary
 } from '../../reducers/configReducer.js';
 
@@ -52,6 +53,20 @@ const CONFIG_STEPS = [
  * Composant de configuration du timing (Étape 1)
  */
 const TimingConfiguration = ({ configState, dispatch, onNext }) => {
+  // 🎯 Validation spécifique au timing (sans exercices)
+  const validateTimingOnly = (state) => {
+    const errors = [];
+    
+    if (state.workTime < 10) errors.push('Temps de travail minimum: 10s');
+    if (state.workTime > 180) errors.push('Temps de travail maximum: 180s');
+    if (state.restTime < 5) errors.push('Temps de repos minimum: 5s');
+    if (state.restTime > 120) errors.push('Temps de repos maximum: 120s');
+    if (state.rounds < 1) errors.push('Au moins 1 round requis');
+    if (state.rounds > 10) errors.push('Maximum 10 rounds');
+    
+    return errors;
+  };
+
   const applyPreset = (presetName) => {
     const actions = applyTimingPresetAction(presetName);
     actions.forEach(action => dispatch(action));
@@ -179,14 +194,33 @@ const TimingConfiguration = ({ configState, dispatch, onNext }) => {
               <div className="text-xs text-slate-500 mt-1">
                 {configState.exercises.length} exercice{configState.exercises.length !== 1 ? 's' : ''} × {configState.rounds} round{configState.rounds > 1 ? 's' : ''}
               </div>
+              {/* Indicateur de validation pour le timing */}
+              {validateTimingOnly(configState).length > 0 && (
+                <div className="text-xs text-red-600 mt-2">
+                  ⚠️ {validateTimingOnly(configState).length} paramètre{validateTimingOnly(configState).length > 1 ? 's' : ''} invalide{validateTimingOnly(configState).length > 1 ? 's' : ''}
+                </div>
+              )}
+              {validateTimingOnly(configState).length === 0 && (
+                <div className="text-xs text-green-600 mt-2">
+                  ✅ Paramètres de timing valides
+                </div>
+              )}
             </div>
             <Button
               variant="primary"
               onClick={onNext}
-              disabled={configState.errors.length > 0}
-              className="disabled:opacity-50"
+              disabled={validateTimingOnly(configState).length > 0}
+              className={`transition-all duration-200 ${
+                validateTimingOnly(configState).length > 0 
+                  ? 'opacity-50 cursor-not-allowed' 
+                  : 'hover:scale-105'
+              }`}
             >
-              Suivant: Exercices →
+              {validateTimingOnly(configState).length > 0 ? (
+                <>🚫 Paramètres invalides</>
+              ) : (
+                <>Suivant: Exercices →</>
+              )}
             </Button>
           </div>
         </div>
@@ -194,7 +228,6 @@ const TimingConfiguration = ({ configState, dispatch, onNext }) => {
     </Card>
   );
 };
-
 /**
  * Composant de sélection des exercices (Étape 2)
  */
@@ -540,7 +573,7 @@ Le workout est maintenant disponible dans vos plans.`);
       )}
 
       {/* Debug panel (optionnel en dev) */}
-      {process.env.NODE_ENV === 'development' && (
+      {import.meta.env.MODE === 'development' && (
         <Card variant="outlined">
           <CardHeader title="🔍 Debug Configuration (Dev only)" />
           <CardBody>
@@ -559,5 +592,59 @@ Le workout est maintenant disponible dans vos plans.`);
     </div>
   );
 };
+
+// 🎯 PropTypes pour WorkoutConfigView (pas de props requises)
+WorkoutConfigView.propTypes = {};
+// PropTypes pour ValidationStep
+ValidationStep.propTypes = {
+  /** État de configuration actuel */
+  configState: PropTypes.shape({
+    exercises: PropTypes.array.isRequired,
+    rounds: PropTypes.number.isRequired,
+    workTime: PropTypes.number.isRequired,
+    restTime: PropTypes.number.isRequired,
+    errors: PropTypes.array.isRequired,
+    warnings: PropTypes.array.isRequired,
+    isValid: PropTypes.bool.isRequired
+  }).isRequired,
+  /** Fonction dispatch du reducer */
+  dispatch: PropTypes.func.isRequired,
+  /** Fonction pour revenir à l'étape précédente */
+  onPrevious: PropTypes.func.isRequired,
+  /** Fonction pour créer le workout */
+  onCreateWorkout: PropTypes.func.isRequired
+};
+
+// PropTypes pour ExerciseSelection
+ExerciseSelection.propTypes = {
+  /** État de configuration actuel */
+  configState: PropTypes.shape({
+    exercises: PropTypes.array.isRequired
+  }).isRequired,
+  /** Fonction dispatch du reducer */
+  dispatch: PropTypes.func.isRequired,
+  /** Fonction pour passer à l'étape suivante */
+  onNext: PropTypes.func.isRequired,
+  /** Fonction pour revenir à l'étape précédente */
+  onPrevious: PropTypes.func.isRequired
+};
+
+// PropTypes pour TimingConfiguration
+TimingConfiguration.propTypes = {
+  /** État de configuration actuel */
+  configState: PropTypes.shape({
+    workTime: PropTypes.number.isRequired,
+    restTime: PropTypes.number.isRequired,
+    rounds: PropTypes.number.isRequired,
+    exercises: PropTypes.array.isRequired,
+    estimatedDuration: PropTypes.number.isRequired,
+    errors: PropTypes.array.isRequired
+  }).isRequired,
+  /** Fonction dispatch du reducer */
+  dispatch: PropTypes.func.isRequired,
+  /** Fonction pour passer à l'étape suivante */
+  onNext: PropTypes.func.isRequired
+};
+
 
 export default WorkoutConfigView;

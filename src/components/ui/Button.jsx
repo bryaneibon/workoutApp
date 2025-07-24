@@ -1,8 +1,9 @@
 // src/components/ui/Button.jsx
-// 🎨 WA-007.1: Composant Button réutilisable avec Tailwind
+// 🎨 WA-008.5: Composant Button avec PropTypes (Clean Code compliance)
 // Référence Clean Code: "Don't repeat yourself - create reusable components"
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Variantes de boutons disponibles
@@ -39,11 +40,11 @@ const buttonSizes = {
  * @param {Function} props.onClick - Fonction appelée au clic
  */
 const Button = ({
-  variant = 'primary',
-  size = 'md',
-  disabled = false,
-  loading = false,
-  className = '',
+  variant,
+  size,
+  disabled,
+  loading,
+  className,
   children,
   onClick,
   ...props
@@ -89,6 +90,34 @@ const Button = ({
   );
 };
 
+// 🎯 PropTypes pour validation et documentation
+Button.propTypes = {
+  /** Style du bouton */
+  variant: PropTypes.oneOf(Object.keys(buttonVariants)),
+  /** Taille du bouton */
+  size: PropTypes.oneOf(Object.keys(buttonSizes)),
+  /** Bouton désactivé */
+  disabled: PropTypes.bool,
+  /** État de chargement avec spinner */
+  loading: PropTypes.bool,
+  /** Classes CSS additionnelles */
+  className: PropTypes.string,
+  /** Contenu du bouton */
+  children: PropTypes.node.isRequired,
+  /** Fonction appelée au clic */
+  onClick: PropTypes.func
+};
+
+// 🎯 Valeurs par défaut
+Button.defaultProps = {
+  variant: 'primary',
+  size: 'md',
+  disabled: false,
+  loading: false,
+  className: '',
+  onClick: () => {}
+};
+
 /**
  * Composants de boutons pré-configurés pour WorkoutApp
  */
@@ -125,5 +154,20 @@ export const ResetButton = (props) => (
     🔄 {props.children || 'Reset'}
   </Button>
 );
+
+// PropTypes pour les boutons pré-configurés
+const buttonPropTypes = {
+  children: PropTypes.node,
+  className: PropTypes.string,
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool
+};
+
+WorkoutButton.propTypes = buttonPropTypes;
+StartButton.propTypes = buttonPropTypes;
+PauseButton.propTypes = buttonPropTypes;
+StopButton.propTypes = buttonPropTypes;
+NextButton.propTypes = buttonPropTypes;
+ResetButton.propTypes = buttonPropTypes;
 
 export default Button;

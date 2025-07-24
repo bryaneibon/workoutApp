@@ -1,8 +1,10 @@
 // src/components/ui/Card.jsx
-// 🎨 WA-007.1: Composant Card réutilisable avec Tailwind
+// 🎨 WA-008.5: Composant Card avec PropTypes (Clean Code compliance)
 // Référence Clean Code: "Compose methods to tell a story"
 
 import React from 'react';
+import PropTypes from 'prop-types';
+import Button from './Button.jsx';
 
 /**
  * Variantes de cartes disponibles
@@ -20,18 +22,12 @@ const cardVariants = {
 
 /**
  * Composant Card de base
- * @param {Object} props - Propriétés de la carte
- * @param {string} props.variant - Style de la carte
- * @param {boolean} props.hoverable - Carte avec effet hover
- * @param {boolean} props.clickable - Carte cliquable
- * @param {string} props.className - Classes CSS additionnelles
- * @param {React.ReactNode} props.children - Contenu de la carte
  */
 const Card = ({
-  variant = 'default',
-  hoverable = false,
-  clickable = false,
-  className = '',
+  variant,
+  hoverable,
+  clickable,
+  className,
   children,
   onClick,
   ...props
@@ -58,10 +54,33 @@ const Card = ({
   );
 };
 
+// 🎯 PropTypes pour Card
+Card.propTypes = {
+  /** Style de la carte */
+  variant: PropTypes.oneOf(Object.keys(cardVariants)),
+  /** Carte avec effet hover */
+  hoverable: PropTypes.bool,
+  /** Carte cliquable */
+  clickable: PropTypes.bool,
+  /** Classes CSS additionnelles */
+  className: PropTypes.string,
+  /** Contenu de la carte */
+  children: PropTypes.node.isRequired,
+  /** Fonction appelée au clic */
+  onClick: PropTypes.func
+};
+
+Card.defaultProps = {
+  variant: 'default',
+  hoverable: false,
+  clickable: false,
+  className: ''
+};
+
 /**
  * En-tête de carte avec titre et description
  */
-export const CardHeader = ({ title, description, icon, action, className = '' }) => (
+export const CardHeader = ({ title, description, icon, action, className }) => (
   <div className={`mb-6 ${className}`}>
     <div className="flex items-center justify-between">
       <div className="flex items-center space-x-3">
@@ -78,23 +97,62 @@ export const CardHeader = ({ title, description, icon, action, className = '' })
   </div>
 );
 
+CardHeader.propTypes = {
+  /** Titre de la carte */
+  title: PropTypes.string.isRequired,
+  /** Description optionnelle */
+  description: PropTypes.string,
+  /** Icône optionnelle */
+  icon: PropTypes.string,
+  /** Action optionnelle (bouton, etc.) */
+  action: PropTypes.node,
+  /** Classes CSS additionnelles */
+  className: PropTypes.string
+};
+
+CardHeader.defaultProps = {
+  className: ''
+};
+
 /**
  * Corps de carte
  */
-export const CardBody = ({ children, className = '' }) => (
+export const CardBody = ({ children, className }) => (
   <div className={`space-y-4 ${className}`}>
     {children}
   </div>
 );
 
+CardBody.propTypes = {
+  /** Contenu du corps */
+  children: PropTypes.node.isRequired,
+  /** Classes CSS additionnelles */
+  className: PropTypes.string
+};
+
+CardBody.defaultProps = {
+  className: ''
+};
+
 /**
  * Pied de carte avec actions
  */
-export const CardFooter = ({ children, className = '' }) => (
+export const CardFooter = ({ children, className }) => (
   <div className={`mt-6 pt-4 border-t border-slate-200 flex items-center justify-between ${className}`}>
     {children}
   </div>
 );
+
+CardFooter.propTypes = {
+  /** Contenu du pied */
+  children: PropTypes.node.isRequired,
+  /** Classes CSS additionnelles */
+  className: PropTypes.string
+};
+
+CardFooter.defaultProps = {
+  className: ''
+};
 
 /**
  * Composants de cartes pré-configurés pour WorkoutApp
@@ -104,6 +162,10 @@ export const WorkoutCard = ({ children, ...props }) => (
     {children}
   </Card>
 );
+
+WorkoutCard.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export const StatsCard = ({ title, value, icon, trend, trendValue, ...props }) => (
   <Card variant="elevated" className="text-center" {...props}>
@@ -122,6 +184,19 @@ export const StatsCard = ({ title, value, icon, trend, trendValue, ...props }) =
     </div>
   </Card>
 );
+
+StatsCard.propTypes = {
+  /** Titre de la statistique */
+  title: PropTypes.string.isRequired,
+  /** Valeur de la statistique */
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  /** Icône optionnelle */
+  icon: PropTypes.string,
+  /** Direction de la tendance */
+  trend: PropTypes.oneOf(['up', 'down', 'neutral']),
+  /** Valeur de la tendance */
+  trendValue: PropTypes.string
+};
 
 export const ExerciseCard = ({ exercise, selected, onSelect, ...props }) => (
   <Card 
@@ -156,8 +231,34 @@ export const ExerciseCard = ({ exercise, selected, onSelect, ...props }) => (
   </Card>
 );
 
+// Type pour un exercice
+const exerciseShape = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  muscleGroup: PropTypes.string.isRequired,
+  difficulty: PropTypes.string.isRequired,
+  images: PropTypes.shape({
+    start: PropTypes.string.isRequired,
+    end: PropTypes.string
+  }).isRequired,
+  defaultDuration: PropTypes.number.isRequired
+});
+
+ExerciseCard.propTypes = {
+  /** Données de l'exercice */
+  exercise: exerciseShape.isRequired,
+  /** Si l'exercice est sélectionné */
+  selected: PropTypes.bool,
+  /** Fonction appelée lors de la sélection */
+  onSelect: PropTypes.func
+};
+
+ExerciseCard.defaultProps = {
+  selected: false
+};
+
 export const PlanCard = ({ plan, onSelect, ...props }) => (
-  <WorkoutCard clickable onClick={() => onSelect && onSelect(plan)} {...props}>
+  <WorkoutCard {...props}>
     <CardHeader 
       title={plan.name}
       description={plan.description}
@@ -176,11 +277,33 @@ export const PlanCard = ({ plan, onSelect, ...props }) => (
     </CardBody>
     <CardFooter>
       <span></span>
-      <button className="text-emerald-600 font-medium text-sm hover:text-emerald-700">
+      <Button
+        variant="success"
+        size="sm"
+        onClick={() => onSelect && onSelect(plan)}
+        className="text-sm"
+      >
         🚀 Démarrer
-      </button>
+      </Button>
     </CardFooter>
   </WorkoutCard>
 );
+
+// Type pour un plan de workout
+const planShape = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  difficulty: PropTypes.string.isRequired,
+  estimatedDuration: PropTypes.number.isRequired,
+  exercises: PropTypes.arrayOf(PropTypes.string)
+});
+
+PlanCard.propTypes = {
+  /** Données du plan */
+  plan: planShape.isRequired,
+  /** Fonction appelée lors de la sélection */
+  onSelect: PropTypes.func
+};
 
 export default Card;
