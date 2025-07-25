@@ -184,8 +184,8 @@ const TestComponentsView = () => {
     const exerciseCount = Object.keys(EXERCISES_DATABASE).length;
     const planCount = Object.keys(WORKOUT_PLANS).length;
     
-    const expectedExercises = 4;
-    const expectedPlans = 2;
+    const expectedExercises = 7;
+    const expectedPlans = 3;
     
     return {
       passed: exerciseCount === expectedExercises && planCount === expectedPlans,
