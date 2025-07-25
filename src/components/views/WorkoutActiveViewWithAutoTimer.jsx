@@ -13,6 +13,10 @@ import PhaseNotifications from '../ui/PhaseNotifications.jsx'; // 🆕 WA-010
 import { useWorkoutWithAutoTimer } from '../../hooks/useWorkoutWithTimer.js';
 import { WORKOUT_PLANS } from '../../data/workoutPlans.js';
 
+// 🧠 WA-011.1: NOUVEAU - Intelligence contextuelle !
+import { usePhaseContext } from '../../hooks/usePhaseContext.js';
+import PhaseContextTestPanel from '../ui/PhaseContextTestPanel.jsx';
+
 /**
  * Composant de sélection de workout pour timer auto
  */
@@ -570,37 +574,46 @@ const WorkoutActiveViewWithAutoTimer = () => {
   // 🚀 WA-010: Hook avec timer + progression automatique !
   const workout = useWorkoutWithAutoTimer();
 
+  // 🧠 WA-011.1: NOUVEAU - Intelligence contextuelle !
+  const phaseContext = usePhaseContext(workout);
+
   return (
     <div className="space-y-6">
-      {/* 🆕 WA-010: Notifications de changement de phase */}
-      <PhaseNotifications
-        notifications={workout.notifications.history}
-        maxVisible={3}
-        position="top-right"
-        showHistory={process.env.NODE_ENV === 'development'}
-        onClearAll={workout.actions.clearNotifications}
-      />
+        {/* 🧪 WA-011.1: TEST PANEL - À ajouter après les notifications */}
+        <PhaseContextTestPanel 
+          phaseContext={phaseContext}
+          workout={workout}
+          expanded={true}
+        />
+        {/* 🆕 WA-010: Notifications de changement de phase */}
+        <PhaseNotifications
+          notifications={workout.notifications.history}
+          maxVisible={3}
+          position="top-right"
+          showHistory={process.env.NODE_ENV === 'development'}
+          onClearAll={workout.actions.clearNotifications}
+        />
 
       {/* Header avec indication progression automatique */}
       <Card variant="success">
         <CardHeader 
-          title="⚡ Séance Active avec Progression Automatique - WA-010 COMPLETED!"
-          description="Timer automatique + progression d'exercice + notifications en temps réel"
+          title="⚡ Séance Active avec Progression Automatique - WA-010 + WA-011.1 TEST!"
+          description="Timer automatique + progression d'exercice + intelligence contextuelle"
           icon="🚀"
         />
         <CardBody>
           <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
-            <h4 className="font-semibold text-emerald-800 mb-2">🎉 Progression Automatique Intégrée!</h4>
+            <h4 className="font-semibold text-emerald-800 mb-2">🎉 WA-011.1 Intelligence Contextuelle Intégrée!</h4>
             <div className="grid md:grid-cols-2 gap-4 text-sm text-emerald-700">
               <ul className="space-y-1">
-                <li>✅ <strong>Timer automatique:</strong> 1 sec précise avec setInterval</li>
-                <li>✅ <strong>Progression auto:</strong> Exercices changent automatiquement</li>
-                <li>✅ <strong>Notifications:</strong> Sons + vibrations + messages</li>
+                <li>✅ <strong>Détection contextuelle:</strong> 9+ contextes intelligents</li>
+                <li>✅ <strong>Messages adaptatifs:</strong> Motivation selon progression</li>
+                <li>✅ <strong>Suggestions audio:</strong> Sons, tempo, volume contextuels</li>
               </ul>
               <ul className="space-y-1">
-                <li>✅ <strong>Détection phases:</strong> PREP → WORK → REST → NEXT</li>
-                <li>✅ <strong>Completion auto:</strong> Workout se termine automatiquement</li>
-                <li>✅ <strong>Interface enrichie:</strong> Progression temps réel</li>
+                <li>🧠 <strong>Phase Context:</strong> {phaseContext.context || 'INITIALIZING'}</li>
+                <li>🔥 <strong>Intensité:</strong> {phaseContext.intensity}</li>
+                <li>⭐ <strong>Moment spécial:</strong> {phaseContext.isSpecialMoment ? 'OUI' : 'NON'}</li>
               </ul>
             </div>
           </div>
