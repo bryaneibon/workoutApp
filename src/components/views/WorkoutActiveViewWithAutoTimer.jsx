@@ -283,6 +283,144 @@ CurrentExerciseInfo.propTypes = {
   workout: PropTypes.object.isRequired
 };
 
+// Ajout dans WorkoutActiveViewWithAutoTimer.jsx
+// 🆕 WA-010.1: Composant d'information sur l'exercice suivant
+
+/**
+ * 🎯 Utilitaire pour récupérer l'exercice suivant
+ */
+const getNextExercise = (workout) => {
+  const { state } = workout;
+  
+  if (!state.exercises.length) return null;
+  
+  const isLastExercise = state.currentExerciseIndex === state.exercises.length - 1;
+  const isLastRound = state.currentRound === state.totalRounds;
+  
+  // Si c'est le dernier exercice du dernier round
+  if (isLastExercise && isLastRound) {
+    return null; // Workout terminé
+  }
+  
+  // Si c'est le dernier exercice du round mais pas le dernier round
+  if (isLastExercise) {
+    return {
+      exercise: state.exercises[0], // Premier exercice du prochain round
+      context: `Round ${state.currentRound + 1}`
+    };
+  }
+  
+  // Exercice suivant dans le round actuel
+  return {
+    exercise: state.exercises[state.currentExerciseIndex + 1],
+    context: `Round ${state.currentRound}`
+  };
+};
+
+/**
+ * 🆕 Composant d'information sur l'exercice suivant
+ */
+const NextExerciseInfo = ({ workout }) => {
+  const nextExerciseData = getNextExercise(workout);
+  
+  if (!nextExerciseData) {
+    // Dernier exercice - Afficher message de fin
+    return (
+      <Card variant="gradient" className="opacity-75 backdrop-blur-sm">
+        <CardHeader 
+          title="🎉 Dernier exercice !"
+          icon="🏁"
+        />
+        <CardBody>
+          <div className="text-center py-8">
+            <div className="text-6xl mb-4">🎉</div>
+            <h3 className="text-xl font-bold text-slate-700 mb-2">
+              Plus qu'un effort !
+            </h3>
+            <p className="text-slate-600">
+              Vous terminez bientôt votre workout
+            </p>
+            <div className="mt-4 bg-gradient-to-r from-purple-50 to-pink-50 p-3 rounded-lg border border-purple-200">
+              <p className="text-sm text-purple-700 font-medium">
+                🏆 Félicitations pour votre persévérance !
+              </p>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+    );
+  }
+
+  const { exercise, context } = nextExerciseData;
+  
+  return (
+    <Card variant="outline" className="opacity-80 backdrop-blur-sm bg-slate-50/70 border-dashed border-slate-300">
+      <CardHeader 
+        title="⏭️ Exercice suivant"
+        description={context}
+        icon={exercise.images.start}
+      />
+      <CardBody>
+        <div className="text-center">
+          {/* Animation des images d'exercice - Version floutée */}
+          <div className="flex justify-center items-center space-x-6 mb-4 opacity-75">
+            <div className="text-5xl filter blur-[1px]">{exercise.images.start}</div>
+            <div className="text-xl text-slate-400">→</div>
+            <div className="text-5xl filter blur-[1px]">{exercise.images.end}</div>
+          </div>
+          
+          <h3 className="text-xl font-semibold text-slate-700 mb-2">
+            {exercise.name}
+          </h3>
+          
+          <div className="flex justify-center items-center space-x-3 mb-4">
+            <span className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-sm opacity-75">
+              {exercise.muscleGroup}
+            </span>
+            <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-sm opacity-75">
+              {exercise.difficulty}
+            </span>
+          </div>
+          
+          {/* Instructions d'exercice - Version simplifiée */}
+          <div className="bg-slate-100/50 p-3 rounded-lg border border-slate-200 text-left">
+            <h4 className="font-medium text-slate-700 mb-2 flex items-center">
+              <span className="opacity-75">💡</span>
+              <span className="ml-2">Aperçu</span>
+            </h4>
+            <div className="text-sm text-slate-600 space-y-1 opacity-90">
+              {exercise.instructions?.slice(0, 2).map((instruction, index) => (
+                <div key={index} className="flex items-start">
+                  <span className="text-slate-400 mr-2">{index + 1}.</span>
+                  <span>{instruction}</span>
+                </div>
+              )) || (
+                <div className="text-slate-500 italic">
+                  Instructions disponibles lors de l'exercice
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {/* Indicateur de progression */}
+          <div className="mt-4 bg-slate-50 p-2 rounded-lg">
+            <div className="text-xs text-slate-500 flex items-center justify-center space-x-2">
+              <span>🔜</span>
+              <span>Se préparer mentalement...</span>
+            </div>
+          </div>
+        </div>
+      </CardBody>
+    </Card>
+  );
+};
+
+// PropTypes pour NextExerciseInfo
+NextExerciseInfo.propTypes = {
+  workout: PropTypes.object.isRequired
+};
+
+
 /**
  * 🆕 WA-010: Composant de contrôles enrichis avec progression automatique
  */
@@ -490,14 +628,24 @@ const WorkoutActiveViewWithAutoTimer = () => {
           {/* 🆕 WA-010: Informations sur la progression automatique */}
           <AutoProgressionInfo workout={workout} />
 
-          {/* Layout principal */}
-          <div className="grid lg:grid-cols-2 gap-6">
+          {/* Layout principal MODIFIÉ */}
+          <div className="grid lg:grid-cols-3 gap-6">
             {/* Timer principal */}
-            <MainTimerDisplay workout={workout} />
+            <div className="lg:col-span-1">
+              <MainTimerDisplay workout={workout} />
+            </div>
             
             {/* Exercice actuel */}
-            <CurrentExerciseInfo workout={workout} />
+            <div className="lg:col-span-1">
+              <CurrentExerciseInfo workout={workout} />
+            </div>
+            
+            {/* 🆕 Exercice suivant */}
+            <div className="lg:col-span-1">
+              <NextExerciseInfo workout={workout} />
+            </div>
           </div>
+
 
           {/* Statistiques de progression */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
