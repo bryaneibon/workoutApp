@@ -30,3 +30,112 @@
     @apply workout-button bg-warning-500 text-white hover:bg-warning-600 focus:ring-warning-500;
   }
 }
+
+/* 🎯 WA-011.3: Animations pour messages motivationnels */
+@layer utilities {
+  /* Animation d'entrée depuis le bas */
+  @keyframes slide-in-from-bottom-5 {
+    from { 
+      transform: translateY(20px) translateX(-50%);
+      opacity: 0;
+      scale: 0.95;
+    }
+    to { 
+      transform: translateY(0) translateX(-50%);
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  /* Animation de sortie vers le bas */
+  @keyframes slide-out-to-bottom-5 {
+    from { 
+      transform: translateY(0) translateX(-50%);
+      opacity: 1;
+      scale: 1;
+    }
+    to { 
+      transform: translateY(20px) translateX(-50%);
+      opacity: 0;
+      scale: 0.95;
+    }
+  }
+
+  /* Animation d'entrée depuis le haut */
+  @keyframes slide-in-from-top-5 {
+    from { 
+      transform: translateY(-20px) translateX(-50%);
+      opacity: 0;
+      scale: 0.95;
+    }
+    to { 
+      transform: translateY(0) translateX(-50%);
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  /* Animation de pulsation douce pour l'effet glow */
+  @keyframes gentle-pulse {
+    0%, 100% { 
+      opacity: 0.15;
+      scale: 1;
+    }
+    50% { 
+      opacity: 0.3;
+      scale: 1.05;
+    }
+  }
+
+  /* Animation de rétrécissement pour barre de progression */
+  @keyframes progress-shrink {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+
+  /* Classes utilitaires pour les animations */
+  .animate-in {
+    animation-fill-mode: forwards;
+  }
+
+  .animate-out {
+    animation-fill-mode: forwards;
+  }
+
+  .slide-in-from-bottom-5 {
+    animation: slide-in-from-bottom-5 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .slide-out-to-bottom-5 {
+    animation: slide-out-to-bottom-5 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .slide-in-from-top-5 {
+    animation: slide-in-from-top-5 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-gentle-pulse {
+    animation: gentle-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-progress-shrink {
+    animation: progress-shrink var(--duration, 3000ms) linear forwards;
+  }
+
+  /* Classes pour les états de motivation */
+  .motivation-milestone {
+    @apply from-emerald-500 to-blue-500;
+  }
+
+  .motivation-encouragement {
+    @apply from-orange-500 to-red-500;
+  }
+
+  .motivation-celebration {
+    @apply from-purple-500 to-pink-500;
+  }
+
+  .motivation-technique {
+    @apply from-blue-400 to-indigo-400;
+  }
+}

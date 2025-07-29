@@ -168,8 +168,8 @@ PhaseNotification.propTypes = {
  */
 const PhaseNotifications = ({ 
   notifications = [], 
-  maxVisible = 3,
-  position = 'top-right',
+  maxVisible = 1,
+  position = 'bottom-right',
   showHistory = false,
   onClearAll 
 }) => {
