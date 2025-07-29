@@ -593,21 +593,23 @@ const WorkoutActiveViewWithAutoTimer = () => {
 
   return (
     <div className="space-y-6">
-        {/* 🧪 WA-011.1: TEST PANEL - À ajouter après les notifications */}
+        {/* 🧪 WA-011.1: TEST PANEL - À ajouter après les notifications
         <PhaseContextTestPanel 
           phaseContext={phaseContext}
           workout={workout}
           expanded={true}
         />
-
-        {/* 🎵 WA-011.2: NOUVEAU - Audio Test Panel */}
+        */}
+        
+        {/* 🎵 WA-011.2: NOUVEAU - Audio Test Panel 
         <AudioTestPanel 
           workout={workout}
           phaseContext={phaseContext}
           workoutAudio={workoutAudio} 
           expanded={true}
         />
-
+        */}
+        
         {/* 🆕 WA-010: Notifications de changement de phase */}
         <PhaseNotifications
           notifications={workout.notifications.history}

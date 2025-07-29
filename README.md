@@ -236,7 +236,11 @@ Le projet suit les principes du **Clean Code** :
 - **WA-011.2** : Système audio contextuel complet
 
 ### 🎯 Ticket en cours 🔄
-
+// WA-011.3: Engine de conseils adaptatifs (A CONFIRMER)
+const MotivationEngine = {
+  getContextualMessage(phase, progress, userState),
+  getEncouragement(strugglingDetected, timeRemaining)
+}
 ### ⏱️ Phase 3: Système de minuteur (EN COURS)
 | Ticket | Priorité | Status | Description |
 |--------|----------|--------|-------------|
