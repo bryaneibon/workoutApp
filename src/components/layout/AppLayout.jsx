@@ -13,10 +13,10 @@ import AppHeader from './AppHeader.jsx';
 const getFooterMessage = () => {
   const messages = [
     { 
-      phase: 'WA-008 PropTypes terminé!', 
-      status: 'Architecture modulaire + Validation des types',
-      next: 'WA-008 - Hook useWorkout',
-      color: 'text-blue-600'
+      phase: 'WA-011.2 Audio Contextuel terminé!', 
+      status: 'Système audio intelligent + Intelligence contextuelle + Timer automatique',
+      next: 'WA-012 - Affichage Timer Formaté',
+      color: 'text-purple-600'
     }
   ];
   

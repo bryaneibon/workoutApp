@@ -5,23 +5,24 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.3-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **Application React complète de gestion d'entraînements** mettant l'accent sur la gestion d'état complexe, les hooks avancés et les patterns React professionnels.
+> **Application React complète de gestion d'entraînements** avec système audio contextuel intelligent et progression automatique d'exercices.
 
 ---
 
 ## 📋 Vue d'ensemble
 
-WorkoutApp est une application moderne de fitness développée avec **React 19** et **Vite**, suivant les principes du **Clean Code** et du **Pragmatic Programmer**. L'application permet de créer, personnaliser et exécuter des séances d'entraînement avec un timer automatique intelligent et une progression automatique d'exercices.
+WorkoutApp est une application moderne de fitness développée avec **React 19** et **Vite**, suivant les principes du **Clean Code** et du **Pragmatic Programmer**. L'application permet de créer, personnaliser et exécuter des séances d'entraînement avec un timer automatique intelligent, une progression automatique d'exercices et un **système audio contextuel adaptatif**.
 
 ### ✨ Fonctionnalités principales
 
 - 🎯 **Configuration de séance personnalisée** - Interface wizard en 3 étapes pour créer vos workouts
 - ⏱️ **Timer automatique intelligent** - Système de minuteur en temps réel avec progression automatique
+- 🧠 **Intelligence contextuelle** - Détection automatique des phases et adaptation du feedback
+- 🎵 **Audio contextuel adaptatif** - Sons, vibrations et motivations selon votre progression
 - 🏋️ **Base de données d'exercices étendue** - 7 exercices avec instructions détaillées et animations
 - 📊 **Suivi de progression temps réel** - Barres de progression et statistiques live
-- 🔔 **Notifications de phase** - Alertes sonores et visuelles pour les changements d'exercice
+- 🔔 **Notifications de phase intelligentes** - Alertes sonores et visuelles contextuelles
 - 🎨 **Interface moderne** - Design responsive avec aperçu de l'exercice suivant
-- 🧠 **Architecture propre** - Hooks personnalisés et gestion d'état avec useReducer
 
 ### 🏗️ Architecture technique
 
@@ -30,6 +31,7 @@ WorkoutApp est une application moderne de fitness développée avec **React 19**
 - **Styling :** Tailwind CSS pour un design moderne et responsive
 - **Gestion d'état :** Architecture Redux-like avec useReducer personnalisé
 - **Timer System :** setInterval avec progression automatique et détection de phases
+- **Audio Engine :** Web Audio API + Navigator Vibration API pour feedback contextuel
 - **Patterns :** Clean Code, DRY, Single Responsibility Principle
 
 ---
@@ -106,15 +108,36 @@ pnpm lint
 1. **Page d'accueil :** Sélectionnez un plan prédéfini ou créez le vôtre
 2. **Configuration :** Personnalisez les temps de travail, repos et nombre de rounds
 3. **Sélection d'exercices :** Choisissez parmi notre catalogue de 7 exercices
-4. **Séance active :** Lancez votre workout avec timer automatique et progression
+4. **Séance active :** Lancez votre workout avec timer automatique et audio contextuel
 
 ### Navigation principale
 
 - 🏠 **Accueil** - Sélection de plans et démarrage rapide
 - ⚙️ **Configuration** - Création de workouts personnalisés en 3 étapes
-- ⏰ **Timer Auto** - Séance active avec minuteur automatique et exercice suivant
+- ⏰ **Timer Auto** - Séance active avec minuteur automatique et audio contextuel
 - 🧪 **Tests** - Validation des composants et architecture
 - 🧠 **Démo** - Démonstration des hooks et reducers
+
+---
+
+## 🎵 Système Audio Contextuel (WA-011.2)
+
+### Fonctionnalités audio avancées
+
+- **🎯 Sons contextuels** - Audio adaptatif selon la phase du workout
+- **📳 Vibrations intelligentes** - Patterns de vibration selon l'intensité
+- **💪 Motivations automatiques** - Encouragements selon votre progression
+- **🎉 Célébrations épiques** - Feedback spécial pour les achievements
+- **🔊 Volume adaptatif** - Ajustement automatique selon l'effort
+
+### Intelligence contextuelle
+
+L'application détecte automatiquement :
+- **Phase de démarrage** - Sons énergiques pour commencer
+- **Transitions d'exercice** - Notifications fluides entre mouvements
+- **Repos actif** - Audio apaisant pendant la récupération
+- **Sprint final** - Intensification motivationnelle
+- **Completion** - Célébration épique de fin de workout
 
 ---
 
@@ -151,6 +174,11 @@ workoutapp/
 │   │   ├── ui/             # Composants UI réutilisables
 │   │   └── views/          # Vues principales
 │   ├── hooks/              # Hooks personnalisés
+│   │   ├── useWorkout.js           # Hook principal workout
+│   │   ├── useWorkoutTimer.js      # Timer automatique
+│   │   ├── usePhaseContext.js      # Intelligence contextuelle
+│   │   ├── useAudioEngine.js       # Moteur audio Web API
+│   │   └── useWorkoutAudio.js      # Audio contextuel intégré
 │   ├── reducers/           # Reducers pour gestion d'état
 │   ├── actions/            # Actions pour reducers
 │   ├── data/               # Données statiques (7 exercices)
@@ -175,6 +203,7 @@ L'application inclut une suite de tests intégrée accessible via l'onglet **Tes
 - ✅ Tests des calculs de workout
 - ✅ Simulation d'opérations asynchrones
 - ✅ Validation de l'intégrité des données
+- ✅ Tests du système audio contextuel
 
 ### Code Quality
 
@@ -203,13 +232,14 @@ Le projet suit les principes du **Clean Code** :
 - **WA-010** : Progression automatique d'exercice + notifications de phase
 - **WA-010.FIX_1** : Aperçu exercice suivant + fix notifications auto-hide
 - **WA-010.FEAT_1** : Petite extension base de données exercices (7 exercices total)
+- **WA-011.1** : Intelligence contextuelle des phases
+- **WA-011.2** : Système audio contextuel complet
 
 ### 🎯 Ticket en cours 🔄
 
 ### ⏱️ Phase 3: Système de minuteur (EN COURS)
 | Ticket | Priorité | Status | Description |
 |--------|----------|--------|-------------|
-| **WA-011** | 🟡 High | 🔄 **EN COURS** | Phases (préparation/travail/repos) - Gestion intelligente |
 | **WA-012** | 🟢 Medium | ⏳ En attente | Affichage timer formaté avec animations |
 
 ---
@@ -270,40 +300,39 @@ Le projet suit les principes du **Clean Code** :
 | **WA-029** | 🔵 Low | M | Notifications audio avec Web Audio API |
 | **WA-030** | 🔵 Low | L | Persistance localStorage workout history |
 | **WA-031** | 🔵 Low | M | Mode plein écran immersif |
-| **WA-032** | 🔵 Low | XL | API ExerciseDB integration externe |
+| **WA-032** | 🔵 Low | XL | API ExerciseDB integration externe 
+
+## 🎵 Fonctionnalités Audio Actuelles (WA-011.2)
+
+### ✅ Système audio contextuel complet
+- **9+ contextes intelligents** : Détection automatique des moments-clés
+- **Sons adaptatifs** : Fréquences et volumes selon l'intensité
+- **Vibrations contextuelles** : Patterns personnalisés par situation
+- **Motivations automatiques** : Encouragements basés sur la progression
+- **Célébrations épiques** : Feedback spécial pour achievements
+- **Volume adaptatif** : Ajustement selon fatigue et effort
+
+### ✅ Interface de test complète
+- **AudioTestPanel** : Validation de tous les sons et vibrations
+- **Tests automatisés** : 6 suites de tests différentes
+- **Health checks** : Diagnostic complet du système audio
+- **Mode debug** : Logs détaillés pour développement
+
+### ✅ Intégration workout
+- **Déclenchement automatique** : Audio selon changements de phase
+- **Fallback gracieux** : Fonctionnement sans audio si non supporté
+- **Configuration flexible** : Enable/disable par type de feedback
+- **Performance optimisée** : Pas d'impact sur le timer principal
 
 ---
 
-## 🎯 Fonctionnalités actuelles
+## 🔄 Prochaine milestone : WA-012
 
-### ✅ Système de timer automatique complet
-- Timer précis avec setInterval (1 seconde)
-- Progression automatique exercice → repos → exercice suivant
-- Détection intelligente de fin de workout
-- Notifications de changement de phase avec sons et vibrations
-
-### ✅ Interface utilisateur avancée
-- Aperçu de l'exercice suivant avec effet flouté
-- Notifications auto-disparition après 5 secondes
-- Layout 3 colonnes : Timer / Exercice actuel / Exercice suivant
-- Interface responsive mobile et desktop
-
-### ✅ Base de données d'exercices étendue
-- **7 exercices** : push-ups, squats, plank, jumping-jacks, burpees, shadow-boxing, explosive push-ups
-- **5 groupes musculaires** : Pectoraux, Jambes, Abdominaux, Cardio, Full Body
-- **3 niveaux de difficulté** : Débutant, Intermédiaire, Avancé
-- Instructions détaillées et emojis pour chaque exercice
-
----
-
-## 🔄 Prochaine milestone : WA-011
-
-### 🎯 Objectif WA-011 : Gestion intelligente des phases
-- **Phases automatiques** : PREP → WORK → REST → NEXT EXERCISE
-- **Transitions fluides** avec animations et feedback visuel
-- **Gestion des contextes** : Round transitions, workout completion
-- **Smart timing** : Adaptation des temps selon la difficulté
-- **Audio feedback** amélioré pour chaque transition de phase
+### 🎯 Objectif WA-012 : Affichage timer formaté avec animations
+- **Timer visuel amélioré** : Animations fluides et formatage professionnel
+- **Transitions entre phases** : Effets visuels pour changements d'état
+- **Indicateurs visuels** : Progression avec couleurs adaptatives
+- **Responsive design** : Optimisation mobile et desktop
 
 ---
 
@@ -318,22 +347,33 @@ Ce projet est actuellement en **développement actif**. Je m'aide de *Claude Son
 - 📖 **Documentation** : PropTypes et commentaires JSDoc
 - 🎨 **UI/UX** : Design moderne et responsive
 - ⚡ **Performance** : Hooks optimisés avec useCallback et useMemo
+- 🎵 **Audio UX** : Feedback contextuel et adaptatif
 
 ---
 
 ## 📊 Métriques du projet
 
 ### 🎯 Progression générale
-- **Tickets complétés** : 12/32 (37.5%)
-- **Hooks avancés** : 5+ hooks personnalisés
-- **Composants** : 15+ composants réutilisables
+- **Tickets complétés** : 14/32 (43.75%)
+- **Hooks avancés** : 8+ hooks personnalisés
+- **Composants** : 20+ composants réutilisables
 - **Architecture** : Clean Code + Pragmatic Programmer appliqués
+- **Système audio** : 100% fonctionnel avec tests complets
 
 ### 🏋️ Données fitness
 - **Exercices disponibles** : 7 mouvements
 - **Groupes musculaires** : 5 catégories
-- **Plans prédéfinis** : 2 workouts + 3 presets avancés
+- **Plans prédéfinis** : 3 workouts + presets avancés
 - **Timer précision** : ±50ms (setInterval optimisé)
+- **Contextes audio** : 9+ situations intelligentes
+- **Types de sons** : 7+ sons contextuels adaptatifs
+
+### 🎵 Capacités audio
+- **Web Audio API** : Génération de sons en temps réel
+- **Vibration API** : Patterns adaptatifs selon contexte
+- **Volume adaptatif** : Ajustement selon intensité
+- **Fallback gracieux** : Fonctionnement sans audio
+- **Tests automatisés** : 6 suites de validation complètes
 
 ---
 
@@ -355,8 +395,8 @@ Développé en suivant les principes des livres :
 - 📖 **The Pragmatic Programmer: From Journeyman to Master**
 - 📚 **Clean Code: A Handbook of Agile Software Craftsmanship**
 
-Avec l'assistance de **Claude Sonnet 4** !!!
+Avec l'assistance de **Claude Sonnet 4** pour l'architecture et le système audio contextuel !
 
 ---
 
-*WorkoutApp - Transformez vos séances d'entraînement* 🚀💪
+*WorkoutApp - Transformez vos séances d'entraînement avec l'intelligence audio contextuelle* 🚀💪🎵

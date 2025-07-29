@@ -17,6 +17,10 @@ import { WORKOUT_PLANS } from '../../data/workoutPlans.js';
 import { usePhaseContext } from '../../hooks/usePhaseContext.js';
 import PhaseContextTestPanel from '../ui/PhaseContextTestPanel.jsx';
 
+// 🎵 WA-011.2: NOUVEAU - Système audio contextuel complet !
+import { useWorkoutAudio } from '../../hooks/useWorkoutAudio.js';
+import AudioTestPanel from '../ui/AudioTestPanel.jsx';
+
 /**
  * Composant de sélection de workout pour timer auto
  */
@@ -577,6 +581,14 @@ const WorkoutActiveViewWithAutoTimer = () => {
   // 🧠 WA-011.1: NOUVEAU - Intelligence contextuelle !
   const phaseContext = usePhaseContext(workout);
 
+  // 🎵 WA-011.2: NOUVEAU - Audio contextuel complet !
+  const workoutAudio = useWorkoutAudio(workout, phaseContext, {
+    enableContextualAudio: true,
+    enableMotivationalBoosts: true,
+    enableCelebrations: true,
+    enableProgressionSounds: true
+});
+
   return (
     <div className="space-y-6">
         {/* 🧪 WA-011.1: TEST PANEL - À ajouter après les notifications */}
@@ -585,6 +597,14 @@ const WorkoutActiveViewWithAutoTimer = () => {
           workout={workout}
           expanded={true}
         />
+
+        {/* 🎵 WA-011.2: NOUVEAU - Audio Test Panel */}
+        <AudioTestPanel 
+          workout={workout}
+          phaseContext={phaseContext}
+          expanded={true}
+        />
+
         {/* 🆕 WA-010: Notifications de changement de phase */}
         <PhaseNotifications
           notifications={workout.notifications.history}
@@ -597,8 +617,8 @@ const WorkoutActiveViewWithAutoTimer = () => {
       {/* Header avec indication progression automatique */}
       <Card variant="success">
         <CardHeader 
-          title="⚡ Séance Active avec Progression Automatique - WA-010 + WA-011.1 TEST!"
-          description="Timer automatique + progression d'exercice + intelligence contextuelle"
+          title="⚡ Séance Active avec Audio Contextuel - WA-011.2 COMPLET!"
+          description="Timer automatique + progression d'exercice + intelligence contextuelle + audio adaptatif"
           icon="🚀"
         />
         <CardBody>
@@ -616,6 +636,21 @@ const WorkoutActiveViewWithAutoTimer = () => {
                 <li>⭐ <strong>Moment spécial:</strong> {phaseContext.isSpecialMoment ? 'OUI' : 'NON'}</li>
               </ul>
             </div>
+          </div>
+        </CardBody>
+        <CardBody>
+          <h4 className="font-semibold text-emerald-800 mb-2">🎉 WA-011.2 Audio Contextuel Intégré!</h4>
+          <div className="grid md:grid-cols-2 gap-4 text-sm text-emerald-700">
+            <ul className="space-y-1">
+              <li>✅ <strong>Audio contextuel:</strong> Sons adaptatifs selon phase</li>
+              <li>✅ <strong>Motivations intelligentes:</strong> Boost selon progression</li>
+              <li>✅ <strong>Célébrations:</strong> Feedback épique achievements</li>
+            </ul>
+            <ul className="space-y-1">
+              <li>🎵 <strong>Système:</strong> {workoutAudio.supported.audio ? 'ACTIF' : 'INACTIF'}</li>
+              <li>📳 <strong>Vibrations:</strong> {workoutAudio.supported.vibration ? 'ACTIF' : 'INACTIF'}</li>
+              <li>🔊 <strong>Sons joués:</strong> {workoutAudio.stats.contextualPlays}</li>
+            </ul>
           </div>
         </CardBody>
       </Card>
