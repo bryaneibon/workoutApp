@@ -24,7 +24,11 @@ const DevelopmentStatus = () => {
     'WA-006: Actions', 
     'WA-007: Config',
     'WA-007.1: Architecture',
-    'WA-008: PropTypes'
+    'WA-008: PropTypes',
+    'WA-009: Timer Auto',
+    'WA-010: Progression Auto',
+    'WA-011.1: Intelligence Contextuelle',
+    'WA-011.2: Audio Contextuel'
   ];
 
   return (
@@ -32,7 +36,7 @@ const DevelopmentStatus = () => {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-emerald-800">📋 Status du développement</h3>
         <span className="text-sm text-emerald-600 font-medium">
-          {completedTickets.length}/12 tickets
+          {completedTickets.length}/32 tickets
         </span>
       </div>
       
@@ -46,14 +50,8 @@ const DevelopmentStatus = () => {
           </span>
         ))}
         <span className="px-3 py-1 bg-slate-400 text-white rounded-lg text-xs font-medium">
-          ⏳ WA-008: Hook useWorkout
+          ⏳ WA-012
         </span>
-      </div>
-
-      <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
-        <p className="text-sm text-emerald-700">
-          <strong>🏗️ Architecture modulaire + PropTypes réussie !</strong> Code professionnel avec validation des types
-        </p>
       </div>
     </Card>
   );

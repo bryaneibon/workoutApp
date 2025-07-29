@@ -15,7 +15,15 @@ import { WORKOUT_PLANS } from '../../data/workoutPlans.js';
 
 // 🧠 WA-011.1: NOUVEAU - Intelligence contextuelle !
 import { usePhaseContext } from '../../hooks/usePhaseContext.js';
-import PhaseContextTestPanel from '../ui/PhaseContextTestPanel.jsx';
+// import PhaseContextTestPanel from '../ui/PhaseContextTestPanel.jsx';
+
+// 🎵 WA-011.2: NOUVEAU - Système audio contextuel complet !
+import { useWorkoutAudio } from '../../hooks/useWorkoutAudio.js';
+// import AudioTestPanel from '../ui/AudioTestPanel.jsx';
+
+// 💬 WA-011.3: NOUVEAU - Messages motivationnels contextuels
+import { useMotivationMessages } from '../../hooks/useMotivationMessages.js';
+import MotivationMessage from '../ui/MotivationMessage.jsx';
 
 /**
  * Composant de sélection de workout pour timer auto
@@ -577,19 +585,43 @@ const WorkoutActiveViewWithAutoTimer = () => {
   // 🧠 WA-011.1: NOUVEAU - Intelligence contextuelle !
   const phaseContext = usePhaseContext(workout);
 
+  // 🎵 WA-011.2: NOUVEAU - Audio contextuel complet !
+  const workoutAudio = useWorkoutAudio(workout, phaseContext, {
+    enableContextualAudio: true,
+    enableMotivationalBoosts: true,
+    enableCelebrations: true,
+    enableProgressionSounds: true,
+    enableRestingSounds: true,
+    autoVolumeAdjustment: true
+});
+
+  // 💬 WA-011.3: NOUVEAU - Messages motivationnels contextuels
+  const motivation = useMotivationMessages(workout, phaseContext);
+
   return (
     <div className="space-y-6">
-        {/* 🧪 WA-011.1: TEST PANEL - À ajouter après les notifications */}
+        {/* 🧪 WA-011.1: TEST PANEL - À ajouter après les notifications
         <PhaseContextTestPanel 
           phaseContext={phaseContext}
           workout={workout}
           expanded={true}
         />
+        */}
+        
+        {/* 🎵 WA-011.2: NOUVEAU - Audio Test Panel 
+        <AudioTestPanel 
+          workout={workout}
+          phaseContext={phaseContext}
+          workoutAudio={workoutAudio} 
+          expanded={true}
+        />
+        */}
+        
         {/* 🆕 WA-010: Notifications de changement de phase */}
         <PhaseNotifications
           notifications={workout.notifications.history}
-          maxVisible={3}
-          position="top-right"
+          maxVisible={1}
+          position="bottom-right"
           showHistory={process.env.NODE_ENV === 'development'}
           onClearAll={workout.actions.clearNotifications}
         />
@@ -597,25 +629,40 @@ const WorkoutActiveViewWithAutoTimer = () => {
       {/* Header avec indication progression automatique */}
       <Card variant="success">
         <CardHeader 
-          title="⚡ Séance Active avec Progression Automatique - WA-010 + WA-011.1 TEST!"
-          description="Timer automatique + progression d'exercice + intelligence contextuelle"
+          title="⚡ Séance Active avec Motivation Contextuelle - WA-011.3 COMPLET!"
+          description="Timer automatique + progression d'exercice + intelligence contextuelle + audio adaptatif + motivation intelligente"
           icon="🚀"
         />
         <CardBody>
           <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
-            <h4 className="font-semibold text-emerald-800 mb-2">🎉 WA-011.1 Intelligence Contextuelle Intégrée!</h4>
+            <h4 className="font-semibold text-emerald-800 mb-2">🎉 WA-011.3 Messages Motivationnels Intégrés!</h4>
             <div className="grid md:grid-cols-2 gap-4 text-sm text-emerald-700">
               <ul className="space-y-1">
-                <li>✅ <strong>Détection contextuelle:</strong> 9+ contextes intelligents</li>
-                <li>✅ <strong>Messages adaptatifs:</strong> Motivation selon progression</li>
-                <li>✅ <strong>Suggestions audio:</strong> Sons, tempo, volume contextuels</li>
+                <li>✅ <strong>Messages contextuels:</strong> 50%, 80%, 95% progression</li>
+                <li>✅ <strong>Encouragements adaptatifs:</strong> Premier/dernier round</li>
+                <li>✅ <strong>Conseils techniques:</strong> Repos et récupération</li>
               </ul>
               <ul className="space-y-1">
-                <li>🧠 <strong>Phase Context:</strong> {phaseContext.context || 'INITIALIZING'}</li>
-                <li>🔥 <strong>Intensité:</strong> {phaseContext.intensity}</li>
-                <li>⭐ <strong>Moment spécial:</strong> {phaseContext.isSpecialMoment ? 'OUI' : 'NON'}</li>
+                <li>💬 <strong>Messages affichés:</strong> {motivation.stats.messagesShown}</li>
+                <li>🎯 <strong>En cours:</strong> {motivation.stats.isShowing ? 'OUI' : 'NON'}</li>
+                <li>📊 <strong>Historique:</strong> {motivation.stats.history.length} messages</li>
               </ul>
             </div>
+          </div>
+        </CardBody>
+        <CardBody>
+          <h4 className="font-semibold text-emerald-800 mb-2">🎉 WA-011.2 Audio Contextuel Intégré!</h4>
+          <div className="grid md:grid-cols-2 gap-4 text-sm text-emerald-700">
+            <ul className="space-y-1">
+              <li>✅ <strong>Audio contextuel:</strong> Sons adaptatifs selon phase</li>
+              <li>✅ <strong>Motivations intelligentes:</strong> Boost selon progression</li>
+              <li>✅ <strong>Célébrations:</strong> Feedback épique achievements</li>
+            </ul>
+            <ul className="space-y-1">
+              <li>🎵 <strong>Système:</strong> {workoutAudio.supported.audio ? 'ACTIF' : 'INACTIF'}</li>
+              <li>📳 <strong>Vibrations:</strong> {workoutAudio.supported.vibration ? 'ACTIF' : 'INACTIF'}</li>
+              <li>🔊 <strong>Sons joués:</strong> {workoutAudio.stats.contextualPlays}</li>
+            </ul>
           </div>
         </CardBody>
       </Card>
@@ -679,6 +726,12 @@ const WorkoutActiveViewWithAutoTimer = () => {
               trend={workout.computed.progressPercentage > 0 ? 'up' : null}
             />
             <StatsCard
+              title="Motivation"
+              value={motivation.stats.messagesShown}
+              icon="💬"
+              trend={motivation.stats.messagesShown > 0 ? 'up' : null}
+            />
+            <StatsCard
               title="Auto-Ticks"
               value={workout.timer.tickCount}
               icon="⚡"
@@ -696,16 +749,32 @@ const WorkoutActiveViewWithAutoTimer = () => {
               />
               <div className="mt-4 text-sm text-slate-600 text-center">
                 {workout.computed.progressPercentage}% complété • 
+                <br />
                 Progression: {workout.timer.progression.isAutoProgressing ? '🟢 Automatique' : '🔴 Manuelle'} • 
-                Notifications: {workout.notifications.count}
+                <br />
+                Notifications: {workout.notifications.count} •
+                <br />
+                Audio: {workoutAudio.supported.audio ? '🟢' : '🔴'} • 
+                <br />
+                Messages: {motivation.stats.messagesShown} affichés
               </div>
             </CardBody>
           </Card>
 
           {/* Contrôles enrichis */}
           <AutoTimerControls workout={workout} />
+
+            {/* 💬 WA-011.3: NOUVEAU - Message motivationnel flottant */}
+        <MotivationMessage 
+          message={motivation.currentMessage}
+          onHide={() => {
+            console.log('💬 Message motivationnel masqué');
+          }}
+          position="bottom"
+        />
         </>
       )}
+      
     </div>
   );
 };

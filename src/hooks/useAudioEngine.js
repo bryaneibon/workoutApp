@@ -96,6 +96,11 @@ export const useAudioEngine = (options = {}) => {
   
   // 🔧 Initialisation du contexte audio
   const initializeAudioContext = useCallback(() => {
+    // 🛡️ Éviter re-initialisation si déjà fait
+    if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+      return true;
+    }
+    
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       
@@ -136,7 +141,7 @@ export const useAudioEngine = (options = {}) => {
       - Audio: ${audioTest ? '✅' : '❌'}
       - Vibration: ${vibrationTest ? '✅' : '❌'}
       - Master Volume: ${config.masterVolume}`);
-  }, [config.masterVolume, initializeAudioContext]);
+  }, []);
   
   // 🎵 Génération de son par fréquence et durée
   const generateTone = useCallback((frequency, duration, volume = VOLUME_LEVELS.NORMAL, waveType = 'sine') => {
@@ -284,6 +289,22 @@ export const useAudioEngine = (options = {}) => {
       [SOUND_TYPES.FINAL_REST]: [
         { frequency: 293, duration: 0.2, volume: VOLUME_LEVELS.NORMAL },
         { frequency: 349, duration: 0.3, volume: VOLUME_LEVELS.SOFT, pause: 100 }
+      ],
+   
+    [SOUND_TYPES.PACE_CELEBRATION]: [
+        { frequency: 440, duration: 0.1, volume: VOLUME_LEVELS.NORMAL },
+        { frequency: 554, duration: 0.1, volume: VOLUME_LEVELS.NORMAL, pause: 20 },
+        { frequency: 659, duration: 0.2, volume: VOLUME_LEVELS.LOUD }
+      ],
+      
+      [SOUND_TYPES.MOTIVATION_BOOST]: [
+        { frequency: 523, duration: 0.15, volume: VOLUME_LEVELS.NORMAL },
+        { frequency: 659, duration: 0.15, volume: VOLUME_LEVELS.LOUD, pause: 50 }
+      ],
+      
+      [SOUND_TYPES.STRUGGLE_SUPPORT]: [
+        { frequency: 392, duration: 0.2, volume: VOLUME_LEVELS.SOFT },
+        { frequency: 440, duration: 0.3, volume: VOLUME_LEVELS.NORMAL, pause: 100 }
       ]
     };
     
@@ -323,6 +344,10 @@ export const useAudioEngine = (options = {}) => {
       [PHASE_CONTEXTS.WORKOUT_START]: {
         sound: SOUND_TYPES.ENERGETIC_START,
         vibration: VIBRATION_PATTERNS.DOUBLE_SHORT
+      },
+      [PHASE_CONTEXTS.FIRST_EXERCISE]: {
+        sound: SOUND_TYPES.ENERGETIC_START,
+        vibration: VIBRATION_PATTERNS.SINGLE_SHORT
       },
       [PHASE_CONTEXTS.FINAL_EXERCISE]: {
         sound: SOUND_TYPES.EPIC_FINAL,
