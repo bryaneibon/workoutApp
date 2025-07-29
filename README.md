@@ -5,13 +5,13 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.3-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **Application React complète de gestion d'entraînements** avec système audio contextuel intelligent et progression automatique d'exercices.
+> **Application React complète de gestion d'entraînements** avec système audio contextuel intelligent, progression automatique d'exercices et **messages motivationnels adaptatifs**.
 
 ---
 
 ## 📋 Vue d'ensemble
 
-WorkoutApp est une application moderne de fitness développée avec **React 19** et **Vite**, suivant les principes du **Clean Code** et du **Pragmatic Programmer**. L'application permet de créer, personnaliser et exécuter des séances d'entraînement avec un timer automatique intelligent, une progression automatique d'exercices et un **système audio contextuel adaptatif**.
+WorkoutApp est une application moderne de fitness développée avec **React 19** et **Vite**, suivant les principes du **Clean Code** et du **Pragmatic Programmer**. L'application permet de créer, personnaliser et exécuter des séances d'entraînement avec un timer automatique intelligent, une progression automatique d'exercices, un **système audio contextuel adaptatif** et des **messages motivationnels intelligents**.
 
 ### ✨ Fonctionnalités principales
 
@@ -19,6 +19,7 @@ WorkoutApp est une application moderne de fitness développée avec **React 19**
 - ⏱️ **Timer automatique intelligent** - Système de minuteur en temps réel avec progression automatique
 - 🧠 **Intelligence contextuelle** - Détection automatique des phases et adaptation du feedback
 - 🎵 **Audio contextuel adaptatif** - Sons, vibrations et motivations selon votre progression
+- 💬 **Messages motivationnels intelligents** - Encouragements contextuels à 50%, 80%, 95% de progression
 - 🏋️ **Base de données d'exercices étendue** - 7 exercices avec instructions détaillées et animations
 - 📊 **Suivi de progression temps réel** - Barres de progression et statistiques live
 - 🔔 **Notifications de phase intelligentes** - Alertes sonores et visuelles contextuelles
@@ -32,6 +33,7 @@ WorkoutApp est une application moderne de fitness développée avec **React 19**
 - **Gestion d'état :** Architecture Redux-like avec useReducer personnalisé
 - **Timer System :** setInterval avec progression automatique et détection de phases
 - **Audio Engine :** Web Audio API + Navigator Vibration API pour feedback contextuel
+- **Motivation System :** Messages adaptatifs avec animations fluides et auto-hide
 - **Patterns :** Clean Code, DRY, Single Responsibility Principle
 
 ---
@@ -108,15 +110,35 @@ pnpm lint
 1. **Page d'accueil :** Sélectionnez un plan prédéfini ou créez le vôtre
 2. **Configuration :** Personnalisez les temps de travail, repos et nombre de rounds
 3. **Sélection d'exercices :** Choisissez parmi notre catalogue de 7 exercices
-4. **Séance active :** Lancez votre workout avec timer automatique et audio contextuel
+4. **Séance active :** Lancez votre workout avec timer automatique, audio contextuel et messages motivationnels
 
 ### Navigation principale
 
 - 🏠 **Accueil** - Sélection de plans et démarrage rapide
 - ⚙️ **Configuration** - Création de workouts personnalisés en 3 étapes
-- ⏰ **Timer Auto** - Séance active avec minuteur automatique et audio contextuel
+- ⏰ **Timer Auto** - Séance active avec minuteur automatique, audio contextuel et motivation
 - 🧪 **Tests** - Validation des composants et architecture
 - 🧠 **Démo** - Démonstration des hooks et reducers
+
+---
+
+## 💬 Système de Motivation Contextuelle (WA-011.3)
+
+### Messages motivationnels intelligents
+
+- **🎯 Messages de progression** - Encouragements automatiques à 50%, 80%, 95%
+- **🔥 Messages contextuels** - Adaptés au premier/dernier round
+- **💪 Conseils techniques** - Rappels de respiration et technique pendant les repos
+- **🎨 Affichage discret** - Positionnement en bas d'écran sans interrompre le workout
+- **⏱️ Auto-hide temporisé** - Disparition automatique après 3-4 secondes
+
+### Types de messages
+
+L'application génère automatiquement :
+- **Messages milestone** - "🔥 Excellent ! Vous êtes à mi-parcours !" (50%)
+- **Messages encouragement** - "💪 Plus qu'un effort ! Vous y êtes presque !" (80%)
+- **Messages celebration** - "🚀 Dernier sprint ! La victoire est à portée !" (95%)
+- **Messages technique** - "🫁 Respirez profondément pendant le repos"
 
 ---
 
@@ -178,12 +200,15 @@ workoutapp/
 │   │   ├── useWorkoutTimer.js      # Timer automatique
 │   │   ├── usePhaseContext.js      # Intelligence contextuelle
 │   │   ├── useAudioEngine.js       # Moteur audio Web API
-│   │   └── useWorkoutAudio.js      # Audio contextuel intégré
+│   │   ├── useWorkoutAudio.js      # Audio contextuel intégré
+│   │   └── useMotivationMessages.js # Messages motivationnels
 │   ├── reducers/           # Reducers pour gestion d'état
 │   ├── actions/            # Actions pour reducers
-│   ├── data/               # Données statiques (7 exercices)
+│   ├── data/               # Données statiques (exercices + messages)
+│   │   ├── exercices.js            # Base de données exercices
+│   │   └── motivationMessages.js   # Messages motivationnels
 │   ├── constants/          # Constantes de l'application
-│   ├── styles/             # Styles globaux
+│   ├── styles/             # Styles globaux + animations
 │   └── main.jsx            # Point d'entrée
 ├── tailwind.config.js      # Configuration Tailwind
 ├── vite.config.js          # Configuration Vite
@@ -204,6 +229,7 @@ L'application inclut une suite de tests intégrée accessible via l'onglet **Tes
 - ✅ Simulation d'opérations asynchrones
 - ✅ Validation de l'intégrité des données
 - ✅ Tests du système audio contextuel
+- ✅ Tests des messages motivationnels
 
 ### Code Quality
 
@@ -234,17 +260,14 @@ Le projet suit les principes du **Clean Code** :
 - **WA-010.FEAT_1** : Petite extension base de données exercices (7 exercices total)
 - **WA-011.1** : Intelligence contextuelle des phases
 - **WA-011.2** : Système audio contextuel complet
+- **WA-011.3** : Messages motivationnels contextuels
 
 ### 🎯 Ticket en cours 🔄
-// WA-011.3: Engine de conseils adaptatifs (A CONFIRMER)
-const MotivationEngine = {
-  getContextualMessage(phase, progress, userState),
-  getEncouragement(strugglingDetected, timeRemaining)
-}
+
 ### ⏱️ Phase 3: Système de minuteur (EN COURS)
 | Ticket | Priorité | Status | Description |
 |--------|----------|--------|-------------|
-| **WA-012** | 🟢 Medium | ⏳ En attente | Affichage timer formaté avec animations |
+| **WA-012** | 🟢 Medium | ⏳ **PROCHAINE ÉTAPE** | Affichage timer formaté avec animations |
 
 ---
 
@@ -304,7 +327,33 @@ const MotivationEngine = {
 | **WA-029** | 🔵 Low | M | Notifications audio avec Web Audio API |
 | **WA-030** | 🔵 Low | L | Persistance localStorage workout history |
 | **WA-031** | 🔵 Low | M | Mode plein écran immersif |
-| **WA-032** | 🔵 Low | XL | API ExerciseDB integration externe 
+| **WA-032** | 🔵 Low | XL | API ExerciseDB integration externe |
+
+---
+
+## 💬 Fonctionnalités Motivation Actuelles (WA-011.3)
+
+### ✅ Système de messages contextuels complet
+- **Messages de progression** : Encouragements automatiques à 50%, 80%, 95%
+- **Messages de phase** : Premier round, dernier round, transitions
+- **Messages techniques** : Conseils respiration et forme pendant repos
+- **Affichage intelligent** : Positionnement discret en bas d'écran
+- **Animations fluides** : Entrée/sortie avec transitions CSS
+- **Auto-hide temporisé** : Disparition automatique sans interaction
+
+### ✅ Interface de test intégrée
+- **Panel de développement** : Tests manuels des différents types de messages
+- **Statistiques temps réel** : Nombre de messages affichés et historique
+- **Contrôles debug** : Force show, hide, reset du système
+- **Historique complet** : Log des messages avec timestamp et progression
+
+### ✅ Architecture extensible
+- **Base de données messages** : Structure modulaire pour nouveaux types
+- **Hook réutilisable** : useMotivationMessages pour autres composants
+- **Protection anti-spam** : Évite les répétitions et conflits
+- **Performance optimisée** : Timeouts gérés et cleanup automatique
+
+---
 
 ## 🎵 Fonctionnalités Audio Actuelles (WA-011.2)
 
@@ -316,13 +365,7 @@ const MotivationEngine = {
 - **Célébrations épiques** : Feedback spécial pour achievements
 - **Volume adaptatif** : Ajustement selon fatigue et effort
 
-### ✅ Interface de test complète
-- **AudioTestPanel** : Validation de tous les sons et vibrations
-- **Tests automatisés** : 6 suites de tests différentes
-- **Health checks** : Diagnostic complet du système audio
-- **Mode debug** : Logs détaillés pour développement
-
-### ✅ Intégration workout
+### ✅ Intégration workout complète
 - **Déclenchement automatique** : Audio selon changements de phase
 - **Fallback gracieux** : Fonctionnement sans audio si non supporté
 - **Configuration flexible** : Enable/disable par type de feedback
@@ -330,13 +373,25 @@ const MotivationEngine = {
 
 ---
 
-## 🔄 Prochaine milestone : WA-012
+## 🔄 Prochaines Étapes
 
-### 🎯 Objectif WA-012 : Affichage timer formaté avec animations
+### 🎯 **WA-012 : Timer Formaté avec Animations (IMMÉDIAT)**
 - **Timer visuel amélioré** : Animations fluides et formatage professionnel
 - **Transitions entre phases** : Effets visuels pour changements d'état
 - **Indicateurs visuels** : Progression avec couleurs adaptatives
 - **Responsive design** : Optimisation mobile et desktop
+
+### ⚙️ **WA-013-016 : Interface de Configuration (COURT TERME)**
+- **Formulaires avancés** : Configuration workout en 3 étapes
+- **Sélection exercices** : Interface intuitive par catégorie
+- **Validation temps réel** : Feedback immédiat sur paramètres
+- **Prévisualisation** : Estimation durée et difficulté
+
+### 🏋️ **WA-017-020 : Affichage Exercices (MOYEN TERME)**
+- **Images dynamiques** : Affichage visuel des exercices
+- **Animations transitions** : Fluidité entre mouvements
+- **Instructions contextuelles** : Conseils adaptatifs
+- **Composant ExerciseDisplay** : Module réutilisable
 
 ---
 
@@ -352,17 +407,19 @@ Ce projet est actuellement en **développement actif**. Je m'aide de *Claude Son
 - 🎨 **UI/UX** : Design moderne et responsive
 - ⚡ **Performance** : Hooks optimisés avec useCallback et useMemo
 - 🎵 **Audio UX** : Feedback contextuel et adaptatif
+- 💬 **Motivation UX** : Encouragements discrets et intelligents
 
 ---
 
 ## 📊 Métriques du projet
 
 ### 🎯 Progression générale
-- **Tickets complétés** : 14/32 (43.75%)
-- **Hooks avancés** : 8+ hooks personnalisés
-- **Composants** : 20+ composants réutilisables
+- **Tickets complétés** : 15/32 (46.87%)
+- **Hooks avancés** : 9+ hooks personnalisés
+- **Composants** : 25+ composants réutilisables
 - **Architecture** : Clean Code + Pragmatic Programmer appliqués
 - **Système audio** : 100% fonctionnel avec tests complets
+- **Système motivation** : 100% fonctionnel avec messages contextuels
 
 ### 🏋️ Données fitness
 - **Exercices disponibles** : 7 mouvements
@@ -371,6 +428,15 @@ Ce projet est actuellement en **développement actif**. Je m'aide de *Claude Son
 - **Timer précision** : ±50ms (setInterval optimisé)
 - **Contextes audio** : 9+ situations intelligentes
 - **Types de sons** : 7+ sons contextuels adaptatifs
+- **Messages motivation** : 8+ messages contextuels
+
+### 💬 Capacités motivationnelles
+- **Messages de progression** : Déclenchement automatique à 50%, 80%, 95%
+- **Messages contextuels** : Premier/dernier round, transitions
+- **Messages techniques** : Conseils respiration et forme
+- **Animations CSS** : Transitions fluides avec Tailwind
+- **Auto-hide intelligent** : Disparition temporisée sans interruption
+- **Tests intégrés** : Panel debug avec statistiques temps réel
 
 ### 🎵 Capacités audio
 - **Web Audio API** : Génération de sons en temps réel
@@ -399,8 +465,8 @@ Développé en suivant les principes des livres :
 - 📖 **The Pragmatic Programmer: From Journeyman to Master**
 - 📚 **Clean Code: A Handbook of Agile Software Craftsmanship**
 
-Avec l'assistance de **Claude Sonnet 4** pour l'architecture et le système audio contextuel !
+Avec l'assistance de **Claude Sonnet 4** pour l'architecture et les systèmes audio/motivation contextuels !
 
 ---
 
-*WorkoutApp - Transformez vos séances d'entraînement avec l'intelligence audio contextuelle* 🚀💪🎵
+*WorkoutApp - Transformez vos séances d'entraînement avec l'intelligence audio contextuelle et la motivation adaptative* 🚀💪🎵💬
