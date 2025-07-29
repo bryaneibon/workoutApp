@@ -28,16 +28,7 @@ import {
 /**
  * 🎯 Panel principal de test audio
  */
-const AudioTestPanel = ({ workout, phaseContext, expanded = true }) => {
-  // 🎵 Initialisation des hooks audio
-  const workoutAudio = useWorkoutAudio(workout, phaseContext, {
-    enableContextualAudio: true,
-    enableMotivationalBoosts: true,
-    enableCelebrations: true,
-    enableProgressionSounds: true,
-    enableRestingSounds: true,
-    autoVolumeAdjustment: true
-  });
+const AudioTestPanel = ({ workout, phaseContext, workoutAudio, expanded = true }) => {
 
   const basicAudio = useBasicWorkoutAudio(workout, phaseContext);
   
@@ -710,11 +701,9 @@ const AudioTestPanel = ({ workout, phaseContext, expanded = true }) => {
 
 // PropTypes pour AudioTestPanel
 AudioTestPanel.propTypes = {
-  /** Instance du hook useWorkout */
   workout: PropTypes.object.isRequired,
-  /** Instance du hook usePhaseContext */
   phaseContext: PropTypes.object.isRequired,
-  /** Mode d'affichage étendu ou compact */
+  workoutAudio: PropTypes.object.isRequired,
   expanded: PropTypes.bool
 };
 

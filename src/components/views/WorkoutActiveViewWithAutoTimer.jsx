@@ -586,7 +586,9 @@ const WorkoutActiveViewWithAutoTimer = () => {
     enableContextualAudio: true,
     enableMotivationalBoosts: true,
     enableCelebrations: true,
-    enableProgressionSounds: true
+    enableProgressionSounds: true,
+    enableRestingSounds: true,
+    autoVolumeAdjustment: true
 });
 
   return (
@@ -602,6 +604,7 @@ const WorkoutActiveViewWithAutoTimer = () => {
         <AudioTestPanel 
           workout={workout}
           phaseContext={phaseContext}
+          workoutAudio={workoutAudio} 
           expanded={true}
         />
 

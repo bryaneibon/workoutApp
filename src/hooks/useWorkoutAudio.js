@@ -130,16 +130,19 @@ export const useWorkoutAudio = (workout, phaseContext, options = {}) => {
       return;
     }
     
-    // 🛡️ Protection contre les répétitions (sauf si forcé)
+    // 🛡️ Protection anti-spam renforcée
     const now = Date.now();
+    const contextKey = `${context}_${intensity}`;
     const timeSinceLastPlay = now - lastPlayedTimestampRef.current;
-    const sameContext = lastPlayedContextRef.current === context;
+    const sameContext = lastPlayedContextRef.current === contextKey;
     
-    if (!forcePlay && sameContext && timeSinceLastPlay < 1000) {
-      console.log(`🔇 Audio ignoré - même contexte dans les 1000ms: ${context}`);
+    if (!forcePlay && sameContext && timeSinceLastPlay < 3000) {
+      console.log(`🛡️ Audio spam prevented: ${contextKey} (${timeSinceLastPlay}ms ago)`);
       return;
     }
-    
+    lastPlayedContextRef.current = contextKey;
+    lastPlayedTimestampRef.current = now;
+
     // 📊 Récupérer la configuration audio pour ce contexte
     const audioConfig = AUDIO_CONTEXT_MAP[context];
     if (!audioConfig) {
@@ -201,13 +204,7 @@ export const useWorkoutAudio = (workout, phaseContext, options = {}) => {
     }
   }, [
     audioEngine, 
-    defaultOptions.enableContextualAudio,
-    defaultOptions.autoVolumeAdjustment,
-    workout.state.status,
-    workout.state.currentRound,
-    workout.state.currentExerciseIndex,
-    workout.computed.progressPercentage
-  ]);
+    defaultOptions.enableContextualAudio]);
   
   // 🎵 Feedback motivationnel intelligent
   const playMotivationalBoost = useCallback(async (reason = 'general') => {
@@ -224,7 +221,7 @@ export const useWorkoutAudio = (workout, phaseContext, options = {}) => {
     
     console.log(`💪 Motivation boost: ${reason} → ${soundType}`);
     await audioEngine.playContextualSound(soundType, phaseContext.intensity);
-  }, [audioEngine, phaseContext.intensity, defaultOptions.enableMotivationalBoosts]);
+  }, [audioEngine, phaseContext.intensity]);
   
   // 🎉 Célébrations épiques
   const playCelebration = useCallback(async (celebrationType = 'achievement') => {
@@ -275,41 +272,7 @@ export const useWorkoutAudio = (workout, phaseContext, options = {}) => {
       }, 600);
     }
     
-  }, [
-    phaseContext.context,
-    phaseContext.intensity,
-    phaseContext.requiresCelebration,
-    phaseContext.shouldMotivate,
-    playContextualFeedback,
-    playCelebration,
-    playMotivationalBoost
-  ]);
-  
-  // 📊 Détection de progression pour motivations intelligentes
-  useEffect(() => {
-    const progress = workout.computed.progressPercentage;
-    
-    // 🎯 Motivation à 50%
-    if (progress === 50) {
-      playMotivationalBoost('halfway');
-    }
-    
-    // 🔥 Motivation dans les 20% finaux
-    if (progress >= 80 && progress < 100 && phaseContext.intensity === INTENSITY_LEVELS.FINAL_PUSH) {
-      playMotivationalBoost('final_push');
-    }
-    
-    // 🎊 Célébration de rythme parfait
-    if (phaseContext.metadata?.paceQuality === 'excellent') {
-      playMotivationalBoost('pace_celebration');
-    }
-    
-  }, [
-    workout.computed.progressPercentage,
-    phaseContext.intensity,
-    phaseContext.metadata?.paceQuality,
-    playMotivationalBoost
-  ]);
+  }, [phaseContext.context]);
   
   // 🎵 Sons de progression personnalisés
   const playProgressionSound = useCallback(async (progressionType) => {
@@ -327,7 +290,7 @@ export const useWorkoutAudio = (workout, phaseContext, options = {}) => {
     if (sound) {
       await audioEngine.playContextualSound(sound, phaseContext.intensity);
     }
-  }, [audioEngine, phaseContext.intensity, defaultOptions.enableProgressionSounds]);
+  }, [audioEngine, phaseContext.intensity]);
   
   // 🔧 Contrôles audio dédiés workout
   const workoutAudioControls = useMemo(() => ({
