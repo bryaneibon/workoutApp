@@ -370,7 +370,7 @@ export const configToWorkoutPlan = (configState) => {
   return {
     id: `custom-${Date.now()}`,
     name: configState.name || 'Workout Personnalisé',
-    description: configState.description || 'Créé avec WorkoutApp',
+    description: configState.description || 'Créé avec Kaizen-Forge',
     difficulty: configState.difficulty,
     estimatedDuration: configState.estimatedDuration,
     exercises: configState.exercises,

@@ -59,7 +59,7 @@ const AppHeader = ({ currentView, onNavigate }) => {
         {/* Logo et titre */}
         <div className="flex-1 min-w-0">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-            🏋️ WorkoutApp
+            🏋️ Kaizen Forge
           </h1>
           <p className="text-sm text-slate-300 mt-1">
             {contextMessages[currentView] || 'Application de fitness'}
