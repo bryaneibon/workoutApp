@@ -39,6 +39,12 @@ export const useMotivationMessages = (workout, phaseContext = null) => {
 
     console.log(`💬 Motivation: Affichage de "${message.message}"`);
     
+    // 🛡️ CLEANUP: Clear existing timeout first
+    if (messageTimeoutRef.current) {
+      clearTimeout(messageTimeoutRef.current);
+      messageTimeoutRef.current = null;
+    }
+    
     // Marquer comme affiché
     setShownMessages(prev => new Set([...prev, message.id]));
     
@@ -52,16 +58,15 @@ export const useMotivationMessages = (workout, phaseContext = null) => {
       workoutProgress: workout.computed.progressPercentage
     }]);
     
-    // Programmer la disparition
-    if (messageTimeoutRef.current) {
-      clearTimeout(messageTimeoutRef.current);
-    }
-    
-    messageTimeoutRef.current = setTimeout(() => {
-      setCurrentMessage(null);
-      messageTimeoutRef.current = null;
+    // 🆕 PROTECTION: Vérifier si le message est encore valide
+    const timeoutId = setTimeout(() => {
+      // Double-check que c'est bien notre timeout
+      if (messageTimeoutRef.current === timeoutId) {
+        setCurrentMessage(null);
+        messageTimeoutRef.current = null;
+      }
     }, message.duration);
-    
+    messageTimeoutRef.current = timeoutId;
   }, [shownMessages, workout.computed.progressPercentage]);
 
   // 🎯 Détection des messages basés sur la progression

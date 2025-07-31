@@ -84,10 +84,8 @@ export const EXERCISES_DATABASE = {
     difficulty: 'avancé',
     instructions: [
       'Position debout, descendre en squat',
-      'Placer les mains au sol, sauter en planche',
       'Faire une pompe (optionnel)',
-      'Ramener les pieds vers les mains',
-      'Sauter en l\'air avec les bras en haut'
+      'Ramener les pieds vers les mains et sauter'
     ],
     images: { start: '🧍', end: '🚀' },
     defaultDuration: 45
@@ -99,8 +97,7 @@ export const EXERCISES_DATABASE = {
     secondaryMuscles: ['Épaules', 'Bras', 'Abdominaux'],
     difficulty: 'intermédiaire',
     instructions: [
-      'Position de garde, pieds écartés',
-      'Alterner jabs, crochets et uppercuts',
+      'Position de garde, Alterner vos coups de poing',
       'Garder les pieds en mouvement',
       'Contracter les abdos à chaque coup'
     ],
@@ -115,7 +112,7 @@ export const EXERCISES_DATABASE = {
     difficulty: 'avancé',
     instructions: [
       'Position planche classique',
-      'Descendre lentement en contrôlant',
+      'Descendre en contrôle',
       'Remonter en explosant pour décoller les mains',
       'Atterrir en douceur et recommencer'
     ],

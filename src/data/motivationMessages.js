@@ -21,7 +21,7 @@ export const MOTIVATION_MESSAGES = {
     id: 'halfway',
     trigger: 50,
     message: "🔥 Excellent ! Vous êtes à mi-parcours !",
-    duration: 3000,
+    duration: 10000,
     type: 'milestone',
     color: 'from-emerald-500 to-blue-500'
   },
@@ -30,7 +30,7 @@ export const MOTIVATION_MESSAGES = {
     id: 'final_push',
     trigger: 80,
     message: "💪 Plus qu'un effort ! Vous y êtes presque !",
-    duration: 4000,
+    duration: 10000,
     type: 'encouragement',
     color: 'from-orange-500 to-red-500'
   },
@@ -39,7 +39,7 @@ export const MOTIVATION_MESSAGES = {
     id: 'completion',
     trigger: 95,
     message: "🚀 Dernier sprint ! La victoire est à portée !",
-    duration: 3000,
+    duration: 10000,
     type: 'celebration',
     color: 'from-purple-500 to-pink-500'
   }
@@ -53,7 +53,7 @@ export const PHASE_MOTIVATION_MESSAGES = {
   FIRST_ROUND: {
     id: 'first_round',
     message: "🚀 Premier round ! Trouvez votre rythme !",
-    duration: 2500,
+    duration: 10000,
     type: 'encouragement',
     color: 'from-blue-500 to-cyan-500'
   },
@@ -61,7 +61,7 @@ export const PHASE_MOTIVATION_MESSAGES = {
   FINAL_ROUND: {
     id: 'final_round',
     message: "🏁 Dernier round ! Donnez tout ce que vous avez !",
-    duration: 3500,
+    duration: 10000,
     type: 'celebration',
     color: 'from-red-500 to-yellow-500'
   },
@@ -69,7 +69,7 @@ export const PHASE_MOTIVATION_MESSAGES = {
   MID_WORKOUT_BOOST: {
     id: 'mid_boost',
     message: "⚡ Vous gérez ! Gardez cette intensité !",
-    duration: 2000,
+    duration: 10000,
     type: 'encouragement',
     color: 'from-green-500 to-emerald-500'
   }
@@ -83,7 +83,7 @@ export const RECOVERY_MESSAGES = {
   BREATH_REMINDER: {
     id: 'breathing',
     message: "🫁 Respirez profondément pendant le repos",
-    duration: 2500,
+    duration: 10000,
     type: 'technique',
     color: 'from-blue-400 to-indigo-400'
   },
@@ -91,7 +91,7 @@ export const RECOVERY_MESSAGES = {
   FORM_FOCUS: {
     id: 'form',
     message: "🎯 Qualité avant vitesse ! Concentrez-vous sur la forme",
-    duration: 3000,
+    duration: 10000,
     type: 'technique',
     color: 'from-amber-500 to-orange-500'
   }
@@ -144,7 +144,7 @@ export const getPhaseMotivationMessage = (phaseContext, workoutState, shownMessa
                       workoutState.currentRound < workoutState.totalRounds &&
                       !shownMessages.has('mid_boost');
   
-  if (isMidWorkout && Math.random() > 0.7) { // 30% de chance
+  if (isMidWorkout && Math.random() > 0.5) { // 50% de chance
     return PHASE_MOTIVATION_MESSAGES.MID_WORKOUT_BOOST;
   }
   

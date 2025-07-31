@@ -3,7 +3,7 @@
 // Référence Clean Code: "Single Responsibility Principle - Audio handling only"
 // Référence Pragmatic Programmer: "Fail fast - graceful audio degradation"
 
-import { useCallback, useRef, useState, useEffect } from 'react';
+import { useCallback, useRef, useState, useEffect, useMemo } from 'react';
 import { PHASE_CONTEXTS, INTENSITY_LEVELS } from './usePhaseContext.js';
 
 /**
@@ -95,53 +95,51 @@ export const useAudioEngine = (options = {}) => {
   });
   
   // 🔧 Initialisation du contexte audio
-  const initializeAudioContext = useCallback(() => {
-    // 🛡️ Éviter re-initialisation si déjà fait
-    if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-      return true;
+const audioContextMemo = useMemo(() => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) {
+      console.log('🔇 Web Audio API non supportée');
+      return null;
     }
-    
-    try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      
-      if (!AudioContext) {
-        console.log('🔇 Web Audio API non supportée');
-        return false;
-      }
-      
-      if (!audioContextRef.current) {
-        audioContextRef.current = new AudioContext();
-        console.log('🎵 Contexte audio initialisé');
-      }
-      
-      // Vérifier l'état du contexte
-      if (audioContextRef.current.state === 'suspended') {
-        audioContextRef.current.resume();
-      }
-      
-      return true;
-    } catch (error) {
-      console.error('❌ Erreur initialisation audio:', error);
-      setAudioStats(prev => ({ ...prev, errorsCount: prev.errorsCount + 1 }));
-      return false;
-    }
-  }, []);
+    console.log('🎵 Contexte audio créé (memoized)');
+    return new AudioContext();
+  } catch (error) {
+    console.error('❌ Erreur création audio context:', error);
+    return null;
+  }
+}, []); // ✅ EMPTY DEPS = CREATE ONCE
+
+const initializeAudioContext = useCallback(() => {
+  if (!audioContextMemo) {
+    return false;
+  }
   
-  // 🔍 Vérification des capacités au montage
-  useEffect(() => {
-    // Test support Web Audio API
-    const audioTest = initializeAudioContext();
-    setAudioSupported(audioTest);
-    
-    // Test support vibrations
-    const vibrationTest = 'vibrate' in navigator;
-    setVibrationSupported(vibrationTest);
-    
-    console.log(`🔍 Audio Engine Capabilities:
-      - Audio: ${audioTest ? '✅' : '❌'}
-      - Vibration: ${vibrationTest ? '✅' : '❌'}
-      - Master Volume: ${config.masterVolume}`);
-  }, []);
+  // 🔄 RÉUTILISER le context memoized
+  audioContextRef.current = audioContextMemo;
+  
+  if (audioContextMemo.state === 'suspended') {
+    audioContextMemo.resume();
+  }
+  
+  return true;
+}, [audioContextMemo]); // ✅ STABLE DEPENDENCY
+
+// 🔍 Vérification des capacités au montage
+useEffect(() => {
+  // Test support Web Audio API
+  const audioTest = initializeAudioContext();
+  setAudioSupported(audioTest);
+  
+  // Test support vibrations
+  const vibrationTest = 'vibrate' in navigator;
+  setVibrationSupported(vibrationTest);
+  
+  console.log(`🔍 Audio Engine Capabilities:
+    - Audio: ${audioTest ? '✅' : '❌'}
+    - Vibration: ${vibrationTest ? '✅' : '❌'}
+    - Master Volume: ${config.masterVolume}`);
+}, []);
   
   // 🎵 Génération de son par fréquence et durée
   const generateTone = useCallback((frequency, duration, volume = VOLUME_LEVELS.NORMAL, waveType = 'sine') => {
@@ -155,6 +153,13 @@ export const useAudioEngine = (options = {}) => {
         const audioContext = audioContextRef.current;
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
+        
+        // 🛡️ PROTECTION: Cleanup si le contexte est fermé
+        if (audioContext.state === 'closed') {
+          console.warn('⚠️ Audio context fermé - son ignoré');
+          resolve();
+          return;
+        }
         
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
@@ -173,12 +178,17 @@ export const useAudioEngine = (options = {}) => {
         oscillator.start(audioContext.currentTime);
         oscillator.stop(audioContext.currentTime + duration);
         
+        // 🆕 EXPLICIT CLEANUP: Déconnexion et arrêt        
         oscillator.onended = () => {
+        try {
           gainNode.disconnect();
           oscillator.disconnect();
-          resolve();
-        };
-        
+        } catch (e) {
+          console.warn('⚠️ Déconnexion déjà effectuée:', e);
+        }
+        resolve();
+      };
+
         // Mise à jour des stats
         setAudioStats(prev => ({
           ...prev,

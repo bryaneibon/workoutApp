@@ -15,10 +15,9 @@ import WorkoutConfigView from './components/views/WorkoutConfigView.jsx';
 import WorkoutDemoView from './components/views/WorkoutDemoView.jsx';
 import TestComponentsView from './components/views/TestComponentsView.jsx';
 import WorkoutActiveView from './components/views/WorkoutActiveView.jsx';
-import WorkoutActiveViewWithAutoTimer from './components/views/WorkoutActiveViewWithAutoTimer.jsx';
 
 /**
- * 🏗️ Composant principal WorkoutApp
+ * 🏗️ Composant principal App (Kaizen-Forge)
  * Clean Code: "Main should be minimal and delegate to other functions"
  * Pragmatic Programmer: "Orthogonality - components should be independent"
  * 
@@ -28,7 +27,7 @@ import WorkoutActiveViewWithAutoTimer from './components/views/WorkoutActiveView
  * - 🗂️ État global minimal
  * - 🔄 Gestion des transitions
  */
-const WorkoutApp = () => {
+const App = () => {
   // État de navigation
   const [currentView, setCurrentView] = useState(APP_VIEWS.HOME);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -86,7 +85,7 @@ const WorkoutApp = () => {
         return <WorkoutDemoView />;
       
       case APP_VIEWS.WORKOUT_ACTIVE:
-        return <WorkoutActiveViewWithAutoTimer />;
+        return <WorkoutActiveView />;
       
       default:
         console.warn(`🚨 Vue inconnue: ${currentView}, retour à HOME`);
@@ -104,4 +103,4 @@ const WorkoutApp = () => {
   );
 };
 
-export default WorkoutApp;
+export default App;

@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Couleurs pour WorkoutApp - Clean & Modern
+        // Couleurs pour Kaizen Forge - Clean & Modern
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
