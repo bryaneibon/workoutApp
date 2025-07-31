@@ -17,7 +17,7 @@ import TestComponentsView from './components/views/TestComponentsView.jsx';
 import WorkoutActiveView from './components/views/WorkoutActiveView.jsx';
 
 /**
- * 🏗️ Composant principal WorkoutApp
+ * 🏗️ Composant principal App (Kaizen-Forge)
  * Clean Code: "Main should be minimal and delegate to other functions"
  * Pragmatic Programmer: "Orthogonality - components should be independent"
  * 
@@ -27,7 +27,7 @@ import WorkoutActiveView from './components/views/WorkoutActiveView.jsx';
  * - 🗂️ État global minimal
  * - 🔄 Gestion des transitions
  */
-const WorkoutApp = () => {
+const App = () => {
   // État de navigation
   const [currentView, setCurrentView] = useState(APP_VIEWS.HOME);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -103,4 +103,4 @@ const WorkoutApp = () => {
   );
 };
 
-export default WorkoutApp;
+export default App;

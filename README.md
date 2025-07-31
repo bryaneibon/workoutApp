@@ -1,5 +1,4 @@
-# 🏋️ WorkoutApp - Application de Gestion d'Entraînement
-
+# 🏋️ Kaizen-Forge ⚡ - Application de Gestion d'Entraînement
 [![React](https://img.shields.io/badge/React-19.1.0-61DAFB?style=flat&logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7.0.4-646CFF?style=flat&logo=vite)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.3-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
@@ -7,11 +6,14 @@
 
 > **Application React complète de gestion d'entraînements** avec système audio contextuel intelligent, progression automatique d'exercices, **messages motivationnels adaptatifs** et **architecture modulaire**.
 
+## Kaizen (改善) = Amélioration continue, petits progrès constants
+## Forge = Lieu où l'on se forge, se transforme
+## Vibe anime : Très populaire dans les shōnen, philosophie d'entraînement
 ---
 
 ## 📋 Vue d'ensemble
 
-WorkoutApp (Nom encore en reflexion ahah) est une application moderne de fitness développée avec **React 19** et **Vite**, suivant les principes du **Clean Code** et du **Pragmatic Programmer**. L'application permet de créer, personnaliser et exécuter des séances d'entraînement avec un timer automatique intelligent, une progression automatique d'exercices, un **système audio contextuel adaptatif** et des **messages motivationnels intelligents**.
+Kaizen-Forge (Nom encore en reflexion ahah) est une application moderne de fitness développée avec **React 19** et **Vite**, suivant les principes du **Clean Code** et du **Pragmatic Programmer**. L'application permet de créer, personnaliser et exécuter des séances d'entraînement avec un timer automatique intelligent, une progression automatique d'exercices, un **système audio contextuel adaptatif** et des **messages motivationnels intelligents**.
 
 ### ✨ Fonctionnalités principales
 
@@ -466,4 +468,4 @@ Avec l'assistance de **Claude Sonnet 4** pour l'architecture modulaire, les syst
 
 ---
 
-*WorkoutApp - Transformez vos séances d'entraînement* 🚀💪🎵💬✨
+*Kaizen Forge - Transformez vos séances d'entraînement* 🚀💪🎵💬✨
