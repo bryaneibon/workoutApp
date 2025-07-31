@@ -15,7 +15,6 @@ import WorkoutConfigView from './components/views/WorkoutConfigView.jsx';
 import WorkoutDemoView from './components/views/WorkoutDemoView.jsx';
 import TestComponentsView from './components/views/TestComponentsView.jsx';
 import WorkoutActiveView from './components/views/WorkoutActiveView.jsx';
-import WorkoutActiveViewWithAutoTimer from './components/views/WorkoutActiveViewWithAutoTimer.jsx';
 
 /**
  * 🏗️ Composant principal WorkoutApp
@@ -86,7 +85,7 @@ const WorkoutApp = () => {
         return <WorkoutDemoView />;
       
       case APP_VIEWS.WORKOUT_ACTIVE:
-        return <WorkoutActiveViewWithAutoTimer />;
+        return <WorkoutActiveView />;
       
       default:
         console.warn(`🚨 Vue inconnue: ${currentView}, retour à HOME`);
