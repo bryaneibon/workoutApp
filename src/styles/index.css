@@ -32,8 +32,9 @@
 }
 
 /* 🎯 WA-011.3: Animations pour messages motivationnels */
+/* 🎨 WA-012.2: Animations enhanced pour composants workout - CLEAN VERSION */
 @layer utilities {
-  /* Animation d'entrée depuis le bas */
+  /* ===== ANIMATIONS EXISTANTES (WA-011.3) ===== */
   @keyframes slide-in-from-bottom-5 {
     from { 
       transform: translateY(20px) translateX(-50%);
@@ -47,7 +48,6 @@
     }
   }
 
-  /* Animation de sortie vers le bas */
   @keyframes slide-out-to-bottom-5 {
     from { 
       transform: translateY(0) translateX(-50%);
@@ -61,7 +61,6 @@
     }
   }
 
-  /* Animation d'entrée depuis le haut */
   @keyframes slide-in-from-top-5 {
     from { 
       transform: translateY(-20px) translateX(-50%);
@@ -75,7 +74,6 @@
     }
   }
 
-  /* Animation de pulsation douce pour l'effet glow */
   @keyframes gentle-pulse {
     0%, 100% { 
       opacity: 0.15;
@@ -87,13 +85,89 @@
     }
   }
 
-  /* Animation de rétrécissement pour barre de progression */
   @keyframes progress-shrink {
     from { width: 100%; }
     to { width: 0%; }
   }
 
-  /* Classes utilitaires pour les animations */
+  /* ===== NOUVELLES ANIMATIONS (WA-012.2) - UTILISÉES SEULEMENT ===== */
+  
+  /* 🎯 fade-in - Utilisée dans CurrentExerciseDisplay et NextExercisePreview */
+  @keyframes fade-in {
+    from { 
+      opacity: 0; 
+      transform: translateY(10px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+
+  /* ⚠️ critical-time - Utilisée dans MainTimerDisplay pour temps ≤ 3s */
+  @keyframes critical-time {
+    0%, 100% { 
+      transform: scale(1);
+      color: #dc2626;
+    }
+    50% { 
+      transform: scale(1.1);
+      color: #ef4444;
+      text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+    }
+  }
+
+  /* 🏆 victory-bounce - Utilisée dans NextExercisePreview pour célébration */
+  @keyframes victory-bounce {
+    0%, 20%, 53%, 80%, 100% { 
+      transform: translate3d(0, 0, 0); 
+    }
+    40%, 43% { 
+      transform: translate3d(0, -30px, 0); 
+    }
+    70% { 
+      transform: translate3d(0, -15px, 0); 
+    }
+    90% { 
+      transform: translate3d(0, -4px, 0); 
+    }
+  }
+
+  /* 🎊 confetti - Utilisée dans NextExercisePreview pour effet confetti */
+  @keyframes confetti {
+    0% { 
+      transform: translateY(0) rotate(0deg); 
+      opacity: 1; 
+    }
+    100% { 
+      transform: translateY(-100px) rotate(360deg); 
+      opacity: 0; 
+    }
+  }
+
+  /* ✨ shimmer - Utilisée dans NextExercisePreview pour badge "Nouveau Round" */
+  @keyframes shimmer {
+    0% { 
+      background-position: -200% 0; 
+    }
+    100% { 
+      background-position: 200% 0; 
+    }
+  }
+
+  /* ⏰ timer-pulse - Utilisée dans MainTimerDisplay et NextExercisePreview */
+  @keyframes timer-pulse {
+    0%, 100% { 
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    50% { 
+      transform: scale(1.05);
+      box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+  }
+
+  /* ===== CLASSES UTILITAIRES EXISTANTES ===== */
   .animate-in {
     animation-fill-mode: forwards;
   }
@@ -122,7 +196,44 @@
     animation: progress-shrink var(--duration, 3000ms) linear forwards;
   }
 
-  /* Classes pour les états de motivation */
+  /* ===== NOUVELLES CLASSES UTILITAIRES - UTILISÉES SEULEMENT ===== */
+  
+  /* ✅ UTILISÉE dans CurrentExerciseDisplay et NextExercisePreview */
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  /* ✅ UTILISÉE dans MainTimerDisplay pour temps critique */
+  .animate-critical-time {
+    animation: critical-time 1s infinite;
+  }
+
+  /* ✅ UTILISÉE dans NextExercisePreview pour célébration finale */
+  .animate-victory-bounce {
+    animation: victory-bounce 1s ease-in-out;
+  }
+
+  /* ✅ UTILISÉE dans NextExercisePreview pour effet confetti */
+  .animate-confetti {
+    animation: confetti 3s ease-out infinite;
+  }
+
+  /* ✅ UTILISÉE dans NextExercisePreview pour badge "Nouveau Round" */
+  .animate-shimmer {
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.4), 
+      transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* ✅ UTILISÉE dans MainTimerDisplay et NextExercisePreview */
+  .animate-timer-pulse {
+    animation: timer-pulse 2s infinite;
+  }
+
+  /* ===== CLASSES POUR ÉTATS DE MOTIVATION (EXISTANTES) ===== */
   .motivation-milestone {
     @apply from-emerald-500 to-blue-500;
   }
@@ -137,5 +248,27 @@
 
   .motivation-technique {
     @apply from-blue-400 to-indigo-400;
+  }
+
+  /* ===== OPTIMISATIONS PERFORMANCE ===== */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* ===== RESPONSIVE & ACCESSIBILITÉ ===== */
+  @media (max-width: 768px) {
+    .animate-timer-pulse {
+      animation-duration: 3s; /* Plus lent sur mobile pour performance */
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Respecter les préférences d'accessibilité */
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
