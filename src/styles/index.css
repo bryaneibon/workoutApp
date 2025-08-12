@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles pour Kaizen-Forge */
+/* Custom styles pour VECT */
 @layer base {
   body {
     @apply bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen;

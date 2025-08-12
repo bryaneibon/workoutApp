@@ -135,7 +135,7 @@ const WorkoutActiveViewRefactored = () => {
       {/* 📋 Header avec statut refactoring */}
       <Card variant="success">
         <CardHeader 
-          title="🏗️ Kaizen-Forge Refactorisé - WA-012.1 COMPLETED!"
+          title="🏗️ VECT Refactorisé - WA-012.1 COMPLETED!"
           description="Architecture Clean Code avec composants modulaires et responsabilités séparées"
           icon="🚀"
         />

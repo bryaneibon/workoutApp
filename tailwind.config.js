@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Couleurs pour Kaizen Forge - Clean & Modern
+        // Couleurs pour VECT - Clean & Modern
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',

@@ -155,7 +155,7 @@ CardFooter.defaultProps = {
 };
 
 /**
- * Composants de cartes pré-configurés pour Kaizen-Forge
+ * Composants de cartes pré-configurés pour VECT
  */
 export const WorkoutCard = ({ children, ...props }) => (
   <Card variant="gradient" hoverable {...props}>
