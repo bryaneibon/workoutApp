@@ -17,7 +17,7 @@ import TestComponentsView from './components/views/TestComponentsView.jsx';
 import WorkoutActiveView from './components/views/WorkoutActiveView.jsx';
 
 /**
- * 🏗️ Composant principal App (Kaizen-Forge)
+ * 🏗️ Composant principal App (VECT)
  * Clean Code: "Main should be minimal and delegate to other functions"
  * Pragmatic Programmer: "Orthogonality - components should be independent"
  * 

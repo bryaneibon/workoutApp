@@ -119,7 +119,7 @@ Button.defaultProps = {
 };
 
 /**
- * Composants de boutons pré-configurés pour Kaizen-Forge
+ * Composants de boutons pré-configurés pour VECT
  */
 export const WorkoutButton = (props) => (
   <Button variant="primary" {...props} />

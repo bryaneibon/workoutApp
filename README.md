@@ -1,471 +1,241 @@
-# 🏋️ Kaizen-Forge ⚡ - Application de Gestion d'Entraînement
+# 🚀 VECT - Smart Fitness Companion
 [![React](https://img.shields.io/badge/React-19.1.0-61DAFB?style=flat&logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7.0.4-646CFF?style=flat&logo=vite)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.3-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **Application React complète de gestion d'entraînements** avec système audio contextuel intelligent, progression automatique d'exercices, **messages motivationnels adaptatifs** et **architecture modulaire**.
+> **Application intelligente de fitness** avec IA, social features, et gamification révolutionnaire. De MVP à plateforme native dominante !
 
-## Kaizen (改善) = Amélioration continue, petits progrès constants
-## Forge = Lieu où l'on se forge, se transforme
-## Vibe anime : Très populaire dans les shōnen, philosophie d'entraînement
----
-
-## 📋 Vue d'ensemble
-
-Kaizen-Forge (Nom encore en reflexion ahah) est une application moderne de fitness développée avec **React 19** et **Vite**, suivant les principes du **Clean Code** et du **Pragmatic Programmer**. L'application permet de créer, personnaliser et exécuter des séances d'entraînement avec un timer automatique intelligent, une progression automatique d'exercices, un **système audio contextuel adaptatif** et des **messages motivationnels intelligents**.
-
-### ✨ Fonctionnalités principales
-
-- 🎯 **Configuration de séance personnalisée** - Interface wizard en 3 étapes pour créer vos workouts
-- ⏱️ **Timer automatique intelligent** - Système de minuteur en temps réel avec progression automatique
-- 🧠 **Intelligence contextuelle** - Détection automatique des phases et adaptation du feedback
-- 🎵 **Audio contextuel adaptatif** - Sons, vibrations et motivations selon votre progression
-- 💬 **Messages motivationnels intelligents** - Encouragements contextuels à 50%, 80%, 95% de progression
-- 🏋️ **Base de données d'exercices étendue** - 7 exercices avec instructions détaillées et animations
-- 📊 **Suivi de progression temps réel** - Barres de progression et statistiques live
-- 🔔 **Notifications de phase intelligentes** - Alertes sonores et visuelles contextuelles
-- 🎨 **Interface moderne** - Design responsive avec aperçu de l'exercice suivant
-- ✨ **Transitions visuelles fluides** - Animations contextuelles et micro-interactions
-
-### 🏗️ Architecture technique
-
-- **Frontend :** React 19 avec hooks avancés (useReducer, useCallback, useMemo, useLayoutEffect)
-- **Build :** Vite pour un développement rapide et optimisé
-- **Styling :** Tailwind CSS pour un design moderne et responsive
-- **Gestion d'état :** Architecture Redux-like avec useReducer personnalisé
-- **Timer System :** setInterval avec progression automatique et détection de phases
-- **Audio Engine :** Web Audio API + Navigator Vibration API pour feedback contextuel
-- **Motivation System :** Messages adaptatifs avec animations fluides et auto-hide
-- **Architecture modulaire :** Composants focalisés avec Single Responsibility Principle
-- **Visual System :** Animations CSS optimisées avec GPU acceleration
-- **Patterns :** Clean Code, DRY, Single Responsibility Principle
+## VECT = **V**ector **E**xercise **C**ondition **T**raining
+**Concept :** Vectoriser votre condition physique vers l'excellence ! 🎯💪
 
 ---
 
-## 🚀 Installation et démarrage
+## 🎯 État Actuel & Vision
+
+### ✅ **Fonctionnalités Actuelles (WA-001 → WA-012)**
+- ⏱️ **Timer intelligent** avec progression automatique
+- 🎵 **Audio contextuel** adaptatif selon workout phase
+- 💬 **Messages motivationnels** intelligents (50%, 80%, 95%)
+- 🏋️ **7 exercices** avec instructions et animations
+- 📊 **Analytics temps réel** et progression tracking
+- 🎨 **Architecture modulaire** Clean Code compliant
+
+### 🚀 **Vision 2025-2026: Killer App Fitness**
+- 🧠 **IA Coaching Gemini** - Coach personnel intelligent
+- 👥 **Social Platform** - Community + challenges + leaderboards
+- 🎮 **Gamification RPG** - Levels + achievements + quests
+- 📱 **Native Mobile** - iOS/Android apps dominantes
+- 🏢 **Enterprise Solutions** - B2B wellness platform
+- 🌍 **Global Expansion** - Market leadership mondial
+
+---
+
+## 🚀 Installation Rapide
 
 ### Prérequis
+- **Node.js** 18+ - [Télécharger](https://nodejs.org/)
+- **pnpm** (recommandé) - [Installer](https://pnpm.io/installation)
 
-Assurez-vous d'avoir les éléments suivants installés sur votre machine :
-
-- **Node.js** (version 18 ou supérieure) - [Télécharger Node.js](https://nodejs.org/)
-- **pnpm** (gestionnaire de paquets recommandé) - [Installer pnpm](https://pnpm.io/installation)
-
-> **Alternative :** Vous pouvez utiliser `npm` ou `yarn`, mais `pnpm` est recommandé pour de meilleures performances.
-
-### Étapes d'installation
-
-1. **Cloner le repository**
-   ```bash
-   git clone <url-du-repository>
-   cd workoutapp
-   ```
-
-2. **Installer les dépendances**
-   ```bash
-   pnpm install
-   ```
-   
-   Ou avec npm/yarn :
-   ```bash
-   npm install
-   # ou
-   yarn install
-   ```
-
-3. **Démarrer le serveur de développement**
-   ```bash
-   pnpm dev
-   ```
-   
-   Ou avec npm/yarn :
-   ```bash
-   npm run dev
-   # ou
-   yarn dev
-   ```
-
-4. **Ouvrir l'application**
-   
-   L'application sera accessible à l'adresse : **http://localhost:5173**
-
-### Scripts disponibles
-
+### Setup
 ```bash
-# Démarrage du serveur de développement
+git clone <repository-url>
+cd <repository>
+pnpm install
 pnpm dev
-
-# Build de production
-pnpm build
-
-# Aperçu du build de production
-pnpm preview
-
-# Linting du code
-pnpm lint
 ```
 
----
-
-## 🎮 Utilisation rapide
-
-### Démarrage d'un workout
-
-1. **Page d'accueil :** Sélectionnez un plan prédéfini ou créez le vôtre
-2. **Configuration :** Personnalisez les temps de travail, repos et nombre de rounds
-3. **Sélection d'exercices :** Choisissez parmi notre catalogue de 7 exercices
-4. **Séance active :** Lancez votre workout avec timer automatique, audio contextuel et messages motivationnels
-
-### Navigation principale
-
-- 🏠 **Accueil** - Sélection de plans et démarrage rapide
-- ⚙️ **Configuration** - Création de workouts personnalisés en 3 étapes
-- ⏰ **Timer Auto** - Séance active avec minuteur automatique, audio contextuel et motivation
-- 🧪 **Tests** - Validation des composants et architecture
-- 🧠 **Démo** - Démonstration des hooks et reducers
+**App accessible sur:** http://localhost:5173
 
 ---
 
-## 🏗️ Architecture Modulaire (WA-012.1 & WA-012.2)
+## 🏗️ Architecture & Technologies
 
-#### 🎯 Avantages de l'architecture refactorisée :
-- **Single Responsibility :** Chaque composant a UNE responsabilité claire
-- **Maintenabilité :** 700+ lignes → 5 composants de <150 lignes chacun
-- **Réutilisabilité :** Composants modulaires et indépendants
-- **Testabilité :** Isolation parfaite pour tests unitaires
-- **Performance :** Optimisation naturelle par séparation des responsabilités
-
-### ✨ Système d'animations (WA-012.2)
-
-#### 🎨 Transitions visuelles intelligentes :
-- **Anticipation d'exercice :** 3 niveaux (low/medium/high) selon proximité
-- **Micro-interactions :** Feedback visuel immédiat sur chaque action
-- **Countdown visuel :** Barres de progression contextuelles
-- **Responsive animations :** Optimisées pour mobile et desktop
-
-#### 🎭 Animations CSS personnalisées :
-- Performance optimisée avec GPU acceleration
-- Accessibilité respectée (prefers-reduced-motion)
-- Animations contextuelles selon l'état du workout
-- Effets de glow, pulse, bounce et transitions fluides
+| **Frontend** | **Backend (Phase 8+)** | **AI & Analytics** | **Mobile (Phase 15+)** |
+|--------------|-------------------------|-------------------|------------------------|
+| React 19 | Supabase → PostgreSQL | Google Gemini API | React Native |
+| Vite Build | Node.js + Express | TensorFlow.js | iOS/Android Native |
+| Tailwind CSS | JWT Auth + Redis | Computer Vision | HealthKit/Google Fit |
+| PWA Ready | Real-time Sync | ML Personalization | Wearables Integration |
 
 ---
 
-## 💬 Système de Motivation Contextuelle (WA-011.3)
+## 📋 ROADMAP COMPLÈTE MVP → DOMINATION
 
-### ✅ Messages motivationnels intelligents
+### 📋 **PHASE 4: Configuration + LocalStorage MVP**
+*Durée: 1-2 semaines | Foundation avec valeur immédiate*
 
-- **🎯 Messages de progression** - Encouragements automatiques à 50%, 80%, 95%
-- **🔥 Messages contextuels** - Adaptés au premier/dernier round
-- **💪 Conseils techniques** - Rappels de respiration et technique pendant les repos
-- **🎨 Affichage discret** - Positionnement en bas d'écran sans interrompre le workout
-- **⏱️ Auto-hide temporisé** - Disparition automatique après 3-4 secondes
-
-### Types de messages
-
-L'application génère automatiquement :
-- **Messages milestone** - "🔥 Excellent ! Vous êtes à mi-parcours !" (50%)
-- **Messages encouragement** - "💪 Plus qu'un effort ! Vous y êtes presque !" (80%)
-- **Messages celebration** - "🚀 Dernier sprint ! La victoire est à portée !" (95%)
-- **Messages technique** - "🫁 Respirez profondément pendant le repos"
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-013** | 🔴 Critical | 2j | *"Créer un workout personnalisé c'est compliqué"* | ✅ **Formulaire configuration intelligent** - Interface intuitive 3 étapes |
+| **WA-STORAGE-001** | 🔴 Critical | 1j | *"Je perds ma config quand je ferme l'app"* | **💾 LocalStorage Foundation** - Sauvegarde config + workouts + historique |
+| **WA-014** | 🟡 High | 2j | *"Je ne trouve pas les exercices que je veux"* | **Sélection exercices par catégorie** - UI moderne avec preview |
+| **WA-015** | 🟢 Medium | 1j | *"Je fais des erreurs dans ma configuration"* | **Validation temps réel** - Feedback immédiat + suggestions |
+| **WA-016** | 🟢 Medium | 1j | *"J'aimerais voir à quoi ressemble mon workout avant"* | **Preview configuration** - Estimation durée + difficulté |
+| **WA-STORAGE-002** | 🟡 High | 2j | *"Je veux retrouver mes anciens workouts"* | **📚 Workout History LocalStorage** - Historique + favoris + templates |
 
 ---
 
-## 🎵 Système Audio Contextuel (WA-011.2)
+### 📋 **PHASE 5: UX Revolution + Design**
+*Durée: 1-2 semaines | Différentiation visuelle*
 
-### Fonctionnalités audio avancées
-
-- **🎯 Sons contextuels** - Audio adaptatif selon la phase du workout
-- **📳 Vibrations intelligentes** - Patterns de vibration selon l'intensité
-- **💪 Motivations automatiques** - Encouragements selon votre progression
-- **🎉 Célébrations épiques** - Feedback spécial pour les achievements
-- **🔊 Volume adaptatif** - Ajustement automatique selon l'effort
-
-### Intelligence contextuelle
-
-L'application détecte automatiquement :
-- **Phase de démarrage** - Sons énergiques pour commencer
-- **Transitions d'exercice** - Notifications fluides entre mouvements
-- **Repos actif** - Audio apaisant pendant la récupération
-- **Sprint final** - Intensification motivationnelle
-- **Completion** - Célébration épique de fin de workout
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-REDESIGN-001** | 🔴 Critical | 1 sem | *"Les apps fitness sont moches et sans énergie"* | **🎨 Design System FITFCK-Inspired** - Palette Orange/Rouge énergétique + animations |
+| **WA-017** | 🟡 High | 2j | *"Je ne sais pas comment faire les exercices"* | **ExerciseDisplay révolutionnaire** - Animations smooth |
+| **WA-018** | 🟡 High | 1j | *"Les images d'exercices sont de mauvaise qualité"* | **Images haute qualité professionnelles** - Démonstration claire |
+| **WA-019** | 🟢 Medium | 2j | *"L'interface est statique et ennuyeuse"* | **Animations transitions premium** - Micro-interactions engageantes |
+| **WA-020** | 🟢 Medium | 1j | *"Les instructions ne sont pas claires"* | **Instructions contextuelles intelligentes** - Adaptées au niveau |
 
 ---
 
-## 🛠️ Technologies utilisées
+### 📋 **PHASE 6: Progress + Analytics LocalStorage**
+*Durée: 1-2 semaines | Intelligence locale*
 
-### Dépendances principales
-
-| Package | Version | Usage |
-|---------|---------|-------|
-| **React** | 19.1.0 | Framework frontend |
-| **React DOM** | 19.1.0 | Rendu DOM |
-| **Prop Types** | 15.8.1 | Validation des types |
-
-### Outils de développement
-
-| Package | Version | Usage |
-|---------|---------|-------|
-| **Vite** | 7.0.4 | Build tool et serveur dev |
-| **Tailwind CSS** | 3.4.3 | Framework CSS utilitaire |
-| **ESLint** | 9.31.0 | Linting JavaScript/React |
-| **Prettier** | 3.6.2 | Formatage de code |
-| **PostCSS** | 8.5.6 | Traitement CSS |
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-021** | 🟡 High | 2j | *"Je ne vois pas ma progression pendant le workout"* | **Barre progression énergétique** - Visual impact motivant |
+| **WA-DATA-LOCAL-001** | 🔴 Critical | 4j | *"Je n'ai aucune donnée sur mes performances"* | **📊 Analytics LocalStorage** - Stats + trends + insights offline |
+| **WA-022** | 🟡 High | 1j | *"Le pourcentage de progression n'est pas motivant"* | **Pourcentage avec micro-animations** - Feedback visuel |
+| **WA-023** | 🟢 Medium | 2j | *"Je ne sais pas quels muscles je travaille"* | **Groupe musculaire visuel** - Education anatomique |
+| **WA-024** | 🟢 Medium | 2j | *"Pas de résumé motivant après mes workouts"* | **Résumé séance intelligent** - Celebration + progression |
 
 ---
 
-## 📁 Structure du projet
+### 📋 **PHASE 7: PWA Mobile-First + Performance**
+*Durée: 1 semaine | Experience native-like*
 
-```
-workoutapp/
-├── public/                 # Assets statiques
-├── src/
-│   ├── components/         # Composants React
-│   │   ├── layout/         # Composants de mise en page
-│   │   ├── ui/             # Composants UI réutilisables
-│   │   ├── views/          # Vues principales
-│   │   └── workout/        # 🆕 Composants workout modulaires
-│   │       ├── MainTimerDisplay.jsx
-│   │       ├── CurrentExerciseDisplay.jsx
-│   │       ├── NextExercisePreview.jsx
-│   │       ├── WorkoutControlPanel.jsx
-│   │       └── AutoProgressionPanel.jsx
-│   ├── hooks/              # Hooks personnalisés
-│   │   ├── useWorkout.js           # Hook principal workout
-│   │   ├── useWorkoutTimer.js      # Timer automatique
-│   │   ├── usePhaseContext.js      # Intelligence contextuelle
-│   │   ├── useAudioEngine.js       # Moteur audio Web API
-│   │   ├── useWorkoutAudio.js      # Audio contextuel intégré
-│   │   └── useMotivationMessages.js # Messages motivationnels
-│   ├── reducers/           # Reducers pour gestion d'état
-│   ├── actions/            # Actions pour reducers
-│   ├── data/               # Données statiques (exercices + messages)
-│   │   ├── exercices.js            # Base de données exercices
-│   │   └── motivationMessages.js   # Messages motivationnels
-│   ├── constants/          # Constantes de l'application
-│   ├── styles/             # Styles globaux + animations CSS
-│   └── main.jsx            # Point d'entrée
-├── tailwind.config.js      # Configuration Tailwind
-├── vite.config.js          # Configuration Vite
-└── package.json            # Dépendances et scripts
-```
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-PWA-001** | 🔴 Critical | 3j | *"Je veux utiliser l'app comme une vraie app mobile"* | **📱 PWA Complète** - Service Worker + Manifest + Install prompt |
+| **WA-025** | 🟢 Medium | 1j | *"L'app devient lente pendant les workouts"* | **useCallback optimizations** - Performance smooth |
+| **WA-026** | 🟢 Medium | 1j | *"L'interface freeze parfois"* | **Mémorisation performance** - Optimization intelligente |
+| **WA-PWA-002** | 🟡 High | 2j | *"L'app ne fonctionne pas offline"* | **🔄 Offline-First Strategy** - Sync quand connection retourne |
 
 ---
 
-## 🧪 Développement et tests
+### 🚀 **DÉPLOIEMENT MVP VERCEL - SEMAINE 6-7**
+*🎯 PREMIER LANCEMENT PUBLIC avec valeur client maximale*
 
-### Validation des composants
-
-L'application inclut une suite de tests intégrée accessible via l'onglet **Tests** :
-
-- ✅ Tests d'état React avec useState
-- ✅ Validation des structures de données
-- ✅ Tests des calculs de workout
-- ✅ Simulation d'opérations asynchrones
-- ✅ Validation de l'intégrité des données
-- ✅ Tests du système audio contextuel
-- ✅ Tests des messages motivationnels
-- ✅ Tests de l'architecture modulaire
-
-### Code Quality
-
-Le projet suit les principes du **Clean Code** :
-
-- 📖 **The Pragmatic Programmer** - Architecture pragmatique et évolutive
-- 📚 **Clean Code** - Code lisible et maintenable
-- 🏗️ **Architecture modulaire** - Composants réutilisables et testables
-- 🎯 **PropTypes** - Validation des types pour la fiabilité
-- ✨ **Single Responsibility** - Chaque composant a une responsabilité unique
+| Milestone | Description | Validation Client |
+|-----------|-------------|-------------------|
+| **MVP-DEPLOY-001** | **🚀 Vercel Production Deploy** | App accessible publiquement |
+| **MVP-FEATURES** | ✅ Configuration workouts<br/>✅ Timer intelligent<br/>✅ Historique local<br/>✅ Analytics offline<br/>✅ PWA installable | **Valeur complète:** Users peuvent créer, faire et tracker leurs workouts ! |
+| **MVP-VALIDATION** | **🎯 100 premiers users beta** | Feedback + metrics + product-market fit |
 
 ---
 
-## 🚧 État du développement
+### 📋 **PHASE 8: Supabase Migration + Auth**
+*Durée: 1-2 semaines | Cloud + Social foundation*
 
-### Tickets complétés ✅
-
-- **WA-001** : Setup projet React + structure dossiers
-- **WA-002** : Types JavaScript + données statiques  
-- **WA-003** : Layout principal + navigation
-- **WA-004** : Composant de test simple
-- **WA-005** : Reducer principal du workout
-- **WA-006** : Actions de base (start/pause/stop)
-- **WA-007** : État de configuration du workout
-- **WA-008** : Hook useWorkout personnalisé + PropTypes
-- **WA-009** : Timer automatique avec setInterval
-- **WA-010** : Progression automatique d'exercice + notifications de phase
-- **WA-010.FIX_1** : Aperçu exercice suivant + fix notifications auto-hide
-- **WA-010.FEAT_1** : Petite extension base de données exercices (7 exercices total)
-- **WA-011.1** : Intelligence contextuelle des phases
-- **WA-011.2** : Système audio contextuel complet
-- **WA-011.3** : Messages motivationnels contextuels
-- **WA-012.1** : ✅ **Refactoring modulaire - 700 lignes → 5 composants focalisés**
-- **WA-012.2** : ✅ **Polish transitions visuelles + micro-interactions fluides**
-
-### 🎯 Ticket en cours 🔄
-
-### ⚙️ Phase 4: Interface de configuration (PROCHAINE PRIORITÉ)
-| Ticket | Priorité | Status | Description |
-|--------|----------|--------|-------------|
-| **WA-013** | 🟡 High | ⏳ **PROCHAINE ÉTAPE** | Formulaire de configuration avancé |
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-SUPABASE-001** | 🔴 Critical | 3j | *"Je veux retrouver mes données sur tous mes devices"* | **☁️ Supabase Setup** - Database + Auth + Real-time + API auto |
+| **WA-AUTH-001** | 🔴 Critical | 2j | *"Je veux créer mon compte et me connecter"* | **🔐 Authentication Complete** - Register/Login + Profile + Google OAuth |
+| **WA-SYNC-001** | 🟡 High | 3j | *"Mes données locales doivent sync avec le cloud"* | **🔄 LocalStorage → Supabase Migration** - Data sync + conflict resolution |
+| **WA-PROFILE-001** | 🟡 High | 2j | *"Je veux personnaliser mon profil fitness"* | **👤 User Profile System** - Fitness goals + preferences + avatar |
 
 ---
 
-## 📋 Epic: Workout Configuration
+### 📋 **PHASE 9: Onboarding + User Experience**
+*Durée: 1 semaine | First impression excellence*
 
-### ⚙️ Phase 4: Interface de configuration
-| Ticket | Priorité | Complexité | Description |
-|--------|----------|------------|-------------|
-| **WA-013** | 🟡 High | M | Formulaire de configuration avancé |
-| **WA-014** | 🟡 High | S | Sélection d'exercices par catégorie |
-| **WA-015** | 🟢 Medium | M | Validation des paramètres temps réel |
-| **WA-016** | 🟢 Medium | S | Prévisualisation config avec estimations |
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-REDESIGN-002** | 🔴 Critical | 4j | *"Je ne sais pas comment commencer mon parcours fitness"* | **🚀 Onboarding révolutionnaire** - Profil détaillé + assessment + objectifs |
+| **WA-GAMIFICATION-BASIC** | 🟡 High | 3j | *"Je veux voir ma progression de façon motivante"* | **🎮 Gamification Foundation** - Levels + Badges + Streaks + XP |
 
 ---
 
-## 📋 Epic: Exercise Display
+### 📋 **PHASE 10: Social Foundation**
+*Durée: 2-3 semaines | Community building*
 
-### 🏋️ Phase 5: Affichage des exercices
-| Ticket | Priorité | Complexité | Description |
-|--------|----------|------------|-------------|
-| **WA-017** | 🟡 High | M | Composant ExerciseDisplay amélioré |
-| **WA-018** | 🟡 High | S | Images d'exercices dynamiques |
-| **WA-019** | 🟢 Medium | M | Animation entre images et transitions |
-| **WA-020** | 🟢 Medium | S | Instructions textuelles contextuelles |
-
----
-
-## 📋 Epic: Progress & Analytics
-
-### 📊 Phase 6: Progression et feedback
-| Ticket | Priorité | Complexité | Description |
-|--------|----------|------------|-------------|
-| **WA-021** | 🟡 High | M | Barre de progression globale avancée |
-| **WA-022** | 🟡 High | S | Pourcentage d'avancement temps réel |
-| **WA-023** | 🟢 Medium | M | Groupe musculaire actuel avec feedback |
-| **WA-024** | 🟢 Medium | L | Résumé de séance avec statistiques |
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-SOCIAL-001** | 🔴 Critical | 1 sem | *"Je manque de motivation, je m'entraîne seul"* | **👥 Social Engine Foundation** - Friends + Follow + Activity feed |
+| **WA-SOCIAL-002** | 🟡 High | 1 sem | *"J'aimerais faire des défis avec mes amis"* | **🏆 Challenge System** - Create challenges + Leaderboards + Team battles |
+| **WA-NOTIFICATIONS** | 🟡 High | 3j | *"Je veux être encouragé et rappelé"* | **🔔 Smart Notifications** - Workout reminders + Social activities + Achievements |
 
 ---
 
-## 📋 Epic: Performance & Polish
+### 📋 **PHASE 11: AI Integration Gemini**
+*Durée: 2-3 semaines | Intelligence artificielle*
 
-### 🚀 Phase 7: Optimisation et finitions
-| Ticket | Priorité | Complexité | Description |
-|--------|----------|------------|-------------|
-| **WA-025** | 🟢 Medium | M | useCallback sur fonctions timer optimisé |
-| **WA-026** | 🟢 Medium | S | Mémorisation calculs lourds avec useMemo |
-| **WA-027** | 🟢 Medium | M | Context pour état global workout |
-| **WA-028** | 🔵 Low | S | Styles et responsive mobile-first |
-
----
-
-## 📋 Epic: Advanced Features
-
-### 🎯 Phase 8: Fonctionnalités avancées
-| Ticket | Priorité | Complexité | Description |
-|--------|----------|------------|-------------|
-| **WA-029** | 🔵 Low | M | Notifications audio avec Web Audio API |
-| **WA-030** | 🔵 Low | L | Persistance localStorage workout history |
-| **WA-031** | 🔵 Low | M | Mode plein écran immersif |
-| **WA-032** | 🔵 Low | XL | API ExerciseDB integration externe |
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-AI-001** | 🔴 Critical | 2 sem | *"Mes workouts ne s'adaptent pas à mon niveau"* | **🧠 AI Workout Personalization** - Gemini API + Adaptive difficulty + Smart recommendations |
+| **WA-AI-002** | 🟡 High | 1 sem | *"J'aimerais un coach personnel intelligent"* | **💬 AI Coaching Assistant** - Conversational coaching + Tips + Motivation |
+| **WA-AI-003** | 🟢 Medium | 4j | *"Je veux des analyses de mes performances"* | **📊 AI Performance Analysis** - Pattern recognition + Insights + Recommendations |
 
 ---
 
-## 🔄 Prochaines Étapes
+### 📋 **PHASE 12: Advanced Features + Monetization**
+*Durée: 2-3 semaines | Business model*
 
-### ⚙️ **WA-013 : Interface de Configuration (PRIORITÉ IMMÉDIATE)**
-- **Formulaire multi-étapes** : Configuration workout en 3 phases
-- **Validation temps réel** : Feedback immédiat sur paramètres
-- **Prévisualisation dynamique** : Estimation durée et difficulté
-- **UX optimisée** : Interface intuitive pour création de workouts
-
-### 🏋️ **WA-017-020 : Affichage Exercices (COURT TERME)**
-- **Images dynamiques** : Affichage visuel des exercices
-- **Animations transitions** : Fluidité entre mouvements
-- **Instructions contextuelles** : Conseils adaptatifs
-- **Composant ExerciseDisplay** : Module réutilisable
-
-### 📊 **WA-021-024 : Progress & Analytics (MOYEN TERME)**
-- **Barres de progression** : Avancement détaillé et précis
-- **Feedback musculaire** : Groupes ciblés en temps réel
-- **Résumé de séance** : Statistiques complètes post-workout
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-MONETIZATION-001** | 🔴 Critical | 1 sem | *"Je veux plus de features et comprends qu'il faut payer"* | **💰 Freemium Model** - Free/Premium tiers + Stripe + Feature gating |
+| **WA-ADVANCED-001** | 🟡 High | 1 sem | *"Je veux des workouts plus avancés"* | **🏋️ Advanced Workout Features** - Custom exercises + Programs + Templates |
+| **WA-ANALYTICS-PREMIUM** | 🟡 High | 4j | *"Je veux des analyses détaillées de mes progrès"* | **📈 Premium Analytics** - Advanced insights + Reports + Trends |
 
 ---
 
-## 🤝 Contribution
+### 📋 **PHASE 13: Performance + Polish**
+*Durée: 1-2 semaines | Production ready*
 
-Ce projet est actuellement en **développement actif**. Je m'aide de *Claude Sonnet 4* au cours du développement!
-
-### Standards de développement
-
-- 📝 **Clean Code** : Fonctions courtes et expressives
-- 🧪 **Testing** : Tests unitaires avec validation
-- 📖 **Documentation** : PropTypes et commentaires JSDoc
-- 🎨 **UI/UX** : Design moderne et responsive
-- ⚡ **Performance** : Hooks optimisés avec useCallback et useMemo
-- 🎵 **Audio UX** : Feedback contextuel et adaptatif
-- 💬 **Motivation UX** : Encouragements discrets et intelligents
-- 🏗️ **Architecture modulaire** : Single Responsibility Principle appliqué
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-PERFORMANCE-001** | 🔴 Critical | 4j | *"L'app doit être rapide et fluide"* | **⚡ Performance Optimization** - Code splitting + Lazy loading + Caching |
+| **WA-POLISH-001** | 🟡 High | 3j | *"L'expérience doit être parfaite"* | **✨ UI/UX Polish** - Animations + Feedback + Error handling |
+| **WA-SEO-001** | 🟡 High | 2j | *"L'app doit être trouvable sur Google"* | **🔍 SEO Optimization** - Meta tags + Sitemap + Schema markup |
 
 ---
 
-## 📊 Métriques du projet
+### 📋 **PHASE 14: Scale Preparation**
+*Durée: 2-3 semaines | Growth ready*
 
-### 🎯 Progression générale
-- **Tickets complétés** : 12/32 (37.5%) ⬆️
-- **Hooks avancés** : 9+ hooks personnalisés
-- **Composants** : 30+ composants réutilisables ⬆️
-- **Architecture** : Clean Code + Pragmatic Programmer appliqués
-- **Système audio** : 100% fonctionnel avec tests complets
-- **Système motivation** : 100% fonctionnel avec messages contextuels
-- **Architecture modulaire** : Single Responsibility appliqué
-- **Animations système** :  Animations fluides et optimisées
-
-### 🏋️ Données fitness
-- **Exercices disponibles** : 7 mouvements
-- **Groupes musculaires** : 5 catégories
-- **Plans prédéfinis** : 3 workouts + presets avancés
-- **Timer précision** : ±50ms (setInterval optimisé)
-- **Contextes audio** : 9+ situations intelligentes
-- **Types de sons** : 7+ sons contextuels adaptatifs
-- **Messages motivation** : 8+ messages contextuels
-
-### 🏗️ Métriques architecture refactorisée
-- **Composants workout modulaires** : 5 composants focalisés
-- **Lignes par composant** : <150 lignes (vs 700+ avant)
-- **Responsabilités séparées** : 100% Single Responsibility
-- **Réutilisabilité** : Composants indépendants et testables
-- **Maintenabilité** : Architecture Clean Code complète
-
-### 🎨 Capacités visuelles
-- **Animations CSS** : 35+ animations contextuelles
-- **Micro-interactions** : Feedback visuel sur toutes actions
-- **Performance** : GPU acceleration + responsive design
-- **Accessibilité** : prefers-reduced-motion respecté
-- **Transitions intelligentes** : Adaptées au contexte workout
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-MIGRATION-PREP** | 🟡 High | 1 sem | *"L'app doit pouvoir supporter plus d'utilisateurs"* | **🏗️ PostgreSQL Migration Prep** - Schema design + Migration plan + Testing |
+| **WA-ENTERPRISE-PREP** | 🟢 Medium | 1 sem | *"Les entreprises s'intéressent à notre solution"* | **🏢 Enterprise Features Prep** - Team management + Analytics + White-label prep |
+| **WA-MOBILE-PREP** | 🟢 Medium | 4j | *"Je veux une vraie app mobile"* | **📱 React Native Preparation** - Component audit + Architecture + Roadmap |
 
 ---
 
-## 📄 Licence
+### 📋 **PHASES 15-18: NATIVE MOBILE**
+*Durée: 24-30 semaines | Market leadership*
 
-Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
----
-
-## 👨‍💻 Auteur
-
-**Bryan Diffo**
-- 📧 Email : bryandiffo@gmail.com
----
-
-## 🙏 Remerciements
-
-Développé en suivant les principes des livres :
-- 📖 **The Pragmatic Programmer: From Journeyman to Master**
-- 📚 **Clean Code: A Handbook of Agile Software Craftsmanship**
-
-Avec l'assistance de **Claude Sonnet 4** pour l'architecture modulaire, les systèmes audio/motivation contextuels et les transitions visuelles !
+| Phase | Focus | Timeline | Key Deliverables |
+|-------|-------|----------|------------------|
+| **Phase 15** | **📱 iOS Native Launch** | 6-8 sem | App Store + Apple Watch + HealthKit + Premium Experience |
+| **Phase 16** | **🤖 Android Native Launch** | 4-6 sem | Play Store + Wear OS + Google Fit + Material Design |
+| **Phase 17** | **🏢 Enterprise Native** | 6-8 sem | White-label + HR Integration + Corporate Wellness |
+| **Phase 18** | **🏆 Market Leadership** | 4-6 sem | API Ecosystem + Global Expansion + Industry Certification |
 
 ---
 
-*Kaizen Forge - Transformez vos séances d'entraînement* 🚀💪🎵💬✨
+**Objectif:** Top 10 fitness apps + Market share significative
+
+---
+
+## 🚀 NEXT ACTIONS IMMÉDIATES
+
+### **🔥 CETTE SEMAINE:**
+1. **Termine WA-013** (Configuration interface) - 2 jours
+2. **WA-STORAGE-001** (LocalStorage foundation) - 1 jour  
+3. **WA-014-015** (Sélection + Validation) - 2 jours
+
+### **📅 OBJECTIF 7 SEMAINES:**
+**MVP deployed sur Vercel avec vrais users ! 🚀**
+
+---
+
+## 👨‍💻 Développeur
+
+**Bryan Diffo** - [bryandiffo@gmail.com](mailto:bryandiffo@gmail.com)
+
+*VECT: Vectorisez votre fitness vers l'excellence !* 🚀💪
+
+---
+
+*Développé avec les principes Clean Code & Pragmatic Programmer + Claude Sonnet 4*

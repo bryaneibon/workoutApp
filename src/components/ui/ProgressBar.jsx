@@ -327,7 +327,7 @@ SteppedProgress.defaultProps = {
 };
 
 /**
- * Composants pré-configurés pour Kaizen-Forge
+ * Composants pré-configurés pour VECT
  */
 export const WorkoutProgress = ({ completedExercises, totalExercises, ...props }) => {
   // 🐛 FIX: Gestion des valeurs invalides et division par zéro
