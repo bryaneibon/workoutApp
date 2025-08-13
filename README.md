@@ -2,6 +2,7 @@
 [![React](https://img.shields.io/badge/React-19.1.0-61DAFB?style=flat&logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7.0.4-646CFF?style=flat&logo=vite)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.3-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase)](https://supabase.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 > **Application intelligente de fitness** avec IA, social features, et gamification révolutionnaire. De MVP à plateforme native dominante !
@@ -52,189 +53,211 @@ pnpm dev
 
 ## 🏗️ Architecture & Technologies
 
-| **Frontend** | **Backend (Phase 8+)** | **AI & Analytics** | **Mobile (Phase 15+)** |
-|--------------|-------------------------|-------------------|------------------------|
-| React 19 | Supabase → PostgreSQL | Google Gemini API | React Native |
-| Vite Build | Node.js + Express | TensorFlow.js | iOS/Android Native |
-| Tailwind CSS | JWT Auth + Redis | Computer Vision | HealthKit/Google Fit |
-| PWA Ready | Real-time Sync | ML Personalization | Wearables Integration |
+| **Frontend** | **Backend** | **AI & Analytics** | **Mobile (Phase 12+)** |
+|--------------|-------------|-------------------|------------------------|
+| React 19 | Supabase PostgreSQL | Google Gemini API | React Native |
+| Vite Build | Real-time Subscriptions | TensorFlow.js | iOS/Android Native |
+| Tailwind CSS | JWT Auth + RLS | Computer Vision | HealthKit/Google Fit |
+| PWA Ready | Edge Functions | ML Personalization | Wearables Integration |
 
 ---
 
-## 📋 ROADMAP COMPLÈTE MVP
+## 📋 ROADMAP COMPLÈTE MVP → DOMINATION
 
-### 📋 **PHASE 4: Configuration + LocalStorage MVP**
-*Durée: 1-2 semaines | Foundation avec valeur immédiate*
+### ✅ **TERMINÉ - Foundation Technique**
 
-| Ticket | Priorité | Status | Justificatif Client | Description |
-|--------|----------|--------|-------------------|-------------|
-| **WA-013** | 🔴 Critical | ✅ **TERMINÉ** | *"Créer un workout personnalisé c'est compliqué"* | ✅ **Formulaire configuration intelligent** - useReducer + validation + calculs optimisés |
-| **WA-STORAGE-001** | 🔴 Critical | ⏳ TODO | *"Je perds ma config quand je ferme l'app"* | **💾 LocalStorage Foundation** - Sauvegarde config + workouts + historique |
-| **WA-014** | 🟡 High | ⏳ TODO | *"Je ne trouve pas les exercices que je veux"* | **Sélection exercices par catégorie** - UI moderne avec preview |
-| **WA-015** | 🟢 Medium | ⏳ TODO | *"Je fais des erreurs dans ma configuration"* | **Validation temps réel** - Feedback immédiat + suggestions |
-| **WA-016** | 🟢 Medium | ⏳ TODO | *"J'aimerais voir à quoi ressemble mon workout avant"* | **Preview configuration** - Estimation durée + difficulté |
-| **WA-STORAGE-002** | 🟡 High | ⏳ TODO | *"Je veux retrouver mes anciens workouts"* | **📚 Workout History LocalStorage** - Historique + favoris + templates |
+| Ticket | Status | Description |
+|--------|--------|-------------|
+| **WA-001 → WA-012** | ✅ **TERMINÉ** | Timer intelligent + Audio + Progression + Architecture modulaire |
+| **WA-013** | ✅ **TERMINÉ** | Configuration workout avancée (useReducer + validation + calculs) |
 
 ---
 
-### 📋 **PHASE 5: UX Revolution + Design**
-*Durée: 1-2 semaines | Différentiation visuelle*
+### 📋 **PHASE 1: Design System**
+*Durée: 2-3 jours | Foundation visuelle moderne*
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-DESIGN-001** | 🔴 Critical | 1j | *"L'app doit être visuellement moderne"* | **🎨 Design System Setup** - Shadcn/ui + Color palette VECT + Typography |
+| **WA-DESIGN-002** | 🔴 Critical | 1j | *"Le timer doit être impressionnant"* | **⏱️ Timer Component V0 Integration** - Gradient orange→blue + Glass morphism |
+| **WA-DESIGN-003** | 🟡 High | 1j | *"L'interface doit être cohérente"* | **🧩 Component Library** - Buttons + Cards + Layout system |
+
+---
+
+### 📋 **PHASE 2: Cloud Foundation**
+*Durée: 3-4 jours | Infrastructure moderne*
 
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
-| **WA-REDESIGN-001** | 🔴 Critical | 1 sem | *"Les apps fitness sont moches et sans énergie"* | **🎨 Design System FITFCK-Inspired** - Palette Orange/Rouge énergétique + animations |
-| **WA-017** | 🟡 High | 2j | *"Je ne sais pas comment faire les exercices"* | **ExerciseDisplay révolutionnaire** - Animations smooth |
-| **WA-018** | 🟡 High | 1j | *"Les images d'exercices sont de mauvaise qualité"* | **Images haute qualité professionnelles** - Démonstration claire |
-| **WA-019** | 🟢 Medium | 2j | *"L'interface est statique et ennuyeuse"* | **Animations transitions premium** - Micro-interactions engageantes |
-| **WA-020** | 🟢 Medium | 1j | *"Les instructions ne sont pas claires"* | **Instructions contextuelles intelligentes** - Adaptées au niveau |
+| **WA-SUPABASE-001** | 🔴 Critical | 2j | *"Je veux retrouver mes données partout"* | **☁️ Supabase Setup** - Database + Auth + Real-time + API |
+| **WA-SUPABASE-002** | 🔴 Critical | 1j | *"Je veux me connecter facilement"* | **🔐 Authentication System** - Google OAuth + Profile management |
+| **WA-SUPABASE-003** | 🟡 High | 1j | *"Mes configurations doivent être sauvées"* | **💾 Workout Config Cloud** - Save/Load workout configurations |
 
 ---
 
-### 📋 **PHASE 6: Progress + Analytics LocalStorage**
-*Durée: 1-2 semaines | Intelligence locale*
+### 📋 **PHASE 3: Core Features Enhanced**
+*Durée: 3-4 jours | Fonctionnalités enrichies*
 
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
-| **WA-021** | 🟡 High | 2j | *"Je ne vois pas ma progression pendant le workout"* | **Barre progression énergétique** - Visual impact motivant |
-| **WA-DATA-LOCAL-001** | 🔴 Critical | 4j | *"Je n'ai aucune donnée sur mes performances"* | **📊 Analytics LocalStorage** - Stats + trends + insights offline |
-| **WA-022** | 🟡 High | 1j | *"Le pourcentage de progression n'est pas motivant"* | **Pourcentage avec micro-animations** - Feedback visuel |
-| **WA-023** | 🟢 Medium | 2j | *"Je ne sais pas quels muscles je travaille"* | **Groupe musculaire visuel** - Education anatomique |
-| **WA-024** | 🟢 Medium | 2j | *"Pas de résumé motivant après mes workouts"* | **Résumé séance intelligent** - Celebration + progression |
-
+| **WA-014** | 🟡 High | 2j | *"Je ne trouve pas les exercices que je veux"* | **🏋️ Exercise Selection Premium** - UI moderne + catégories + preview |
+| **WA-015** | 🟢 Medium | 1j | *"Je fais des erreurs dans ma configuration"* | **✅ Validation Cloud Enhanced** - Feedback temps réel + cloud sync |
+| **WA-016** | 🟡 High | 1j | *"J'aimerais voir à quoi ressemble mon workout"* | **👁️ Workout Preview** - Estimation + visualisation + design moderne |
 ---
 
-### 📋 **PHASE 7: PWA Mobile-First + Performance**
-*Durée: 1 semaine | Experience native-like*
+### 📋 **PHASE 4: MVP Deploy Ready**
+*Durée: 2-3 jours | Déploiement production*
 
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
-| **WA-PWA-001** | 🔴 Critical | 3j | *"Je veux utiliser l'app comme une vraie app mobile"* | **📱 PWA Complète** - Service Worker + Manifest + Install prompt |
-| **WA-025** | 🟢 Medium | 1j | *"L'app devient lente pendant les workouts"* | **useCallback optimizations** - Performance smooth |
-| **WA-026** | 🟢 Medium | 1j | *"L'interface freeze parfois"* | **Mémorisation performance** - Optimization intelligente |
-| **WA-PWA-002** | 🟡 High | 2j | *"L'app ne fonctionne pas offline"* | **🔄 Offline-First Strategy** - Sync quand connection retourne |
+| **WA-DEPLOY-001** | 🔴 Critical | 1j | *"Je veux utiliser l'app maintenant"* | **🚀 Vercel Production Deploy** - App publique avec Supabase |
+| **WA-DEPLOY-002** | 🟡 High | 1j | *"L'app doit être rapide et fiable"* | **⚡ Performance Optimization** - Caching + CDN + monitoring |
+| **WA-DEPLOY-003** | 🟢 Medium | 1j | *"Je veux partager l'app avec mes amis"* | **📱 PWA Setup** - Service Worker + Install prompt |
 
 ---
 
-### 🚀 **DÉPLOIEMENT MVP VERCEL - SEMAINE 6-7**
-*🎯 PREMIER LANCEMENT PUBLIC avec valeur client maximale*
+### 🚀 **MILESTONE MVP**
+*🎯 Premier lancement public avec valeur complète*
 
-| Milestone | Description | Validation Client |
-|-----------|-------------|-------------------|
-| **MVP-DEPLOY-001** | **🚀 Vercel Production Deploy** | App accessible publiquement |
-| **MVP-FEATURES** | ✅ Configuration workouts<br/>✅ Timer intelligent<br/>✅ Historique local<br/>✅ Analytics offline<br/>✅ PWA installable | **Valeur complète:** Users peuvent créer, faire et tracker leurs workouts ! |
-| **MVP-VALIDATION** | **🎯 100 premiers users beta** | Feedback + metrics + product-market fit |
+| Achievement | Description | Validation Client |
+|-------------|-------------|-------------------|
+| **MVP-COMPLETE** | **🏆 App complète déployée** | Users peuvent créer, configurer et faire leurs workouts |
+| **CLOUD-NATIVE** | **☁️ Données cross-device** | Sync automatique entre appareils |
+| **DESIGN-PREMIUM** | **🎨 Interface VECT unique** | Design niveau Apple/Strava |
+| **USER-READY** | **👥 Premiers beta users** | 50-100 utilisateurs test |
 
 ---
 
-### 📋 **PHASE 8: Supabase Migration + Auth**
-*Durée: 1-2 semaines | Cloud + Social foundation*
+### 📋 **PHASE 5: User Experience Polish**
+*Durée: 1-2 semaines | Expérience utilisateur parfaite*
 
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
-| **WA-SUPABASE-001** | 🔴 Critical | 3j | *"Je veux retrouver mes données sur tous mes devices"* | **☁️ Supabase Setup** - Database + Auth + Real-time + API auto |
-| **WA-AUTH-001** | 🔴 Critical | 2j | *"Je veux créer mon compte et me connecter"* | **🔐 Authentication Complete** - Register/Login + Profile + Google OAuth |
-| **WA-SYNC-001** | 🟡 High | 3j | *"Mes données locales doivent sync avec le cloud"* | **🔄 LocalStorage → Supabase Migration** - Data sync + conflict resolution |
-| **WA-PROFILE-001** | 🟡 High | 2j | *"Je veux personnaliser mon profil fitness"* | **👤 User Profile System** - Fitness goals + preferences + avatar |
+| **WA-017** | 🟡 High | 2j | *"Je ne sais pas comment faire les exercices"* | **🎬 Exercise Display Premium** - Animations + démonstrations |
+| **WA-018** | 🟡 High | 2j | *"Les instructions doivent être claires"* | **📖 Exercise Instructions** - Guide visuel + tips contextuels |
+| **WA-019** | 🟢 Medium | 2j | *"L'interface doit être plus vivante"* | **✨ Micro-animations** - Transitions fluides + interactions |
+| **WA-020** | 🟢 Medium | 1j | *"Je veux des feedbacks motivants"* | **🎯 Smart Feedback System** - Messages adaptatifs + celebrations |
 
 ---
 
-### 📋 **PHASE 9: Onboarding + User Experience**
-*Durée: 1 semaine | First impression excellence*
+### 📋 **PHASE 6: Analytics & Progress Cloud**
+*Durée: 1-2 semaines | Intelligence des données*
 
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
-| **WA-REDESIGN-002** | 🔴 Critical | 4j | *"Je ne sais pas comment commencer mon parcours fitness"* | **🚀 Onboarding révolutionnaire** - Profil détaillé + assessment + objectifs |
-| **WA-GAMIFICATION-BASIC** | 🟡 High | 3j | *"Je veux voir ma progression de façon motivante"* | **🎮 Gamification Foundation** - Levels + Badges + Streaks + XP |
+| **WA-021** | 🟡 High | 2j | *"Je veux voir ma progression en temps réel"* | **📊 Progress Tracking Premium** - Charts + trends + insights |
+| **WA-ANALYTICS-001** | 🔴 Critical | 3j | *"Je veux mes stats détaillées"* | **📈 Analytics Dashboard** - Performance metrics + history cloud |
+| **WA-022** | 🟡 High | 1j | *"Les pourcentages doivent être motivants"* | **🎯 Progress Visualization** - Animated progress + milestones |
+| **WA-023** | 🟢 Medium | 2j | *"Je veux comprendre quels muscles je travaille"* | **💪 Muscle Group Education** - Anatomie + ciblage + conseils |
+| **WA-024** | 🟢 Medium | 2j | *"Je veux un résumé motivant après workout"* | **🏆 Workout Summary** - Stats + achievements + sharing |
 
 ---
 
-### 📋 **PHASE 10: Social Foundation**
-*Durée: 2-3 semaines | Community building*
+### 📋 **PHASE 7: Social Foundation**
+*Durée: 2 semaines | Community building*
 
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
-| **WA-SOCIAL-001** | 🔴 Critical | 1 sem | *"Je manque de motivation, je m'entraîne seul"* | **👥 Social Engine Foundation** - Friends + Follow + Activity feed |
-| **WA-SOCIAL-002** | 🟡 High | 1 sem | *"J'aimerais faire des défis avec mes amis"* | **🏆 Challenge System** - Create challenges + Leaderboards + Team battles |
-| **WA-NOTIFICATIONS** | 🟡 High | 3j | *"Je veux être encouragé et rappelé"* | **🔔 Smart Notifications** - Workout reminders + Social activities + Achievements |
+| **WA-SOCIAL-001** | 🔴 Critical | 1 sem | *"Je manque de motivation, je m'entraîne seul"* | **👥 Social Engine** - Friends + Follow + Activity feed |
+| **WA-SOCIAL-002** | 🟡 High | 1 sem | *"J'aimerais faire des défis avec mes amis"* | **🏆 Challenge System** - Défis + Leaderboards + Team battles |
+| **WA-SOCIAL-003** | 🟡 High | 3j | *"Je veux partager mes performances"* | **📱 Social Sharing** - Workout sharing + achievements |
 
 ---
 
-### 📋 **PHASE 11: AI Integration Gemini**
+### 📋 **PHASE 8: AI Integration Gemini**
 *Durée: 2-3 semaines | Intelligence artificielle*
 
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
-| **WA-AI-001** | 🔴 Critical | 2 sem | *"Mes workouts ne s'adaptent pas à mon niveau"* | **🧠 AI Workout Personalization** - Gemini API + Adaptive difficulty + Smart recommendations |
-| **WA-AI-002** | 🟡 High | 1 sem | *"J'aimerais un coach personnel intelligent"* | **💬 AI Coaching Assistant** - Conversational coaching + Tips + Motivation |
-| **WA-AI-003** | 🟢 Medium | 4j | *"Je veux des analyses de mes performances"* | **📊 AI Performance Analysis** - Pattern recognition + Insights + Recommendations |
+| **WA-AI-001** | 🔴 Critical | 2 sem | *"Mes workouts ne s'adaptent pas à mon niveau"* | **🧠 AI Workout Personalization** - Gemini API + adaptation intelligente |
+| **WA-AI-002** | 🟡 High | 1 sem | *"J'aimerais un coach personnel intelligent"* | **💬 AI Coaching Assistant** - Chat contextuel + conseils personnalisés |
+| **WA-AI-003** | 🟢 Medium | 4j | *"Je veux des analyses intelligentes"* | **📊 AI Performance Analysis** - Pattern recognition + recommandations |
 
 ---
 
-### 📋 **PHASE 12: Advanced Features + Monetization**
+### 📋 **PHASE 9: Gamification & Engagement**
+*Durée: 1-2 semaines | Motivation maximale*
+
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-GAMIFICATION-001** | 🔴 Critical | 1 sem | *"Je veux voir ma progression de façon motivante"* | **🎮 Gamification System** - Levels + XP + Badges + Streaks |
+| **WA-ONBOARDING-001** | 🟡 High | 4j | *"Je ne sais pas comment commencer"* | **🚀 Onboarding Premium** - Assessment + goals + AI setup |
+| **WA-NOTIFICATIONS-001** | 🟡 High | 3j | *"Je veux être encouragé et rappelé"* | **🔔 Smart Notifications** - Reminders + achievements + social |
+
+---
+
+### 📋 **PHASE 10: Monetization & Business**
 *Durée: 2-3 semaines | Business model*
 
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
-| **WA-MONETIZATION-001** | 🔴 Critical | 1 sem | *"Je veux plus de features et comprends qu'il faut payer"* | **💰 Freemium Model** - Free/Premium tiers + Stripe + Feature gating |
-| **WA-ADVANCED-001** | 🟡 High | 1 sem | *"Je veux des workouts plus avancés"* | **🏋️ Advanced Workout Features** - Custom exercises + Programs + Templates |
-| **WA-ANALYTICS-PREMIUM** | 🟡 High | 4j | *"Je veux des analyses détaillées de mes progrès"* | **📈 Premium Analytics** - Advanced insights + Reports + Trends |
+| **WA-MONETIZATION-001** | 🔴 Critical | 1 sem | *"Je veux plus de features premium"* | **💰 Freemium Model** - Free/Premium tiers + Stripe integration |
+| **WA-PREMIUM-001** | 🟡 High | 1 sem | *"Je veux des workouts plus avancés"* | **🏋️ Premium Features** - Advanced workouts + AI coaching + analytics |
+| **WA-BUSINESS-001** | 🟡 High | 4j | *"L'app doit générer des revenus"* | **📊 Business Dashboard** - Revenue tracking + user analytics |
 
 ---
 
-### 📋 **PHASE 13: Performance + Polish**
+### 📋 **PHASE 11: Advanced Features**
+*Durée: 2-3 semaines | Fonctionnalités avancées*
+
+| Ticket | Priorité | Durée | Justificatif Client | Description |
+|--------|----------|-------|-------------------|-------------|
+| **WA-ADVANCED-001** | 🟡 High | 1 sem | *"Je veux créer mes propres exercices"* | **🔧 Custom Exercise Builder** - Créateur d'exercices personnalisés |
+| **WA-ADVANCED-002** | 🟡 High | 1 sem | *"Je veux des programmes d'entraînement"* | **📅 Training Programs** - Plans structurés + progression |
+| **WA-INTEGRATIONS-001** | 🟢 Medium | 4j | *"Je veux connecter mes wearables"* | **⌚ Wearables Integration** - Apple Watch + Fitbit + heart rate |
+
+---
+
+### 📋 **PHASE 12: Performance & Scale**
 *Durée: 1-2 semaines | Production ready*
 
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
-| **WA-PERFORMANCE-001** | 🔴 Critical | 4j | *"L'app doit être rapide et fluide"* | **⚡ Performance Optimization** - Code splitting + Lazy loading + Caching |
-| **WA-POLISH-001** | 🟡 High | 3j | *"L'expérience doit être parfaite"* | **✨ UI/UX Polish** - Animations + Feedback + Error handling |
-| **WA-SEO-001** | 🟡 High | 2j | *"L'app doit être trouvable sur Google"* | **🔍 SEO Optimization** - Meta tags + Sitemap + Schema markup |
+| **WA-PERFORMANCE-001** | 🔴 Critical | 4j | *"L'app doit être ultra-rapide"* | **⚡ Performance Optimization** - Code splitting + Lazy loading + Caching |
+| **WA-SCALE-001** | 🟡 High | 3j | *"L'app doit supporter beaucoup d'utilisateurs"* | **🏗️ Scalability** - Database optimization + CDN + monitoring |
+| **WA-SEO-001** | 🟡 High | 2j | *"L'app doit être trouvable"* | **🔍 SEO & Marketing** - Meta tags + sitemap + analytics |
 
 ---
 
-### 📋 **PHASE 14: Scale Preparation**
-*Durée: 2-3 semaines | Growth ready*
-
-| Ticket | Priorité | Durée | Justificatif Client | Description |
-|--------|----------|-------|-------------------|-------------|
-| **WA-MIGRATION-PREP** | 🟡 High | 1 sem | *"L'app doit pouvoir supporter plus d'utilisateurs"* | **🏗️ PostgreSQL Migration Prep** - Schema design + Migration plan + Testing |
-| **WA-ENTERPRISE-PREP** | 🟢 Medium | 1 sem | *"Les entreprises s'intéressent à notre solution"* | **🏢 Enterprise Features Prep** - Team management + Analytics + White-label prep |
-| **WA-MOBILE-PREP** | 🟢 Medium | 4j | *"Je veux une vraie app mobile"* | **📱 React Native Preparation** - Component audit + Architecture + Roadmap |
-
----
-
-### 📋 **PHASES 15-18: NATIVE MOBILE**
-*Durée: 24-30 semaines | Market leadership*
+### 📋 **PHASES 13-15: NATIVE MOBILE**
+*Durée: 20-24 semaines | Market leadership*
 
 | Phase | Focus | Timeline | Key Deliverables |
 |-------|-------|----------|------------------|
-| **Phase 15** | **📱 iOS Native Launch** | 6-8 sem | App Store + Apple Watch + HealthKit + Premium Experience |
-| **Phase 16** | **🤖 Android Native Launch** | 4-6 sem | Play Store + Wear OS + Google Fit + Material Design |
-| **Phase 17** | **🏢 Enterprise Native** | 6-8 sem | White-label + HR Integration + Corporate Wellness |
-| **Phase 18** | **🏆 Market Leadership** | 4-6 sem | API Ecosystem + Global Expansion + Industry Certification |
+| **Phase 13** | **📱 iOS Native** | 6-8 sem | App Store + Apple Watch + HealthKit + Premium UX |
+| **Phase 14** | **🤖 Android Native** | 4-6 sem | Play Store + Wear OS + Google Fit + Material Design |
+| **Phase 15** | **🏆 Market Leadership** | 4-6 sem | Global expansion + API ecosystem + Enterprise |
 
 ---
 
-**Objectif:** Top 10 fitness apps + Market share significative
+## 🚀 TIMELINE GLOBAL
+### **📅 SPRINT 1 (Semaine 1) :**
+- ✅ WA-013 terminé
+- 🎨 WA-DESIGN-001→003 (Design system)
+- ☁️ WA-SUPABASE-001→003 (Cloud foundation)
 
+### **📅 SPRINT 2 (Semaine 2) :**
+- 🏋️ WA-014→016 (Core features)
+- 🚀 WA-DEPLOY-001→003 (MVP deploy)
+- 🎯 **MILESTONE MVP LIVE**
+
+### **📅 MOIS 1-2 :**
+- Phases 5-6 (UX + Analytics)
+- 100+ users beta
+- Product-market fit
+
+### **📅 MOIS 3-4 :**
+- Phases 7-8 (Social + AI)
+- Monetization
+- 1000+ users
+
+### **📅 MOIS 5-12 :**
+- Advanced features
+- Scale preparation
+- Market leadership
 ---
-
-## 🚀 NEXT ACTIONS IMMÉDIATES
-1. ✅ **WA-013 TERMINÉ** - Configuration avancée avec hooks optimisés
-2. **WA-STORAGE-001** (LocalStorage foundation) - 1 jour  
-3. **WA-014-015** (Sélection + Validation) - 2 jours
-
-### **📅 OBJECTIF 7 SEMAINES:**
-**MVP deployed sur Vercel avec vrais users ! 🚀**
-
----
-
 ## 👨‍💻 Développeur
-
 **Bryan Diffo** - [bryandiffo@gmail.com](mailto:bryandiffo@gmail.com)
 
 *VECT: Vectorisez votre fitness vers l'excellence !* 🚀💪
-
 ---
-
 *Développé avec les principes Clean Code & Pragmatic Programmer + Claude Sonnet 4*
