@@ -1,147 +1,109 @@
-// src/actions/configActions.js
-// 🏗️ WA-007: Actions pour la configuration du workout
+// src/actions/configActions.js - EXTENSION WA-013.1
+// 🏗️ Actions complémentaires pour la configuration avancée
 // Référence Clean Code: "Functions should do one thing and do it well"
 
 import { CONFIG_ACTIONS } from '../reducers/configReducer';
 
-/**
- * 🎯 Actions de base pour la configuration
- * Pragmatic Programmer: "DRY - Don't Repeat Yourself"
- */
+// 🔄 Actions de navigation multi-étapes
 
 /**
- * Action pour définir le temps de travail
- * @param {number} seconds - Temps en secondes
+ * Action pour passer à l'étape suivante
  */
-export const setWorkTimeAction = (seconds) => {
-  if (typeof seconds !== 'number' || seconds < 0) {
-    throw new Error('Le temps de travail doit être un nombre positif');
-  }
-
-  return {
-    type: CONFIG_ACTIONS.SET_WORK_TIME,
-    payload: seconds,
-    meta: {
-      timestamp: new Date().toISOString(),
-      action: 'set_work_time'
-    }
-  };
-};
-
-/**
- * Action pour définir le temps de repos
- * @param {number} seconds - Temps en secondes
- */
-export const setRestTimeAction = (seconds) => {
-  if (typeof seconds !== 'number' || seconds < 0) {
-    throw new Error('Le temps de repos doit être un nombre positif');
-  }
-
-  return {
-    type: CONFIG_ACTIONS.SET_REST_TIME,
-    payload: seconds,
-    meta: {
-      timestamp: new Date().toISOString(),
-      action: 'set_rest_time'
-    }
-  };
-};
-
-/**
- * Action pour définir le temps de préparation
- * @param {number} seconds - Temps en secondes
- */
-export const setPrepTimeAction = (seconds) => ({
-  type: CONFIG_ACTIONS.SET_PREP_TIME,
-  payload: seconds,
+export const nextStepAction = () => ({
+  type: CONFIG_ACTIONS.NEXT_STEP,
   meta: {
     timestamp: new Date().toISOString(),
-    action: 'set_prep_time'
+    action: 'next_step'
   }
 });
 
 /**
- * Action pour définir le nombre de rounds
- * @param {number} rounds - Nombre de rounds
+ * Action pour retourner à l'étape précédente
  */
-export const setRoundsAction = (rounds) => {
-  if (typeof rounds !== 'number' || rounds < 1) {
-    throw new Error('Le nombre de rounds doit être au moins 1');
+export const previousStepAction = () => ({
+  type: CONFIG_ACTIONS.PREVIOUS_STEP,
+  meta: {
+    timestamp: new Date().toISOString(),
+    action: 'previous_step'
+  }
+});
+
+/**
+ * Action pour aller directement à une étape
+ * @param {number} step - Numéro de l'étape (1-3)
+ */
+export const goToStepAction = (step) => {
+  if (typeof step !== 'number' || step < 1 || step > 3) {
+    throw new Error('L\'étape doit être un nombre entre 1 et 3');
   }
 
   return {
-    type: CONFIG_ACTIONS.SET_ROUNDS,
-    payload: rounds,
+    type: CONFIG_ACTIONS.GO_TO_STEP,
+    payload: step,
     meta: {
       timestamp: new Date().toISOString(),
-      action: 'set_rounds'
+      action: 'go_to_step'
     }
   };
 };
 
+// 🗑️ Action pour supprimer un exercice
+
 /**
- * Action pour ajouter un exercice
- * @param {string} exerciseId - ID de l'exercice
+ * Action pour supprimer un exercice par ID
+ * @param {string} exerciseId - ID de l'exercice à supprimer
  */
-export const addExerciseAction = (exerciseId) => {
+export const removeExerciseAction = (exerciseId) => {
   if (!exerciseId || typeof exerciseId !== 'string') {
-    throw new Error('ID d\'exercice requis');
+    throw new Error('ID d\'exercice requis pour la suppression');
   }
 
   return {
-    type: CONFIG_ACTIONS.ADD_EXERCISE,
+    type: CONFIG_ACTIONS.REMOVE_EXERCISE,
     payload: { exerciseId },
     meta: {
       timestamp: new Date().toISOString(),
-      action: 'add_exercise',
-      exerciseId
+      action: 'remove_exercise'
     }
   };
 };
 
 /**
- * Action pour supprimer un exercice
- * @param {string} exerciseId - ID de l'exercice
- */
-export const removeExerciseAction = (exerciseId) => ({
-  type: CONFIG_ACTIONS.REMOVE_EXERCISE,
-  payload: { exerciseId },
-  meta: {
-    timestamp: new Date().toISOString(),
-    action: 'remove_exercise',
-    exerciseId
-  }
-});
-
-/**
  * Action pour réorganiser les exercices
- * @param {number} fromIndex - Index source
- * @param {number} toIndex - Index destination
+ * @param {string} exerciseId - ID de l'exercice à déplacer
+ * @param {number} newIndex - Nouvelle position
  */
-export const reorderExercisesAction = (fromIndex, toIndex) => ({
-  type: CONFIG_ACTIONS.REORDER_EXERCISES,
-  payload: { fromIndex, toIndex },
-  meta: {
-    timestamp: new Date().toISOString(),
-    action: 'reorder_exercises',
-    move: `${fromIndex} → ${toIndex}`
+export const reorderExerciseAction = (exerciseId, newIndex) => {
+  if (!exerciseId || typeof newIndex !== 'number') {
+    throw new Error('ID d\'exercice et nouvel index requis');
   }
-});
+
+  return {
+    type: CONFIG_ACTIONS.REORDER_EXERCISES,
+    payload: { exerciseId, newIndex },
+    meta: {
+      timestamp: new Date().toISOString(),
+      action: 'reorder_exercise'
+    }
+  };
+};
+
+// 🎚️ Actions de configuration générale
 
 /**
  * Action pour définir la difficulté
- * @param {string} difficulty - Niveau de difficulté
+ * @param {string} level - Niveau de difficulté ('débutant', 'intermédiaire', 'avancé')
  */
-export const setDifficultyAction = (difficulty) => {
-  const validDifficulties = ['débutant', 'intermédiaire', 'avancé'];
+export const setDifficultyAction = (level) => {
+  const validLevels = ['débutant', 'intermédiaire', 'avancé'];
   
-  if (!validDifficulties.includes(difficulty)) {
-    throw new Error(`Difficulté invalide. Doit être: ${validDifficulties.join(', ')}`);
+  if (!validLevels.includes(level)) {
+    throw new Error(`Difficulté invalide. Valeurs acceptées: ${validLevels.join(', ')}`);
   }
 
   return {
     type: CONFIG_ACTIONS.SET_DIFFICULTY,
-    payload: { difficulty },
+    payload: level,
     meta: {
       timestamp: new Date().toISOString(),
       action: 'set_difficulty'
@@ -151,52 +113,73 @@ export const setDifficultyAction = (difficulty) => {
 
 /**
  * Action pour définir le nom de la configuration
- * @param {string} name - Nom du workout
+ * @param {string} name - Nom de la configuration
  */
-export const setConfigNameAction = (name) => ({
-  type: CONFIG_ACTIONS.SET_CONFIG_NAME,
-  payload: { name },
-  meta: {
-    timestamp: new Date().toISOString(),
-    action: 'set_config_name'
-  }
-});
-
-/**
- * Action pour définir la description
- * @param {string} description - Description du workout
- */
-export const setConfigDescriptionAction = (description) => ({
-  type: CONFIG_ACTIONS.SET_CONFIG_DESCRIPTION,
-  payload: { description },
-  meta: {
-    timestamp: new Date().toISOString(),
-    action: 'set_config_description'
-  }
-});
-
-/**
- * Action pour charger un preset
- * @param {Object} preset - Plan de workout à charger
- */
-export const loadPresetAction = (preset) => {
-  if (!preset || typeof preset !== 'object') {
-    throw new Error('Preset de workout requis');
+export const setConfigNameAction = (name) => {
+  if (typeof name !== 'string') {
+    throw new Error('Le nom doit être une chaîne de caractères');
   }
 
   return {
-    type: CONFIG_ACTIONS.LOAD_PRESET,
-    payload: { preset },
+    type: CONFIG_ACTIONS.SET_CONFIG_NAME,
+    payload: name.trim(),
     meta: {
       timestamp: new Date().toISOString(),
-      action: 'load_preset',
-      presetId: preset.id
+      action: 'set_config_name'
     }
   };
 };
 
 /**
- * Action pour remettre à zéro la configuration
+ * Action pour définir la description de la configuration
+ * @param {string} description - Description de la configuration
+ */
+export const setConfigDescriptionAction = (description) => {
+  if (typeof description !== 'string') {
+    throw new Error('La description doit être une chaîne de caractères');
+  }
+
+  return {
+    type: CONFIG_ACTIONS.SET_CONFIG_DESCRIPTION,
+    payload: description.trim(),
+    meta: {
+      timestamp: new Date().toISOString(),
+      action: 'set_config_description'
+    }
+  };
+};
+
+// 📦 Actions de preset
+
+/**
+ * Action pour charger un preset
+ * @param {Object} preset - Configuration prédéfinie
+ */
+export const loadPresetAction = (preset) => {
+  if (!preset || typeof preset !== 'object') {
+    throw new Error('Preset invalide');
+  }
+
+  const requiredFields = ['name', 'exercises', 'timing'];
+  const missingFields = requiredFields.filter(field => !preset[field]);
+  
+  if (missingFields.length > 0) {
+    throw new Error(`Champs manquants dans le preset: ${missingFields.join(', ')}`);
+  }
+
+  return {
+    type: CONFIG_ACTIONS.LOAD_PRESET,
+    payload: preset,
+    meta: {
+      timestamp: new Date().toISOString(),
+      action: 'load_preset',
+      presetName: preset.name
+    }
+  };
+};
+
+/**
+ * Action pour réinitialiser la configuration
  */
 export const resetConfigAction = () => ({
   type: CONFIG_ACTIONS.RESET_CONFIG,
@@ -206,8 +189,10 @@ export const resetConfigAction = () => ({
   }
 });
 
+// 🔍 Actions de validation
+
 /**
- * Action pour valider la configuration
+ * Action pour déclencher une validation manuelle
  */
 export const validateConfigAction = () => ({
   type: CONFIG_ACTIONS.VALIDATE_CONFIG,
@@ -218,153 +203,110 @@ export const validateConfigAction = () => ({
 });
 
 /**
- * 🎯 Actions composées pour des opérations complexes
- * Clean Code: "Compose methods to tell a story"
+ * Action pour marquer la configuration comme modifiée
+ */
+export const markDirtyAction = () => ({
+  type: CONFIG_ACTIONS.MARK_DIRTY,
+  meta: {
+    timestamp: new Date().toISOString(),
+    action: 'mark_dirty'
+  }
+});
+
+/**
+ * Action pour marquer la configuration comme sauvegardée
+ */
+export const markCleanAction = () => ({
+  type: CONFIG_ACTIONS.MARK_CLEAN,
+  meta: {
+    timestamp: new Date().toISOString(),
+    action: 'mark_clean'
+  }
+});
+
+// 🏭 Factory pattern pour créer des actions complexes
+export class ConfigActionFactory {
+  
+  /**
+   * Crée une action de configuration complète
+   * @param {Object} config - Configuration complète
+   */
+  static createCompleteConfig(config) {
+    return {
+      type: CONFIG_ACTIONS.SET_COMPLETE_CONFIG,
+      payload: config,
+      meta: {
+        timestamp: new Date().toISOString(),
+        action: 'set_complete_config',
+        source: 'factory'
+      }
+    };
+  }
+
+  /**
+   * Crée une action de sauvegarde de configuration
+   * @param {Object} config - Configuration à sauvegarder
+   */
+  static createSaveConfig(config) {
+    return {
+      type: CONFIG_ACTIONS.SAVE_CONFIG,
+      payload: {
+        config,
+        saveId: `config_${Date.now()}`,
+        timestamp: new Date().toISOString()
+      },
+      meta: {
+        timestamp: new Date().toISOString(),
+        action: 'save_config',
+        source: 'factory'
+      }
+    };
+  }
+}
+
+/**
+ * 🎯 Thunk-like actions pour opérations complexes
+ * Pragmatic Programmer: "DRY - Don't Repeat Yourself"
  */
 
 /**
- * Action composée pour ajuster le timing rapidement
- * @param {Object} timing - Objet avec workTime, restTime, prepTime
- */
-export const setBulkTimingAction = (timing) => {
-  return [
-    setWorkTimeAction(timing.workTime),
-    setRestTimeAction(timing.restTime),
-    setPrepTimeAction(timing.prepTime)
-  ];
-};
-
-/**
- * Action composée pour ajouter plusieurs exercices
- * @param {Array} exerciseIds - Liste des IDs d'exercices
+ * Action composée pour ajouter plusieurs exercices d'un coup
+ * @param {string[]} exerciseIds - Liste des IDs d'exercices
  */
 export const addMultipleExercisesAction = (exerciseIds) => {
   if (!Array.isArray(exerciseIds)) {
-    throw new Error('Liste d\'exercices requise');
+    throw new Error('exerciseIds doit être un tableau');
   }
 
-  return exerciseIds.map(id => addExerciseAction(id));
-};
-
-/**
- * Action composée pour créer un workout rapide
- * @param {Object} quickConfig - Configuration rapide
- */
-export const createQuickWorkoutAction = (quickConfig) => {
-  const actions = [];
-  
-  if (quickConfig.name) {
-    actions.push(setConfigNameAction(quickConfig.name));
-  }
-  
-  if (quickConfig.difficulty) {
-    actions.push(setDifficultyAction(quickConfig.difficulty));
-  }
-  
-  if (quickConfig.timing) {
-    actions.push(...setBulkTimingAction(quickConfig.timing));
-  }
-  
-  if (quickConfig.rounds) {
-    actions.push(setRoundsAction(quickConfig.rounds));
-  }
-  
-  if (quickConfig.exercises) {
-    actions.push(...addMultipleExercisesAction(quickConfig.exercises));
-  }
-  
-  actions.push(validateConfigAction());
-  
-  return actions;
-};
-
-/**
- * 🏭 Factory pour les actions de configuration
- * Clean Code: "Use polymorphism instead of switch statements"
- */
-export const ConfigActionFactory = {
-  timing: {
-    work: setWorkTimeAction,
-    rest: setRestTimeAction,
-    prep: setPrepTimeAction,
-    bulk: setBulkTimingAction
-  },
-  
-  structure: {
-    rounds: setRoundsAction,
-    difficulty: setDifficultyAction
-  },
-  
-  exercises: {
-    add: addExerciseAction,
-    remove: removeExerciseAction,
-    reorder: reorderExercisesAction,
-    addMultiple: addMultipleExercisesAction
-  },
-  
-  metadata: {
-    name: setConfigNameAction,
-    description: setConfigDescriptionAction
-  },
-  
-  workflow: {
-    preset: loadPresetAction,
-    reset: resetConfigAction,
-    validate: validateConfigAction,
-    quick: createQuickWorkoutAction
-  }
-};
-
-/**
- * 🎯 Actions avec presets communs
- * Pragmatic Programmer: "Parameterize from the outside"
- */
-
-/**
- * Presets de timing populaires
- */
-export const TIMING_PRESETS = {
-  beginner: { workTime: 30, restTime: 30, prepTime: 10 },
-  intermediate: { workTime: 45, restTime: 15, prepTime: 10 },
-  advanced: { workTime: 60, restTime: 10, prepTime: 5 },
-  hiit: { workTime: 20, restTime: 10, prepTime: 5 },
-  endurance: { workTime: 90, restTime: 30, prepTime: 15 }
-};
-
-/**
- * Action pour appliquer un preset de timing
- * @param {string} presetName - Nom du preset
- */
-export const applyTimingPresetAction = (presetName) => {
-  const preset = TIMING_PRESETS[presetName];
-  
-  if (!preset) {
-    throw new Error(`Preset de timing inconnu: ${presetName}`);
-  }
-  
-  return setBulkTimingAction(preset);
-};
-
-/**
- * 📊 Actions avec analytics
- * Clean Code: "Separate concerns"
- */
-
-/**
- * Action avec logging pour changement de configuration
- * @param {string} configType - Type de configuration modifiée
- * @param {any} oldValue - Ancienne valeur
- * @param {any} newValue - Nouvelle valeur
- */
-export const logConfigChangeAction = (configType, oldValue, newValue) => {
-  console.log(`🔧 Configuration ${configType}: ${oldValue} → ${newValue}`);
-  
   return {
-    type: 'LOG_CONFIG_CHANGE',
-    payload: { configType, oldValue, newValue },
+    type: CONFIG_ACTIONS.ADD_MULTIPLE_EXERCISES,
+    payload: exerciseIds,
     meta: {
       timestamp: new Date().toISOString(),
-      action: 'log_config_change'
+      action: 'add_multiple_exercises',
+      count: exerciseIds.length
+    }
+  };
+};
+
+/**
+ * Action composée pour définir la configuration de timing complète
+ * @param {Object} timingConfig - Configuration complète des temps
+ */
+export const setTimingConfigAction = (timingConfig) => {
+  const { workTime, restTime, prepTime, rounds } = timingConfig;
+  
+  if (typeof workTime !== 'number' || typeof restTime !== 'number' || 
+      typeof prepTime !== 'number' || typeof rounds !== 'number') {
+    throw new Error('Tous les paramètres de timing doivent être des nombres');
+  }
+
+  return {
+    type: CONFIG_ACTIONS.SET_TIMING_CONFIG,
+    payload: { workTime, restTime, prepTime, rounds },
+    meta: {
+      timestamp: new Date().toISOString(),
+      action: 'set_timing_config'
     }
   };
 };

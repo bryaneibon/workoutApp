@@ -11,7 +11,7 @@ import AppLayout from './components/layout/AppLayout.jsx';
 
 // Imports des vues complètes
 import HomeView from './components/views/HomeView.jsx';
-import WorkoutConfigView from './components/views/WorkoutConfigView.jsx';
+import WorkoutCalculationsDemo from './components/views/WorkoutConfigView.jsx';
 import WorkoutDemoView from './components/views/WorkoutDemoView.jsx';
 import TestComponentsView from './components/views/TestComponentsView.jsx';
 import WorkoutActiveView from './components/views/WorkoutActiveView.jsx';
@@ -76,7 +76,7 @@ const App = () => {
         return <HomeView {...viewProps} />;
       
       case APP_VIEWS.WORKOUT_CONFIG:
-        return <WorkoutConfigView />;
+        return <WorkoutCalculationsDemo />;
       
       case APP_VIEWS.TEST_COMPONENTS:
         return <TestComponentsView />;
