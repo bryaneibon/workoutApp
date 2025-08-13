@@ -3,7 +3,7 @@
 // Référence Clean Code: "Functions should do one thing" - Validation pure séparée
 // Référence Pragmatic Programmer: "Fail fast" - Validation précoce et précise
 
-import { useCallback, useMemo, useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { EXERCISES_DATABASE } from '../data/exercices.js';
 import { DEFAULT_TIMERS } from '../constants/workoutStates.js';
 
@@ -246,6 +246,18 @@ export const useWorkoutValidation = (configState) => {
   const validateWorkoutMetrics = useCallback((state) => {
     const results = [];
     const { estimatedDuration, exercises, workTime, restTime, rounds, difficulty } = state;
+
+      // Validation cohérence exercices/durée
+      if (exercises.length > 5 && rounds > 5) {
+        results.push({
+          type: VALIDATION_TYPES.WARNING,
+          priority: VALIDATION_PRIORITIES.MEDIUM,
+          field: 'volume',
+          message: 'Combinaison exercices/rounds très intense',
+          suggestion: 'Réduisez exercices ou rounds pour éviter épuisement',
+          code: 'HIGH_VOLUME_COMBINATION'
+        });
+      }
 
     // Validation durée
     if (estimatedDuration > 60) {

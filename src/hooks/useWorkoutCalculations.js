@@ -5,26 +5,26 @@
 
 import { useMemo, useRef, useCallback } from 'react';
 import { EXERCISES_DATABASE } from '../data/exercices.js';
-import { DIFFICULTY_LEVELS } from '../data/workoutPresets.js';
-import { formatDuration,
-        calculateTimeComplexity,
-        calculateVolumeComplexity,
-        calculateExerciseComplexity,
-        getDifficultyLabel,
-        getIntensityLevel,
-        getNextLevelTarget,
-        identifyImprovementAreas,
-        generateMuscleRecommendations,
-        generateProgressionSuggestions,
-        calculateDiversityIndex,
-        analyzeExerciseSequence,
-        generateOptimalSequence,
-        calculateProjections,
-        calculateSustainabilityScore,
-        generateOptimizationSuggestions,
-        benchmarkCalculation,
-        CalculationCache,
-        globalCalculationCache
+
+import {
+  formatDuration,
+  calculateTimeComplexity,
+  calculateVolumeComplexity,
+  calculateExerciseComplexity,
+  getDifficultyLabel,
+  getIntensityLevel,
+  getNextLevelTarget,
+  identifyImprovementAreas,
+  generateMuscleRecommendations,
+  generateProgressionSuggestions,
+  calculateDiversityIndex,
+  analyzeExerciseSequence,
+  generateOptimalSequence,
+  calculateProjections,
+  calculateSustainabilityScore,
+  generateOptimizationSuggestions,
+  benchmarkCalculation,
+  globalCalculationCache
 } from '../utils/calculationUtils.js';
 
 /**
@@ -88,9 +88,9 @@ export const useWorkoutCalculations = (configState) => {
   }, [configState.workTime, configState.restTime, configState.prepTime, 
       configState.rounds, configState.exercises, configState.difficulty]);
 
-  // ⏱️ Calculs de durée optimisés avec useMemo
+  // ⏱️ Calculs de durée optimisés avec useMemo + VRAIS utilitaires
   const durationCalculations = useMemo(() => {
-    console.log('🧮 Calcul durées - useMemo déclenché - useWorkoutCalculations.js ');
+    console.log('🧮 Calcul durées - useMemo avec utilitaires réels');
     
     const { workTime, restTime, prepTime, rounds, exercises } = configState;
     
@@ -103,7 +103,7 @@ export const useWorkoutCalculations = (configState) => {
         prepSeconds: prepTime,
         roundDuration: 0,
         averageExerciseTime: 0,
-        formattedDuration: '0:00'
+        formattedDuration: formatDuration(0) // 🔧 UTILISE calculationUtils
       };
     }
 
@@ -121,7 +121,7 @@ export const useWorkoutCalculations = (configState) => {
       prepSeconds: prepTime,
       roundDuration,
       averageExerciseTime: workTime + restTime,
-      formattedDuration: formatDuration(totalSeconds),
+      formattedDuration: formatDuration(totalSeconds), // 🔧 UTILISE calculationUtils
       
       // Métriques avancées
       workPercentage: Math.round((workSeconds / totalSeconds) * 100),
@@ -184,9 +184,9 @@ export const useWorkoutCalculations = (configState) => {
     };
   }, [configState.difficulty, configState.exercises, durationCalculations]);
 
-  // 🏋️‍♀️ Analyse des groupes musculaires optimisée
+  // 🏋️‍♀️ Analyse des groupes musculaires optimisée + VRAIS utilitaires
   const muscleGroupAnalysis = useMemo(() => {
-    console.log('💪 Analyse groupes musculaires - useMemo déclenché');
+    console.log('💪 Analyse groupes musculaires - useMemo avec utilitaires réels');
     
     const { exercises } = configState;
     
@@ -197,7 +197,9 @@ export const useWorkoutCalculations = (configState) => {
         dominantGroup: null,
         coverage: 0,
         balanceScore: 0,
-        recommendations: []
+        recommendations: ['Aucun exercice sélectionné'],
+        diversityIndex: 0,
+        sequenceAnalysis: { consecutiveSameGroup: 0, alternationScore: 100, recommendations: [] }
       };
     }
 
@@ -246,7 +248,7 @@ export const useWorkoutCalculations = (configState) => {
       ? Math.round(100 - (dominantGroup.count / totalExercises * 100))
       : 0;
 
-    // Recommandations intelligentes
+    // 🔧 UTILISE calculationUtils pour recommandations
     const recommendations = generateMuscleRecommendations(
       muscleDistribution, 
       dominantGroup, 
@@ -263,20 +265,21 @@ export const useWorkoutCalculations = (configState) => {
       muscleDetails,
       recommendations,
       
-      // Métriques avancées
+      // 🔧 UTILISE calculationUtils pour métriques avancées
       diversityIndex: calculateDiversityIndex(muscleCount),
-      sequenceAnalysis: analyzeExerciseSequence(muscleDetails)
+      sequenceAnalysis: analyzeExerciseSequence(muscleDetails),
+      optimalSequence: generateOptimalSequence(muscleDetails)
     };
   }, [configState.exercises]);
 
-  // 📊 Analyse de difficulté et progression optimisée
+  // 📊 Analyse de difficulté et progression optimisée + VRAIS utilitaires
   const difficultyAnalysis = useMemo(() => {
-    console.log('🎯 Analyse difficulté - useMemo déclenché');
+    console.log('🎯 Analyse difficulté - useMemo avec utilitaires réels');
     
     const { difficulty, workTime, restTime, rounds, exercises } = configState;
     const { intensityRatio } = durationCalculations;
     
-    // Métriques de difficulté par composant
+    // 🔧 UTILISE calculationUtils pour métriques de difficulté
     const timeComplexity = calculateTimeComplexity(workTime, restTime, intensityRatio);
     const volumeComplexity = calculateVolumeComplexity(exercises.length, rounds);
     const exerciseComplexity = calculateExerciseComplexity(exercises);
@@ -298,7 +301,7 @@ export const useWorkoutCalculations = (configState) => {
     const currentLevel = expectedDifficulty[difficulty];
     const isAligned = difficultyScore >= currentLevel.min && difficultyScore <= currentLevel.max;
     
-    // Suggestions de progression
+    // 🔧 UTILISE calculationUtils pour suggestions
     const progressionSuggestions = generateProgressionSuggestions(
       difficulty, 
       difficultyScore, 
@@ -314,20 +317,20 @@ export const useWorkoutCalculations = (configState) => {
       currentLevel,
       progressionSuggestions,
       
-      // Classification textuelle
+      // 🔧 UTILISE calculationUtils pour classifications
       difficultyLabel: getDifficultyLabel(difficultyScore),
       intensityLevel: getIntensityLevel(intensityRatio),
-
-      // Métriques de progression
+      
+      // 🔧 UTILISE calculationUtils pour métriques de progression
       nextLevelScore: getNextLevelTarget(difficulty, difficultyScore),
       improvementAreas: identifyImprovementAreas(timeComplexity, volumeComplexity, exerciseComplexity)
     };
   }, [configState.difficulty, configState.workTime, configState.restTime, 
       configState.rounds, configState.exercises, durationCalculations]);
 
-  // 📈 Métriques de performance globales optimisées
+  // 📈 Métriques de performance globales optimisées + VRAIS utilitaires
   const performanceMetrics = useMemo(() => {
-    console.log('📈 Calcul métriques performance - useMemo déclenché');
+    console.log('📈 Calcul métriques performance - useMemo avec utilitaires réels');
     
     const { totalMinutes, intensityRatio } = durationCalculations;
     const { estimatedCalories, caloriesPerMinute } = calorieCalculations;
@@ -354,12 +357,11 @@ export const useWorkoutCalculations = (configState) => {
     else if (qualityScore >= 65) overallRating = 'Très bon';
     else if (qualityScore >= 50) overallRating = 'Bon';
     
-    // Prédictions et projections
-    const projections = calculateProjections(
-      estimatedCalories, 
-      totalMinutes, 
-      intensityScore
-    );
+    // 🔧 UTILISE calculationUtils pour projections
+    const projections = {
+      ...calculateProjections(estimatedCalories, totalMinutes, intensityScore),
+      sustainabilityScore: calculateSustainabilityScore(totalMinutes, intensityScore)
+    };
 
     return {
       qualityScore,
@@ -377,7 +379,7 @@ export const useWorkoutCalculations = (configState) => {
         efficiency: Math.min(timeEfficiency * 10, 100)
       },
       
-      // Recommandations d'optimisation
+      // 🔧 UTILISE calculationUtils pour recommandations d'optimisation
       optimizationSuggestions: generateOptimizationSuggestions(
         qualityScore, 
         coverage, 
@@ -387,25 +389,49 @@ export const useWorkoutCalculations = (configState) => {
     };
   }, [durationCalculations, calorieCalculations, muscleGroupAnalysis, difficultyAnalysis]);
 
-  // 🔄 Fonction de nettoyage du cache
+  // 🔄 Fonction de nettoyage du cache + intégration globale
   const clearCalculationCache = useCallback(() => {
     calculationCache.current.clear();
-    console.log('🧹 Cache de calculs nettoyé');
+    globalCalculationCache.clear(); // 🔧 UTILISE calculationUtils cache
+    console.log('🧹 Cache de calculs nettoyé (local + global)');
   }, []);
 
-  // 📊 Fonction de benchmark des performances
+  // 📊 Fonction de benchmark des performances + VRAIS utilitaires
   const benchmarkCalculations = useCallback(() => {
-    const start = performance.now();
+    console.log('🚀 Benchmark avec utilitaires réels...');
     
-    // Force le recalcul de tous les useMemo
-    const hash = Date.now().toString();
+    // 🔧 UTILISE calculationUtils pour benchmark
+    const durationBenchmark = benchmarkCalculation(
+      calculateTimeComplexity, 
+      [configState.workTime, configState.restTime, durationCalculations.intensityRatio],
+      100
+    );
     
-    const end = performance.now();
-    const duration = end - start;
+    const volumeBenchmark = benchmarkCalculation(
+      calculateVolumeComplexity,
+      [configState.exercises.length, configState.rounds],
+      100
+    );
     
-    console.log(`⚡ Benchmark calculs: ${duration.toFixed(2)}ms`);
-    return { duration, timestamp: start };
-  }, []);
+    const exerciseBenchmark = benchmarkCalculation(
+      calculateExerciseComplexity,
+      [configState.exercises],
+      100
+    );
+    
+    console.log('📊 Résultats benchmark:', {
+      timeComplexity: durationBenchmark,
+      volumeComplexity: volumeBenchmark,
+      exerciseComplexity: exerciseBenchmark
+    });
+    
+    return {
+      durationBenchmark,
+      volumeBenchmark,
+      exerciseBenchmark,
+      timestamp: Date.now()
+    };
+  }, [configState, durationCalculations]);
 
   // 🏗️ Interface publique du hook
   return {
