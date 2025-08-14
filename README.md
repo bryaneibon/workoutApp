@@ -78,8 +78,9 @@ pnpm dev
 | Ticket | Priorité | Durée | Justificatif Client | Description |
 |--------|----------|-------|-------------------|-------------|
 | **WA-DESIGN-001** | 🔴 Critical | 1j | *"L'app doit être visuellement moderne"* | **🎨 Design System Setup** - Shadcn/ui + Color palette VECT + Typography |
-| **WA-DESIGN-002** | 🔴 Critical | 1j | *"Le timer doit être impressionnant"* | **⏱️ Timer Component V0 Integration** - Gradient orange→blue + Glass morphism |
-| **WA-DESIGN-003** | 🟡 High | 1j | *"L'interface doit être cohérente"* | **🧩 Component Library** - Buttons + Cards + Layout system |
+| **WA-DESIGN-002** | 🔴 Critical | 1j | *"L'app doit être visuellement moderne"* | **🎨 Design System Refactoring** - Refactorer mes composants existants pour utiliser notre VECT Design System et matcher l'interface V0 |
+| **WA-DESIGN-003** | 🔴 Critical | 1j | *"Le timer doit être impressionnant"* | **⏱️ Timer Component V0 Integration** - Gradient orange→blue + Glass morphism |
+| **WA-DESIGN-004** | 🟡 High | 1j | *"L'interface doit être cohérente"* | **🧩 Component Library** - Buttons + Cards + Layout system |
 
 ---
 
