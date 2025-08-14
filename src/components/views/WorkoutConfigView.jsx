@@ -4,7 +4,7 @@ import { useWorkoutValidation } from '../../hooks/useWorkoutValidation.js';
 import { useValidationFeedback } from '../../hooks/useValidationFeedback.js';
 import { EXERCISES_DATABASE } from '../../data/exercices.js';
 
-const WorkoutCalculationsDemo = () => {
+const WorkoutConfigView = () => {
   // 🔗 État de configuration simulé
   const [configState, setConfigState] = useState({
     workTime: 30,
@@ -433,4 +433,4 @@ const WorkoutCalculationsDemo = () => {
   );
 };
 
-export default WorkoutCalculationsDemo;
+export default WorkoutConfigView;
