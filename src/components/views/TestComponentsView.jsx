@@ -184,7 +184,7 @@ const TestComponentsView = () => {
     const exerciseCount = Object.keys(EXERCISES_DATABASE).length;
     const planCount = Object.keys(WORKOUT_PLANS).length;
     
-    const expectedExercises = 7;
+    const expectedExercises = 12;
     const expectedPlans = 3;
     
     return {

@@ -27,14 +27,14 @@ export const WORKOUT_PLANS = {
     exercises: ['push-up', 'squat', 'plank'],
     timing: { workTime: 30, restTime: 30, rounds: 3 }
   },
-  'dev-full-body-test': {
-    id: 'dev-full-body-test',
-    name: 'Corps Complet Expert - TEST',
-    description: 'Entraînement complet pour prendre FEUU - TEST',
+  'short-explosive': {
+    id: 'short-explosive',
+    name: 'Corps Complet Expert',
+    description: 'Entraînement complet pour prendre du muscle et de la force',
     difficulty: 'expert',
-    estimatedDuration: 9,
-    exercises: ['burpees', 'shadow-boxing', 'explosive push-ups'],
-    timing: { workTime: 10, restTime: 5, rounds: 10 }
+    estimatedDuration: 5,
+    exercises: ['burpees', 'shadow-boxing', 'explosive-push-ups', 'mountain-climbers', 'lunges', 'high-knees', 'bear-crawl', 'russian-twists'],
+    timing: { workTime: 10, restTime: 5, rounds: 3 }
   },
   'cardio-burn': {
     id: 'cardio-burn',

@@ -1,112 +1,264 @@
 // src/components/layout/AppHeader.jsx
-// 🎨 WA-008.5: Header moderne avec PropTypes (Clean Code compliance)
-// Référence Clean Code: "Use meaningful names" + "Functions should be small"
-
-import React from 'react';
+// 🎨 WA-REDESIGN-001: Header ultra clean avec responsive et hamburger menu
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { APP_VIEWS } from '../../constants/workoutStates.js';
-import Button from '../ui/Button.jsx';
+import { APP_VIEWS } from '@/constants/workoutStates';
+import { 
+  Home, 
+  Settings, 
+  TestTube, 
+  Timer, 
+  Zap,
+  SquareActivity,
+  Menu,
+  X
+} from 'lucide-react';
 
 /**
- * Navigation items configuration
+ * Navigation items configuration avec priorités d'affichage
+ * Clean Code: "Use intention-revealing names"
  */
 const navigationItems = [
-  { view: APP_VIEWS.HOME, icon: '🏠', label: 'Accueil', shortLabel: 'Home' },
-  { view: APP_VIEWS.WORKOUT_CONFIG, icon: '⚙️', label: 'Configuration', shortLabel: 'Config' },
-  { view: APP_VIEWS.TEST_COMPONENTS, icon: '🧪', label: 'Tests', shortLabel: 'Tests' },
-  { view: APP_VIEWS.WORKOUT_DEMO, icon: '🧠', label: 'Démo', shortLabel: 'Démo' },
-  { view: APP_VIEWS.WORKOUT_ACTIVE, icon: '⏰', label: 'Timer Auto', shortLabel: 'Timer' } // 🆕 WA-009
+  { 
+    view: APP_VIEWS.HOME, 
+    icon: Home, 
+    label: 'Accueil', 
+    shortLabel: 'Home',
+    priority: 1 // Toujours visible
+  },
+  { 
+    view: APP_VIEWS.WORKOUT_CONFIG, 
+    icon: Settings, 
+    label: 'Configuration', 
+    shortLabel: 'Config',
+    priority: 2 // Visible sur tablet+
+  },
+  { 
+    view: APP_VIEWS.TEST_COMPONENTS, 
+    icon: TestTube, 
+    label: 'Tests', 
+    shortLabel: 'Tests',
+    priority: 3
+  },
+  { 
+    view: APP_VIEWS.WORKOUT_ACTIVE, 
+    icon: Timer, 
+    label: 'Auto Timer', 
+    shortLabel: 'Timer',
+    priority: 2
+  },
+  { 
+    view: APP_VIEWS.WORKOUT_ACTIVE_V2, 
+    icon: Zap, 
+    label: 'Auto Timer - V2', 
+    shortLabel: 'Timer V2',
+    priority: 1
+  }
 ];
 
 /**
- * Messages contextuels par vue
+ * Hook pour gérer le responsive
  */
-const contextMessages = {
-  [APP_VIEWS.HOME]: 'Choisissez votre entraînement',
-  [APP_VIEWS.WORKOUT_CONFIG]: 'Configuration de la séance',
-  [APP_VIEWS.WORKOUT_ACTIVE]: 'Séance en cours',
-  [APP_VIEWS.WORKOUT_SUMMARY]: 'Résumé de la séance',
-  [APP_VIEWS.TEST_COMPONENTS]: 'Tests de validation',
-  [APP_VIEWS.WORKOUT_DEMO]: 'Démo useReducer'
-};
-
-/**
- * Calcul du pourcentage de progression du développement
- */
-const getProgressPercentage = () => {
-  const completedTickets = [
-    'WA-001', 'WA-002', 'WA-003', 'WA-004', 
-    'WA-005', 'WA-005.1', 'WA-006', 'WA-007', 'WA-008'
-  ];
-  const totalTickets = 12; // Estimation totale
+const useResponsiveNavigation = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  return Math.min(100, (completedTickets.length / totalTickets) * 100);
+  // Items toujours visibles (priority 1)
+  const alwaysVisible = navigationItems.filter(item => item.priority === 1);
+  
+  // Items visibles sur tablet+ (priority 1-2)
+  const tabletVisible = navigationItems.filter(item => item.priority <= 2);
+  
+  // Items visibles sur desktop+ (priority 1-3)
+  const desktopVisible = navigationItems.filter(item => item.priority <= 3);
+  
+  // Items dans le hamburger menu
+  const hamburgerItems = navigationItems.filter(item => item.priority >= 3);
+  
+  return {
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
+    alwaysVisible,
+    tabletVisible,
+    desktopVisible,
+    hamburgerItems
+  };
 };
 
 /**
- * Composant AppHeader
+ * Composant NavButton réutilisable
+ */
+const NavButton = ({ view, icon: Icon, label, shortLabel, isActive, onClick, className = '' }) => (
+  <button
+    onClick={onClick}
+    className={`
+      relative group px-3 py-2 rounded-lg font-medium text-sm
+      transition-all duration-200 ease-out flex items-center gap-2
+      ${isActive 
+        ? `bg-blue-200 border border-blue-200 shadow-sm text-blue-900` 
+        : `bg-blue-50 border border-blue-200 shadow-sm text-blue-600
+           hover:bg-blue-300 hover:shadow-md hover:shadow-blue-600/25`
+      }
+      hover:scale-105 ${className}
+    `}
+  >
+    <Icon className="w-4 h-4 flex-shrink-0" />
+    <span className="font-semibold whitespace-nowrap">
+      {label}
+    </span>
+  </button>
+);
+
+/**
+ * Composant AppHeader - Responsive avec Hamburger Menu
  * @param {Object} props - Propriétés du header
  * @param {string} props.currentView - Vue actuelle
  * @param {Function} props.onNavigate - Fonction de navigation
  */
 const AppHeader = ({ currentView, onNavigate }) => {
-  const progressPercentage = getProgressPercentage();
+  const [isHovered, setIsHovered] = useState(false);
+  const {
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
+    alwaysVisible,
+    tabletVisible,
+    desktopVisible,
+    hamburgerItems
+  } = useResponsiveNavigation();
+
+  const handleNavigate = (view) => {
+    onNavigate(view);
+    setIsMobileMenuOpen(false); // Ferme le menu mobile après navigation
+  };
 
   return (
-    <header className="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 text-white rounded-xl shadow-lg mb-6 overflow-hidden">
-      {/* Contenu principal du header */}
-      <div className="px-6 py-4 flex flex-wrap justify-between items-center">
-        {/* Logo et titre */}
-        <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-            🏋️ VECT
-          </h1>
-          <p className="text-sm text-slate-300 mt-1">
-            {contextMessages[currentView] || 'Application de fitness'}
-          </p>
+    <>
+      {/* 🎯 Header Ultra Clean Responsive */}
+      <header 
+        className="sticky top-0 z-50 mb-8"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Background harmonisé */}
+        <div className={`
+          bg-white border border-gray-200/60 rounded-2xl p-4 sm:p-6 
+          shadow-lg transition-all duration-300 ease-out
+          ${isHovered ? 'shadow-xl border-gray-300/60' : ''}
+        `}>
+          
+          {/* Contenu principal du header */}
+          <div className="flex justify-between items-center">
+            
+            {/* 🏋️ Logo optimisé responsive */}
+            <div className="flex-shrink-0 group">
+              <div className="flex items-center gap-1 bg-blue-50 border border-blue-200 px-2 py-1 rounded-lg">
+                <SquareActivity className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-blue-600 animate-pulse group-hover:rotate-6 transition-transform duration-300" />
+                <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-blue-600 tracking-tight group-hover:scale-105 transition-all duration-200">
+                  VECT
+                </h1>
+              </div>
+            </div>
+            
+            {/* 🎯 Navigation Responsive */}
+            <div className="flex items-center gap-2">
+              
+              {/* Navigation Mobile (xs-sm) - Items essentiels seulement */}
+              <nav className="flex gap-1 sm:hidden" role="navigation">
+                {alwaysVisible.map(({ view, icon: Icon, shortLabel }) => (
+                  <button
+                    key={view}
+                    onClick={() => handleNavigate(view)}
+                    className={`
+                      p-2 rounded-lg transition-all duration-200 ease-out
+                      ${currentView === view 
+                        ? 'bg-blue-200 text-blue-900' 
+                        : 'bg-blue-50 text-blue-600 hover:bg-blue-300'
+                      }
+                    `}
+                    title={shortLabel}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </button>
+                ))}
+              </nav>
+
+              {/* Navigation Tablet (sm-lg) - Items prioritaires */}
+              <nav className="hidden sm:flex lg:hidden gap-2" role="navigation">
+                {tabletVisible.map((item) => (
+                  <NavButton
+                    key={item.view}
+                    {...item}
+                    isActive={currentView === item.view}
+                    onClick={() => handleNavigate(item.view)}
+                    className="text-xs px-2 py-1.5"
+                  />
+                ))}
+              </nav>
+
+              {/* Navigation Desktop (lg+) - Tous les items principaux */}
+              <nav className="hidden lg:flex gap-2" role="navigation">
+                {desktopVisible.map((item) => (
+                  <NavButton
+                    key={item.view}
+                    {...item}
+                    isActive={currentView === item.view}
+                    onClick={() => handleNavigate(item.view)}
+                  />
+                ))}
+              </nav>
+
+              {/* 🍔 Hamburger Menu Button */}
+              {hamburgerItems.some(item => item.priority >= 3) && (
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="lg:hidden p-2 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-300 transition-all duration-200 hover:scale-105"
+                  aria-label="Menu"
+                >
+                  {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
-        
-        {/* Navigation */}
-        <nav className="flex gap-2 mt-3 sm:mt-0 flex-wrap" role="navigation">
-          {navigationItems.map(({ view, icon, label, shortLabel }) => (
-            <Button
-              key={view}
-              variant={currentView === view ? 'primary' : 'ghost'}
-              size="sm"
-              onClick={() => onNavigate(view)}
-              className={`
-                focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-800
-                ${currentView === view 
-                  ? 'bg-blue-500 text-white shadow-lg transform scale-105' 
-                  : 'bg-slate-600/50 text-slate-200 hover:bg-slate-500 hover:text-white hover:scale-105'
-                }
-              `}
-            >
-              <span className="hidden sm:inline">{icon} {label}</span>
-              <span className="sm:hidden" title={label}>{icon}</span>
-            </Button>
-          ))}
-        </nav>
-      </div>
-      
-      {/* Barre de progression du développement */}
-      <div className="h-1 bg-slate-600">
-        <div 
-          className="h-full bg-gradient-to-r from-blue-400 to-emerald-400 transition-all duration-500 ease-out"
-          style={{ width: `${progressPercentage}%` }}
-          title={`Progression du développement: ${Math.round(progressPercentage)}%`}
-        />
-      </div>
-    </header>
+
+        {/* 🍔 Mobile/Tablet Dropdown Menu */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden mt-2 bg-white border border-gray-200/60 rounded-xl shadow-lg p-4 animate-in slide-in-from-top-2 duration-200">
+            <nav className="flex flex-col gap-2" role="navigation">
+              {navigationItems
+                .filter(item => !alwaysVisible.includes(item) || window.innerWidth >= 640)
+                .map((item) => (
+                <NavButton
+                  key={item.view}
+                  {...item}
+                  isActive={currentView === item.view}
+                  onClick={() => handleNavigate(item.view)}
+                  className="w-full justify-start"
+                />
+              ))}
+            </nav>
+          </div>
+        )}
+      </header>
+    </>
   );
 };
 
-// 🎯 PropTypes pour validation et documentation
+// 🎯 PropTypes pour validation stricte
 AppHeader.propTypes = {
   /** Vue actuelle de l'application */
   currentView: PropTypes.oneOf(Object.values(APP_VIEWS)).isRequired,
   /** Fonction appelée lors de la navigation vers une nouvelle vue */
   onNavigate: PropTypes.func.isRequired
+};
+
+NavButton.propTypes = {
+  view: PropTypes.string.isRequired,
+  icon: PropTypes.elementType.isRequired,
+  label: PropTypes.string.isRequired,
+  shortLabel: PropTypes.string.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+  className: PropTypes.string
 };
 
 export default AppHeader;

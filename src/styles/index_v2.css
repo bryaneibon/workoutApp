@@ -6,6 +6,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@custom-variant dark (&:is(.dark *));
+
 /* Custom styles pour VECT */
 @layer base {
   body {
@@ -34,250 +36,6 @@
     @apply workout-button bg-warning-500 text-white hover:bg-warning-600 focus:ring-warning-500;
   }
 }
-
-/* 🎯 WA-011.3: Animations pour messages motivationnels */
-/* 🎨 WA-012.2: Animations enhanced pour composants workout - CLEAN VERSION */
-@layer utilities {
-  /* ===== ANIMATIONS EXISTANTES (WA-011.3) ===== */
-  @keyframes slide-in-from-bottom-5 {
-    from { 
-      transform: translateY(20px) translateX(-50%);
-      opacity: 0;
-      scale: 0.95;
-    }
-    to { 
-      transform: translateY(0) translateX(-50%);
-      opacity: 1;
-      scale: 1;
-    }
-  }
-
-  @keyframes slide-out-to-bottom-5 {
-    from { 
-      transform: translateY(0) translateX(-50%);
-      opacity: 1;
-      scale: 1;
-    }
-    to { 
-      transform: translateY(20px) translateX(-50%);
-      opacity: 0;
-      scale: 0.95;
-    }
-  }
-
-  @keyframes slide-in-from-top-5 {
-    from { 
-      transform: translateY(-20px) translateX(-50%);
-      opacity: 0;
-      scale: 0.95;
-    }
-    to { 
-      transform: translateY(0) translateX(-50%);
-      opacity: 1;
-      scale: 1;
-    }
-  }
-
-  @keyframes gentle-pulse {
-    0%, 100% { 
-      opacity: 0.15;
-      scale: 1;
-    }
-    50% { 
-      opacity: 0.3;
-      scale: 1.05;
-    }
-  }
-
-  @keyframes progress-shrink {
-    from { width: 100%; }
-    to { width: 0%; }
-  }
-
-  /* ===== NOUVELLES ANIMATIONS (WA-012.2) - UTILISÉES SEULEMENT ===== */
-  
-  /* 🎯 fade-in - Utilisée dans CurrentExerciseDisplay et NextExercisePreview */
-  @keyframes fade-in {
-    from { 
-      opacity: 0; 
-      transform: translateY(10px); 
-    }
-    to { 
-      opacity: 1; 
-      transform: translateY(0); 
-    }
-  }
-
-  /* ⚠️ critical-time - Utilisée dans MainTimerDisplay pour temps ≤ 3s */
-  @keyframes critical-time {
-    0%, 100% { 
-      transform: scale(1);
-      color: #dc2626;
-    }
-    50% { 
-      transform: scale(1.1);
-      color: #ef4444;
-      text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
-    }
-  }
-
-  /* 🏆 victory-bounce - Utilisée dans NextExercisePreview pour célébration */
-  @keyframes victory-bounce {
-    0%, 20%, 53%, 80%, 100% { 
-      transform: translate3d(0, 0, 0); 
-    }
-    40%, 43% { 
-      transform: translate3d(0, -30px, 0); 
-    }
-    70% { 
-      transform: translate3d(0, -15px, 0); 
-    }
-    90% { 
-      transform: translate3d(0, -4px, 0); 
-    }
-  }
-
-  /* 🎊 confetti - Utilisée dans NextExercisePreview pour effet confetti */
-  @keyframes confetti {
-    0% { 
-      transform: translateY(0) rotate(0deg); 
-      opacity: 1; 
-    }
-    100% { 
-      transform: translateY(-100px) rotate(360deg); 
-      opacity: 0; 
-    }
-  }
-
-  /* ✨ shimmer - Utilisée dans NextExercisePreview pour badge "Nouveau Round" */
-  @keyframes shimmer {
-    0% { 
-      background-position: -200% 0; 
-    }
-    100% { 
-      background-position: 200% 0; 
-    }
-  }
-
-  /* ⏰ timer-pulse - Utilisée dans MainTimerDisplay et NextExercisePreview */
-  @keyframes timer-pulse {
-    0%, 100% { 
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-    }
-    50% { 
-      transform: scale(1.05);
-      box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-    }
-  }
-
-  /* ===== CLASSES UTILITAIRES EXISTANTES ===== */
-  .animate-in {
-    animation-fill-mode: forwards;
-  }
-
-  .animate-out {
-    animation-fill-mode: forwards;
-  }
-
-  .slide-in-from-bottom-5 {
-    animation: slide-in-from-bottom-5 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .slide-out-to-bottom-5 {
-    animation: slide-out-to-bottom-5 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .slide-in-from-top-5 {
-    animation: slide-in-from-top-5 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .animate-gentle-pulse {
-    animation: gentle-pulse 2s ease-in-out infinite;
-  }
-
-  .animate-progress-shrink {
-    animation: progress-shrink var(--duration, 3000ms) linear forwards;
-  }
-
-  /* ===== NOUVELLES CLASSES UTILITAIRES - UTILISÉES SEULEMENT ===== */
-  
-  /* ✅ UTILISÉE dans CurrentExerciseDisplay et NextExercisePreview */
-  .animate-fade-in {
-    animation: fade-in 0.5s ease-out forwards;
-  }
-
-  /* ✅ UTILISÉE dans MainTimerDisplay pour temps critique */
-  .animate-critical-time {
-    animation: critical-time 1s infinite;
-  }
-
-  /* ✅ UTILISÉE dans NextExercisePreview pour célébration finale */
-  .animate-victory-bounce {
-    animation: victory-bounce 1s ease-in-out;
-  }
-
-  /* ✅ UTILISÉE dans NextExercisePreview pour effet confetti */
-  .animate-confetti {
-    animation: confetti 3s ease-out infinite;
-  }
-
-  /* ✅ UTILISÉE dans NextExercisePreview pour badge "Nouveau Round" */
-  .animate-shimmer {
-    background: linear-gradient(90deg, 
-      transparent, 
-      rgba(255, 255, 255, 0.4), 
-      transparent);
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
-  }
-
-  /* ✅ UTILISÉE dans MainTimerDisplay et NextExercisePreview */
-  .animate-timer-pulse {
-    animation: timer-pulse 2s infinite;
-  }
-
-  /* ===== CLASSES POUR ÉTATS DE MOTIVATION (EXISTANTES) ===== */
-  .motivation-milestone {
-    @apply from-emerald-500 to-blue-500;
-  }
-
-  .motivation-encouragement {
-    @apply from-orange-500 to-red-500;
-  }
-
-  .motivation-celebration {
-    @apply from-purple-500 to-pink-500;
-  }
-
-  .motivation-technique {
-    @apply from-blue-400 to-indigo-400;
-  }
-
-  /* ===== OPTIMISATIONS PERFORMANCE ===== */
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-
-  /* ===== RESPONSIVE & ACCESSIBILITÉ ===== */
-  @media (max-width: 768px) {
-    .animate-timer-pulse {
-      animation-duration: 3s; /* Plus lent sur mobile pour performance */
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    /* Respecter les préférences d'accessibilité */
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
-}
-
-@custom-variant dark (&:is(.dark *));
 
 :root {
   --background: oklch(1 0 0);
@@ -820,5 +578,689 @@
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+/* 🎨 Premium Animations CSS - À ajouter à index_v2.css */
+/* Référence Clean Code: "Good software is written to be read by humans" */
+/* Référence Pragmatic Programmer: "DRY - Don't Repeat Yourself" */
+
+/* ✨ Enhanced keyframes animations for ultra premium UI */
+
+@keyframes subtle-warmth {
+  0%, 100% { opacity: 0.1; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.3; transform: scale(1.05) rotate(1deg); }
+}
+
+@keyframes float-enhanced {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) rotate(0deg); 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 12px rgba(0, 0, 0, 0.04);
+  }
+  33% { 
+    transform: translateY(-8px) translateX(2px) rotate(0.5deg); 
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06);
+  }
+  66% { 
+    transform: translateY(-4px) translateX(-2px) rotate(-0.5deg); 
+    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.10), 0 3px 14px rgba(0, 0, 0, 0.05);
+  }
+}
+
+@keyframes enhanced-breathing {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg); 
+    opacity: 0.8;
+    filter: brightness(1) saturate(1);
+  }
+  50% { 
+    transform: scale(1.03) rotate(0.5deg); 
+    opacity: 1;
+    filter: brightness(1.1) saturate(1.1);
+  }
+}
+
+@keyframes subtle-flicker {
+  0%, 100% { 
+    filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.3)) brightness(1);
+    transform: scale(1);
+  }
+  50% { 
+    filter: drop-shadow(0 4px 8px rgba(249, 115, 22, 0.5)) brightness(1.2);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes energetic-bounce {
+  0% {
+    transform: scale(0.3) translateY(20px) rotate(-5deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) translateY(-10px) rotate(2deg);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(0.95) translateY(2px) rotate(-1deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0px) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+    opacity: 0.8;
+  }
+  50% {
+    box-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+    opacity: 1;
+  }
+}
+
+@keyframes micro-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes scale-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* 🌟 Premium button states with advanced effects */
+.premium-button {
+  position: relative;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.premium-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 600ms ease-out;
+  pointer-events: none;
+}
+
+.premium-button:hover {
+  transform: scale(1.05) translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.25),
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.premium-button:hover::before {
+  transform: translateX(100%);
+}
+
+.premium-button:active {
+  transform: scale(1.02) translateY(-1px);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🎯 Gradient button variations */
+.premium-button--gradient {
+  background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px var(--shadow-color), 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.premium-button--gradient:hover {
+  filter: brightness(1.1) saturate(1.1);
+  box-shadow: 0 8px 30px var(--shadow-color), 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 🌈 Glass morphism enhancements */
+.glass-morphism-premium {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* 🎨 Particle effects */
+.particle-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particle-float 6s ease-in-out infinite;
+}
+
+@keyframes particle-float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) translateX(20px);
+    opacity: 0;
+  }
+}
+
+/* 📊 Progress bar enhancements */
+.progress-bar-premium {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.progress-bar-premium::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: translateX(-100%);
+  animation: progress-shine 2s ease-in-out infinite;
+}
+
+@keyframes progress-shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 🎭 Hover states with micro-interactions */
+.micro-interaction {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.micro-interaction:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.micro-interaction:active {
+  transform: translateY(0px) scale(0.98);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🌟 Glow effects */
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, currentColor, transparent, currentColor);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  animation: rotate-slow 6s linear infinite;
+}
+
+.glow-effect:hover::before {
+  opacity: 0.3;
+}
+
+/* 🎪 3D transforms */
+.transform-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.card-3d {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-3d:hover {
+  transform: rotateY(5deg) rotateX(5deg) translateZ(20px);
+}
+
+/* 🌊 Ripple effect */
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.ripple-effect:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* 🎯 Utility classes for premium effects */
+.shadow-premium {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-premium-lg {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.border-premium {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.backdrop-premium {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* 🎨 Responsive premium effects */
+@media (max-width: 768px) {
+  .premium-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .floating-element {
+    animation-duration: 8s;
+  }
+  
+  .glass-card-light {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+}
+
+/* 🎨 Premium Animations CSS - Version Clean Blanc/Noir/Bleu */
+/* Référence Clean Code: "Good software is written to be read by humans" */
+/* Référence Pragmatic Programmer: "DRY - Don't Repeat Yourself" */
+
+/* ✨ Transitions 3D ultra légères - pas de vertige */
+
+@keyframes gentle-slide-in {
+  0% {
+    transform: translateX(8px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes gentle-scale-in {
+  0% {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes subtle-rotate-in {
+  0% {
+    transform: perspective(1000px) rotateY(2deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: perspective(1000px) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes gentle-lift {
+  0% {
+    transform: translateY(4px);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes micro-bounce {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-2px); 
+  }
+}
+
+@keyframes subtle-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.95;
+  }
+}
+
+@keyframes gentle-glow {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.25);
+  }
+}
+
+/* 🎯 Classes utilitaires pour transitions légères */
+.gentle-transition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gentle-hover:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.gentle-active:active {
+  transform: translateY(0px) scale(0.99);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🌟 Boutons avec thème blanc/noir/bleu */
+.btn-primary-blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.btn-primary-blue:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+}
+
+.btn-primary-blue:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary-clean {
+  background: #000000;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-secondary-clean:hover {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.btn-secondary-clean:active {
+  transform: translateY(0px);
+}
+
+/* 🎨 Cards avec effets 3D ultra légers */
+.card-3d-light {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.card-3d-light:hover {
+  transform: perspective(1000px) rotateX(1deg) rotateY(1deg) translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* 🌈 Glass effect léger sans backdrop-blur */
+.glass-light {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* 📊 Progress bar avec thème bleu */
+.progress-blue {
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-blue::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: translateX(-100%);
+  animation: progress-shine 2s ease-in-out infinite;
+}
+
+@keyframes progress-shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 🎯 Transitions entre vues */
+.view-transition-enter {
+  animation: gentle-slide-in 0.3s ease-out forwards;
+}
+
+.view-transition-scale {
+  animation: gentle-scale-in 0.3s ease-out forwards;
+}
+
+.view-transition-rotate {
+  animation: subtle-rotate-in 0.3s ease-out forwards;
+}
+
+.view-transition-lift {
+  animation: gentle-lift 0.3s ease-out forwards;
+}
+
+/* 🌟 Micro-interactions subtiles */
+.micro-bounce {
+  animation: micro-bounce 0.4s ease-in-out;
+}
+
+.micro-pulse {
+  animation: subtle-pulse 0.6s ease-in-out;
+}
+
+.micro-glow {
+  animation: gentle-glow 1s ease-in-out infinite;
+}
+
+/* 🎪 Hover states optimisés */
+.hover-lift {
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.hover-scale {
+  transition: transform 0.2s ease-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-rotate {
+  transition: transform 0.2s ease-out;
+}
+
+.hover-rotate:hover {
+  transform: rotate(1deg);
+}
+
+/* 🌊 Ripple effect léger */
+.ripple-light {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-light::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s, height 0.4s;
+}
+
+.ripple-light:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* 🎯 Classes utilitaires pour le thème */
+.text-primary-blue {
+  color: #3b82f6;
+}
+
+.text-secondary-gray {
+  color: #6b7280;
+}
+
+.bg-blue-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.border-blue-light {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.shadow-blue-light {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.shadow-blue-medium {
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+}
+
+/* 🎨 Responsive optimizations */
+@media (max-width: 768px) {
+  .card-3d-light:hover {
+    transform: perspective(1000px) translateY(-1px);
+  }
+  
+  .gentle-hover:hover {
+    transform: translateY(-0.5px) scale(1.005);
+  }
+  
+  .btn-primary-blue,
+  .btn-secondary-clean {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+/* 🌟 Focus states pour l'accessibilité */
+.btn-primary-blue:focus,
+.btn-secondary-clean:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 🎭 Loading states */
+.loading-shimmer {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }

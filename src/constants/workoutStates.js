@@ -40,9 +40,9 @@ export const APP_VIEWS = {
   HOME: 'home',
   WORKOUT_CONFIG: 'workout-config',
   WORKOUT_ACTIVE: 'workout-active', 
+  WORKOUT_ACTIVE_V2: 'workout-active-V2', 
   WORKOUT_SUMMARY: 'workout-summary',
-  TEST_COMPONENTS: 'test-components',
-  WORKOUT_DEMO: 'workout-demo'
+  TEST_COMPONENTS: 'test-components'
 };
 
 /**

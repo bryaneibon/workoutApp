@@ -1,57 +1,326 @@
+// src/components/views/WorkoutConfigView.jsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useWorkoutCalculations } from '../../hooks/useWorkoutCalculations.js';
-import { useWorkoutValidation } from '../../hooks/useWorkoutValidation.js';
-import { useValidationFeedback } from '../../hooks/useValidationFeedback.js';
-import { EXERCISES_DATABASE } from '../../data/exercices.js';
+import PropTypes from 'prop-types';
+import { useWorkoutCalculations } from '@/hooks/useWorkoutCalculations.js';
+import { useWorkoutValidation } from '@/hooks/useWorkoutValidation.js';
+import { useValidationFeedback } from '@/hooks/useValidationFeedback.js';
+import { EXERCISES_DATABASE } from '@/data/exercices';
+import ExerciseIcon, { ExerciseIconPair } from '../ui/ExerciseIcon.jsx';
+import { 
+  Settings, 
+  Clock, 
+  Target, 
+  Zap, 
+  TrendingUp,
+  Activity,
+  Flame,
+  Award,
+  BarChart3,
+  CheckCircle,
+  AlertTriangle,
+  Info,
+  Sparkles,
+  Timer,
+  Users,
+  Dumbbell,
+  Play,
+  RotateCcw,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  EyeOff,
+  Gauge,
+  Heart,
+  Crosshair
+} from 'lucide-react';
 
-const WorkoutCalculationsDemo = () => {
-  // 🔗 État de configuration simulé
+/**
+ * Composant PremiumCard avec effets ultra raffinés
+ */
+const PremiumCard = ({ children, className = '', gradient = false, glow = false }) => (
+  <div className={`
+    bg-white border border-gray-200/60 rounded-xl shadow-lg
+    transition-all duration-500 ease-out hover:shadow-xl hover:border-gray-300/60
+    ${gradient ? 'bg-gradient-to-br from-white to-blue-50/30' : ''}
+    ${glow ? 'hover:shadow-blue-500/10 hover:shadow-2xl' : ''}
+    ${className}
+  `}>
+    {children}
+  </div>
+);
+
+/**
+ * Composant StatCard ultra premium
+ */
+const StatCard = ({ icon: Icon, label, value, color = 'blue', trend, onClick, animated = true }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  const colorConfig = {
+    blue: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-600', icon: 'text-blue-600' },
+    green: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-600', icon: 'text-green-600' },
+    orange: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-600', icon: 'text-orange-600' },
+    purple: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-600', icon: 'text-purple-600' },
+    gray: { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-600', icon: 'text-gray-600' }
+  };
+  
+  const config = colorConfig[color] || colorConfig.blue;
+
+  return (
+    <div 
+      className={`
+        ${config.bg} ${config.border} border rounded-xl p-4 
+        transition-all duration-300 ease-out cursor-pointer
+        hover:scale-105 hover:shadow-lg hover:shadow-${color}-500/20
+        ${animated ? 'animate-in fade-in duration-500' : ''}
+      `}
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <Icon className={`w-5 h-5 ${config.icon} ${isHovered ? 'scale-110' : ''} transition-transform duration-200`} />
+        {trend && (
+          <div className={`text-xs ${trend > 0 ? 'text-green-500' : 'text-red-500'} flex items-center gap-1`}>
+            {trend > 0 ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            {Math.abs(trend)}%
+          </div>
+        )}
+      </div>
+      <div className={`text-2xl font-bold ${config.text} mb-1`}>
+        {value}
+      </div>
+      <div className="text-xs text-gray-600 font-medium">
+        {label}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Composant SliderInput premium avec feedback visuel
+ */
+const SliderInput = ({ label, value, min, max, step = 1, unit = '', onChange, icon: Icon, color = 'blue' }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const percentage = ((value - min) / (max - min)) * 100;
+  
+  const colorConfig = {
+    blue: 'from-blue-500 to-blue-600',
+    green: 'from-green-500 to-green-600',
+    orange: 'from-orange-500 to-orange-600',
+    purple: 'from-purple-500 to-purple-600'
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          {Icon && <Icon className="w-4 h-4 text-blue-600" />}
+          {label}
+        </label>
+        <div className={`
+          px-3 py-1 rounded-lg text-sm font-bold
+          bg-gradient-to-r ${colorConfig[color]} text-white
+          ${isDragging ? 'scale-110' : 'scale-100'} transition-transform duration-200
+        `}>
+          {value}{unit}
+        </div>
+      </div>
+      
+      <div className="relative">
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(parseInt(e.target.value))}
+          onMouseDown={() => setIsDragging(true)}
+          onMouseUp={() => setIsDragging(false)}
+          onTouchStart={() => setIsDragging(true)}
+          onTouchEnd={() => setIsDragging(false)}
+          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-premium"
+          style={{
+            background: `linear-gradient(to right, rgb(59 130 246) 0%, rgb(59 130 246) ${percentage}%, rgb(229 231 235) ${percentage}%, rgb(229 231 235) 100%)`
+          }}
+        />
+        
+        {/* Marqueurs de valeurs */}
+        <div className="flex justify-between text-xs text-gray-400 mt-1">
+          <span>{min}{unit}</span>
+          <span>{max}{unit}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Composant ExerciseSelector ultra premium
+ */
+const ExerciseSelector = ({ exercises, selectedExercises, onToggle }) => {
+  const [expandedGroups, setExpandedGroups] = useState(new Set(['Cardio', 'Pectoraux']));
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' ou 'list'
+  
+  // Grouper par muscle
+  const exercisesByGroup = Object.values(exercises).reduce((acc, exercise) => {
+    if (!acc[exercise.muscleGroup]) acc[exercise.muscleGroup] = [];
+    acc[exercise.muscleGroup].push(exercise);
+    return acc;
+  }, {});
+
+  const toggleGroup = (group) => {
+    const newExpanded = new Set(expandedGroups);
+    if (newExpanded.has(group)) {
+      newExpanded.delete(group);
+    } else {
+      newExpanded.add(group);
+    }
+    setExpandedGroups(newExpanded);
+  };
+
+  return (
+    <PremiumCard className="p-6" gradient>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+          <Dumbbell className="w-5 h-5 text-blue-600" />
+          Sélection d'exercices
+        </h3>
+        
+        <div className="flex items-center gap-2">
+          <div className="bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg text-sm font-semibold text-blue-600">
+            {selectedExercises.length} sélectionnés
+          </div>
+          
+          <button
+            onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+          >
+            {viewMode === 'grid' ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {Object.entries(exercisesByGroup).map(([group, groupExercises]) => {
+          const isExpanded = expandedGroups.has(group);
+          const selectedInGroup = groupExercises.filter(ex => selectedExercises.includes(ex.id)).length;
+          
+          return (
+            <div key={group} className="border border-gray-200 rounded-lg overflow-hidden">
+              <button
+                onClick={() => toggleGroup(group)}
+                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="text-lg font-semibold text-gray-800">{group}</div>
+                  <div className="bg-white border border-gray-200 px-2 py-1 rounded-lg text-xs font-medium text-gray-600">
+                    {selectedInGroup}/{groupExercises.length}
+                  </div>
+                </div>
+                {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+              </button>
+              
+              {isExpanded && (
+                <div className={`p-4 bg-white ${viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-3' : 'space-y-3'}`}>
+                  {groupExercises.map((exercise) => {
+                    const isSelected = selectedExercises.includes(exercise.id);
+                    
+                    return (
+                      <div
+                        key={exercise.id}
+                        onClick={() => onToggle(exercise.id)}
+                        className={`
+                          p-3 border rounded-lg cursor-pointer transition-all duration-200
+                          ${isSelected 
+                            ? 'border-blue-300 bg-blue-50 scale-[1.02]' 
+                            : 'border-gray-200 hover:border-blue-200 hover:bg-blue-50/30'
+                          }
+                        `}
+                      >
+                        <div className="flex items-center gap-3">
+                          <ExerciseIcon 
+                            iconName={exercise.images.start}
+                            exercise={exercise}
+                            size="sm"
+                            animated={true}
+                          />
+                          
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-gray-800 text-sm truncate">
+                              {exercise.name}
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-gray-600">
+                              <span>{exercise.difficulty}</span>
+                              <span>•</span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {exercise.defaultDuration}s
+                              </span>
+                            </div>
+                          </div>
+                          
+                          {isSelected && (
+                            <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </PremiumCard>
+  );
+};
+
+/**
+ * Composant principal WorkoutConfigView - LE STRAVA KILLER
+ */
+const WorkoutConfigView = () => {
+  // États de configuration
   const [configState, setConfigState] = useState({
     workTime: 30,
     restTime: 15,
     prepTime: 10,
     rounds: 3,
-    exercises: Object.keys(EXERCISES_DATABASE).slice(0, 3), // Sélection de 3 exercices par défaut
+    exercises: Object.keys(EXERCISES_DATABASE).slice(0, 3),
     difficulty: 'intermédiaire',
     name: 'Mon Workout HIIT',
-    description: 'Test workout pour démo',
+    description: 'Configuration VECT',
     currentStep: 1,
     isDirty: false
   });
 
-  // 📊 État pour mesures de performance
-  const renderCountRef = useRef(0);
-  renderCountRef.current = renderCountRef.current + 1;
-  const renderCount = renderCountRef.current;
-
-  const [benchmarkResults, setBenchmarkResults] = useState(null);
-
-  // 🔧 UTILISE le VRAI hook useWorkoutCalculations
+  // Hooks de calculs et validation
   const calculations = useWorkoutCalculations(configState);
-  
-  // 🔧 UTILISE le VRAI hook useWorkoutValidation  
   const validation = useWorkoutValidation(configState);
-  
-  // 🔧 Validation complète avec le hook réel
   const [validationResults, setValidationResults] = useState(null);
-  
-  useEffect(() => {
-    const performValidation = async () => {
-      const results = await validation.validateComplete(configState, { debounceMs: 100 });
-      setValidationResults(results);
-    };
-    
-    performValidation();
-  }, [configState, validation]);
-
-  // 🔧 UTILISE le VRAI hook useValidationFeedback
   const feedback = useValidationFeedback(validationResults, {
     maxVisible: 3,
-    autoHideDelay: 3000,
+    autoHideDelay: 5000,
     groupByField: true
   });
 
-  // 🎯 Mise à jour optimisée avec useCallback
+  // États UI
+  const [activeSection, setActiveSection] = useState('timing');
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const renderCountRef = useRef(0);
+  renderCountRef.current++;
+
+  // Validation en temps réel
+  useEffect(() => {
+    const performValidation = async () => {
+      const results = await validation.validateComplete(configState, { debounceMs: 200 });
+      setValidationResults(results);
+    };
+    performValidation();
+  }, [configState, validation]);
+
+  // Mise à jour optimisée
   const updateConfig = useCallback((field, value) => {
     setConfigState(prev => ({
       ...prev,
@@ -60,377 +329,563 @@ const WorkoutCalculationsDemo = () => {
     }));
   }, []);
 
-  // 📊 Benchmark utilisant le VRAI hook
-  const runBenchmark = useCallback(() => {
-    console.log('🚀 Lancement benchmark avec VRAIS hooks...');
-    
-    const benchmarkResults = calculations.benchmarkCalculations();
-    setBenchmarkResults(benchmarkResults);
-    
-    console.log('📊 Benchmark terminé:', benchmarkResults);
-  }, [calculations]);
+  // Toggle exercice
+  const toggleExercise = useCallback((exerciseId) => {
+    setConfigState(prev => {
+      const isSelected = prev.exercises.includes(exerciseId);
+      const newExercises = isSelected
+        ? prev.exercises.filter(id => id !== exerciseId)
+        : [...prev.exercises, exerciseId];
+      
+      return {
+        ...prev,
+        exercises: newExercises,
+        isDirty: true
+      };
+    });
+  }, []);
+
+  const sections = [
+    { id: 'timing', label: 'Timing', icon: Timer, color: 'blue' },
+    { id: 'exercises', label: 'Exercices', icon: Dumbbell, color: 'green' },
+    { id: 'analysis', label: 'Analyse', icon: BarChart3, color: 'purple' },
+    { id: 'validation', label: 'Validation', icon: CheckCircle, color: 'orange' }
+  ];
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          ⚡ Demo INTÉGRÉE WA-013.1→3
-        </h1>
-        <p className="text-gray-600">
-          Test complet : <code>useWorkoutConfig</code> + <code>useWorkoutValidation</code> + <code>useWorkoutCalculations</code>
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white p-6">
+      <div className="max-w-7xl mx-auto">
         
-        {/* Métriques de performance RÉELLES */}
-        <div className="mt-4 grid grid-cols-4 gap-4">
-          <div className="p-3 bg-gray-50 rounded">
-            <div className="text-sm text-gray-600">Rendus composant</div>
-            <div className="text-2xl font-bold text-gray-800">{renderCount}</div>
-          </div>
-          <div className="p-3 bg-blue-50 rounded">
-            <div className="text-sm text-blue-600">Calculs actifs</div>
-            <div className="text-2xl font-bold text-blue-800">
-              {calculations ? '✅ 5' : '❌ 0'}
-            </div>
-          </div>
-          <div className="p-3 bg-green-50 rounded">
-            <div className="text-sm text-green-600">Validation</div>
-            <div className="text-2xl font-bold text-green-800">
-              {validationResults?.isValid ? '✅ OK' : '❌ ERR'}
-            </div>
-          </div>
-          <div className="p-3 bg-purple-50 rounded">
-            <div className="text-sm text-purple-600">Feedback</div>
-            <div className="text-2xl font-bold text-purple-800">
-              {feedback.messageStats.total}
-            </div>
-          </div>
-        </div>
-      </div>
+        {/* Header Premium */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        {/* Configuration */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold mb-4">⚙️ Configuration Workout</h3>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              ⏱️ Temps de travail: {configState.workTime}s
-            </label>
-            <input
-              type="range"
-              min="15"
-              max="60"
-              value={configState.workTime}
-              onChange={(e) => updateConfig('workTime', parseInt(e.target.value))}
-              className="w-full"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              😴 Temps de repos: {configState.restTime}s
-            </label>
-            <input
-              type="range"
-              min="5"
-              max="45"
-              value={configState.restTime}
-              onChange={(e) => updateConfig('restTime', parseInt(e.target.value))}
-              className="w-full"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              🔄 Rounds: {configState.rounds}
-            </label>
-            <input
-              type="range"
-              min="1"
-              max="8"
-              value={configState.rounds}
-              onChange={(e) => updateConfig('rounds', parseInt(e.target.value))}
-              className="w-full"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              🎚️ Difficulté: {configState.difficulty}
-            </label>
-            <select
-              value={configState.difficulty}
-              onChange={(e) => updateConfig('difficulty', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="débutant">🔰 Débutant</option>
-              <option value="intermédiaire">🎯 Intermédiaire</option>
-              <option value="avancé">🔥 Avancé</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              🏋️‍♀️ Exercices ({configState.exercises.length})
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {Object.keys(EXERCISES_DATABASE).map(exercise => (
-                <button
-                  key={exercise}
-                  onClick={() => {
-                    const isSelected = configState.exercises.includes(exercise);
-                    if (isSelected) {
-                      updateConfig('exercises', configState.exercises.filter(ex => ex !== exercise));
-                    } else {
-                      updateConfig('exercises', [...configState.exercises, exercise]);
-                    }
-                  }}
-                  className={`px-3 py-1 text-sm rounded ${
-                    configState.exercises.includes(exercise)
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {exercise}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Résultats calculés avec VRAIS hooks */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold mb-4">📊 Calculs RÉELS (useWorkoutCalculations)</h3>
-          
-          {/* Durée - VRAI hook */}
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <h4 className="font-semibold text-blue-800 mb-2">⏱️ Analyse Temporelle</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>Durée totale: <strong>{calculations.durationCalculations.formattedDuration}</strong></div>
-              <div>Minutes: <strong>{calculations.durationCalculations.totalMinutes}</strong></div>
-              <div>Travail: <strong>{calculations.durationCalculations.workPercentage}%</strong></div>
-              <div>Repos: <strong>{calculations.durationCalculations.restPercentage}%</strong></div>
-            </div>
-            <div className="mt-2">
-              <div className="w-full bg-gray-200 rounded-full h-2 flex">
-                <div 
-                  className="bg-red-500 h-2 rounded-l-full"
-                  style={{ width: `${calculations.durationCalculations.workPercentage}%` }}
-                ></div>
-                <div 
-                  className="bg-green-500 h-2 rounded-r-full"
-                  style={{ width: `${calculations.durationCalculations.restPercentage}%` }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Calories - VRAI hook */}
-          <div className="p-4 bg-orange-50 rounded-lg">
-            <h4 className="font-semibold text-orange-800 mb-2">🔥 Analyse Calorique</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>Estimation: <strong>{calculations.calorieCalculations.estimatedCalories} cal</strong></div>
-              <div>Par minute: <strong>{calculations.calorieCalculations.caloriesPerMinute}</strong></div>
-              <div>Fourchette: <strong>{calculations.calorieCalculations.calorieRange.min}-{calculations.calorieCalculations.calorieRange.max}</strong></div>
-              <div>Taux: <strong>{calculations.calorieCalculations.burnRate}</strong></div>
-            </div>
-          </div>
-
-          {/* Groupes musculaires - VRAI hook */}
-          <div className="p-4 bg-purple-50 rounded-lg">
-            <h4 className="font-semibold text-purple-800 mb-2">💪 Analyse Musculaire RÉELLE</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm mb-2">
-              <div>Groupes ciblés: <strong>{calculations.muscleGroupAnalysis.targetedGroups.length}</strong></div>
-              <div>Couverture: <strong>{calculations.muscleGroupAnalysis.coverage}%</strong></div>
-              <div>Équilibre: <strong>{calculations.muscleGroupAnalysis.balanceScore}%</strong></div>
-              <div>Diversité: <strong>{calculations.muscleGroupAnalysis.diversityIndex}%</strong></div>
-            </div>
-            
-            {/* Recommandations RÉELLES du hook */}
-            <div className="mt-2 text-xs">
-              <div className="font-medium mb-1">Recommandations:</div>
-              {calculations.muscleGroupAnalysis.recommendations.slice(0, 2).map((rec, index) => (
-                <div key={index} className="text-purple-700">• {rec}</div>
-              ))}
-            </div>
-          </div>
-
-          {/* Performance globale - VRAI hook */}
-          <div className="p-4 bg-green-50 rounded-lg">
-            <h4 className="font-semibold text-green-800 mb-2">📈 Score Global RÉEL</h4>
-            <div className="text-center mb-2">
-              <div className="text-3xl font-bold text-green-600">
-                {calculations.performanceMetrics.qualityScore}%
-              </div>
-              <div className="text-sm text-green-700">
-                {calculations.performanceMetrics.overallRating}
-              </div>
-            </div>
-            <div className="text-xs text-center">
-              Efficacité: {calculations.performanceMetrics.timeEfficiency} cal/min
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-              <div 
-                className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${calculations.performanceMetrics.qualityScore}%` }}
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Validation RÉELLE avec hooks */}
-      <div className="mb-6 p-4 bg-red-50 rounded-lg border border-red-200">
-        <h4 className="font-semibold text-red-800 mb-3">🔍 Validation RÉELLE (useWorkoutValidation + useValidationFeedback)</h4>
-        
-        {validationResults && (
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-red-600">{validationResults.errors.length}</div>
-              <div className="text-sm text-red-600">Erreurs</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">{validationResults.warnings.length}</div>
-              <div className="text-sm text-orange-600">Avertissements</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{validationResults.infos.length}</div>
-              <div className="text-sm text-blue-600">Infos</div>
-            </div>
-          </div>
-        )}
-
-        {/* Messages de validation RÉELS */}
-        <div className="space-y-2">
-          {feedback.priorityMessages.slice(0, 3).map((message, index) => (
-            <div
-              key={index}
-              className={`p-3 rounded border ${message.style.bgColor} ${message.style.borderColor} ${message.style.textColor}`}
-            >
-              <div className="flex items-start">
-                <span className="mr-2">{message.style.icon}</span>
-                <div className="flex-1">
-                  <div className="font-medium">{message.message}</div>
-                  {message.suggestion && (
-                    <div className="text-sm mt-1">💡 {message.suggestion}</div>
-                  )}
+            <div className="group">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="bg-blue-50 border border-blue-200 p-3 rounded-xl group-hover:bg-blue-100 transition-colors duration-300">
+                  <Settings className="w-8 h-8 text-blue-600 group-hover:rotate-12 transition-transform duration-300" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-black bg-gradient-to-r from-gray-900 via-blue-600 to-gray-800 bg-clip-text text-transparent">
+                    Configuration
+                  </h1>
                 </div>
               </div>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                Créez votre workout parfait personnalisé
+              </p>
             </div>
-          ))}
-          
-          {feedback.priorityMessages.length === 0 && (
-            <div className="p-3 bg-green-50 border border-green-200 rounded text-green-700">
-              ✅ Aucun problème détecté - Configuration optimale !
+            
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsPreviewMode(!isPreviewMode)}
+                className={`
+                  flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200
+                  ${isPreviewMode 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'bg-gray-800 text-white hover:bg-blue-600'
+                  }
+                `}
+              >
+                {isPreviewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {isPreviewMode ? 'Édition' : 'Aperçu'}
+              </button>
+              
+              <button className="btn-secondary flex items-center gap-2 px-6 py-3">
+                <Play className="w-4 h-4" />
+                Démarrer
+              </button>
             </div>
-          )}
-        </div>
-      </div>
+          </div>
 
-      {/* Performance et Benchmark RÉELS */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-semibold mb-3">⚡ Performance RÉELLE (useMemo hooks)</h4>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span>Hook calculations:</span>
-              <span className="font-mono text-green-600">✅ Actif</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Hook validation:</span>
-              <span className="font-mono text-green-600">✅ Actif</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Hook feedback:</span>
-              <span className="font-mono text-green-600">✅ Actif</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Rendus totaux:</span>
-              <span className="font-mono">{renderCount}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>État validé:</span>
-              <span className={`font-semibold ${
-                validationResults?.isValid ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {validationResults?.isValid ? 'Valide' : 'Invalide'}
-              </span>
-            </div>
+          {/* Statistiques en temps réel */}
+          <div className="grid grid-cols-5 md:grid-cols-5 lg:grid-cols-5 gap-4 mb-6">
+            <StatCard 
+              icon={Clock} 
+              label="Durée totale" 
+              value={calculations.durationCalculations.formattedDuration} 
+              color="blue"
+              trend={5}
+            />
+            <StatCard 
+              icon={Flame} 
+              label="Calories" 
+              value={calculations.calorieCalculations.estimatedCalories} 
+              color="orange"
+              trend={12}
+            />
+            <StatCard 
+              icon={Target} 
+              label="Exercices" 
+              value={configState.exercises.length} 
+              color="green"
+            />
+            <StatCard 
+              icon={RotateCcw} 
+              label="Rounds" 
+              value={configState.rounds} 
+              color="purple"
+            />
+            <StatCard 
+              icon={Award} 
+              label="Score" 
+              value={`${calculations.performanceMetrics.qualityScore}%`} 
+              color="blue"
+              trend={8}
+            />
+          </div>
+
+          {/* Navigation sections */}
+          <div className="flex gap-2 mb-6 overflow-x-auto">
+            {sections.map(({ id, label, icon: Icon, color }) => (
+              <button
+                key={id}
+                onClick={() => setActiveSection(id)}
+                className={`
+                  flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap
+                  transition-all duration-200 hover:scale-105
+                  ${activeSection === id
+                    ? `bg-${color}-50 border border-${color}-200 text-${color}-700 shadow-md`
+                    : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300'
+                  }
+                `}
+              >
+                <Icon className="w-4 h-4" />
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-semibold mb-3">🚀 Benchmark RÉEL (calculationUtils)</h4>
+        {/* Contenu principal */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          <button
-            onClick={runBenchmark}
-            className="w-full mb-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          >
-            Lancer Benchmark RÉEL
-          </button>
-          
-          {benchmarkResults && (
-            <div className="space-y-2 text-sm">
-              <div className="font-medium text-green-600">✅ Benchmark des utilitaires réels:</div>
-              <div className="ml-4 space-y-1">
-                <div>Durée: {benchmarkResults.durationBenchmark?.averageTime}ms</div>
-                <div>Volume: {benchmarkResults.volumeBenchmark?.averageTime}ms</div>
-                <div>Exercices: {benchmarkResults.exerciseBenchmark?.averageTime}ms</div>
+          {/* Colonne de configuration */}
+          <div className="lg:col-span-2 space-y-6">
+            
+            {/* Section Timing */}
+            {activeSection === 'timing' && (
+              <PremiumCard className="p-6" gradient glow>
+                <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                  <Timer className="w-6 h-6 text-blue-600" />
+                  Configuration temporelle
+                </h3>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <SliderInput
+                    label="Temps de travail"
+                    value={configState.workTime}
+                    min={15}
+                    max={60}
+                    unit="s"
+                    onChange={(value) => updateConfig('workTime', value)}
+                    icon={Zap}
+                    color="blue"
+                  />
+                  
+                  <SliderInput
+                    label="Temps de repos"
+                    value={configState.restTime}
+                    min={5}
+                    max={45}
+                    unit="s"
+                    onChange={(value) => updateConfig('restTime', value)}
+                    icon={Heart}
+                    color="green"
+                  />
+                  
+                  <SliderInput
+                    label="Temps de préparation"
+                    value={configState.prepTime}
+                    min={5}
+                    max={30}
+                    unit="s"
+                    onChange={(value) => updateConfig('prepTime', value)}
+                    icon={Crosshair}
+                    color="orange"
+                  />
+                  
+                  <SliderInput
+                    label="Nombre de rounds"
+                    value={configState.rounds}
+                    min={1}
+                    max={8}
+                    onChange={(value) => updateConfig('rounds', value)}
+                    icon={RotateCcw}
+                    color="purple"
+                  />
+                </div>
+
+                {/* Visualisation temporelle */}
+                <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                  <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                    <Gauge className="w-5 h-5" />
+                    Répartition temporelle
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span>Travail ({calculations.durationCalculations.workPercentage}%)</span>
+                      <span className="font-semibold">{calculations.durationCalculations.totalWorkTime}s</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
+                        style={{ width: `${calculations.durationCalculations.workPercentage}%` }}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-sm">
+                      <span>Repos ({calculations.durationCalculations.restPercentage}%)</span>
+                      <span className="font-semibold">{calculations.durationCalculations.totalRestTime}s</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
+                        style={{ width: `${calculations.durationCalculations.restPercentage}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </PremiumCard>
+            )}
+
+            {/* Section Exercices */}
+            {activeSection === 'exercises' && (
+              <ExerciseSelector 
+                exercises={EXERCISES_DATABASE}
+                selectedExercises={configState.exercises}
+                onToggle={toggleExercise}
+              />
+            )}
+
+            {/* Section Analyse */}
+            {activeSection === 'analysis' && (
+              <PremiumCard className="p-6" gradient>
+                <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                  <BarChart3 className="w-6 h-6 text-purple-600" />
+                  Analyse avancée
+                </h3>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Analyse calorique */}
+                  <div className="p-4 bg-orange-50 rounded-xl border border-orange-200">
+                    <h4 className="font-semibold text-orange-800 mb-3 flex items-center gap-2">
+                      <Flame className="w-5 h-5" />
+                      Analyse calorique
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>Estimation:</span>
+                        <span className="font-bold">{calculations.calorieCalculations.estimatedCalories} cal</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Par minute:</span>
+                        <span className="font-bold">{calculations.calorieCalculations.caloriesPerMinute} cal/min</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Fourchette:</span>
+                        <span className="font-bold">
+                          {calculations.calorieCalculations.calorieRange.min}-{calculations.calorieCalculations.calorieRange.max}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Analyse musculaire */}
+                  <div className="p-4 bg-purple-50 rounded-xl border border-purple-200">
+                    <h4 className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
+                      <Users className="w-5 h-5" />
+                      Groupes musculaires
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>Groupes ciblés:</span>
+                        <span className="font-bold">{calculations.muscleGroupAnalysis.targetedGroups.length}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Couverture:</span>
+                        <span className="font-bold">{calculations.muscleGroupAnalysis.coverage}%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Équilibre:</span>
+                        <span className="font-bold">{calculations.muscleGroupAnalysis.balanceScore}%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-3">
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${calculations.muscleGroupAnalysis.balanceScore}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Score global */}
+                <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
+                  <div className="text-center">
+                    <h4 className="font-bold text-gray-800 mb-2 flex items-center justify-center gap-2">
+                      <Award className="w-6 h-6 text-blue-600" />
+                      Score de qualité global
+                    </h4>
+                    <div className="text-5xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                      {calculations.performanceMetrics.qualityScore}%
+                    </div>
+                    <div className="text-lg font-semibold text-gray-700 mb-4">
+                      {calculations.performanceMetrics.overallRating}
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-1000"
+                        style={{ width: `${calculations.performanceMetrics.qualityScore}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </PremiumCard>
+            )}
+
+            {/* Section Validation */}
+            {activeSection === 'validation' && (
+              <PremiumCard className="p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                  Validation et feedback
+                </h3>
+
+                {validationResults && (
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    <StatCard 
+                      icon={AlertTriangle} 
+                      label="Erreurs" 
+                      value={validationResults.errors.length} 
+                      color="orange"
+                    />
+                    <StatCard 
+                      icon={Info} 
+                      label="Avertissements" 
+                      value={validationResults.warnings.length} 
+                      color="blue"
+                    />
+                    <StatCard 
+                      icon={CheckCircle} 
+                      label="Infos" 
+                      value={validationResults.infos.length} 
+                      color="green"
+                    />
+                  </div>
+                )}
+
+                <div className="space-y-3">
+                  {feedback.priorityMessages.slice(0, 5).map((message, index) => (
+                    <div
+                      key={index}
+                      className={`p-4 rounded-xl border transition-all duration-300 hover:scale-[1.01] ${message.style.bgColor} ${message.style.borderColor}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="text-lg">{message.style.icon}</span>
+                        <div className="flex-1">
+                          <div className={`font-semibold ${message.style.textColor} mb-1`}>
+                            {message.message}
+                          </div>
+                          {message.suggestion && (
+                            <div className="text-sm text-gray-600 flex items-start gap-2">
+                              <Sparkles className="w-4 h-4 mt-0.5 text-blue-500" />
+                              {message.suggestion}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {feedback.priorityMessages.length === 0 && (
+                    <div className="p-6 bg-green-50 border border-green-200 rounded-xl text-center">
+                      <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-3" />
+                      <div className="text-lg font-bold text-green-800 mb-2">
+                        Configuration parfaite ! 🎉
+                      </div>
+                      <div className="text-green-600">
+                        Votre workout est optimisé et prêt à être utilisé
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </PremiumCard>
+            )}
+          </div>
+
+          {/* Colonne de preview et actions */}
+          <div className="space-y-6">
+            
+            {/* Preview du workout */}
+            <PremiumCard className="p-6 sticky top-6" gradient glow>
+              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Eye className="w-5 h-5 text-blue-600" />
+                Aperçu du workout
+              </h3>
+              
+              <div className="space-y-4">
+                {/* Métadonnées */}
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600 mb-1">
+                      {calculations.durationCalculations.formattedDuration}
+                    </div>
+                    <div className="text-sm text-blue-700">
+                      Durée totale estimée
+                    </div>
+                  </div>
+                </div>
+
+                {/* Exercices sélectionnés */}
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <Dumbbell className="w-4 h-4" />
+                    Exercices ({configState.exercises.length})
+                  </h4>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {configState.exercises.map((exerciseId, index) => {
+                      const exercise = EXERCISES_DATABASE[exerciseId];
+                      if (!exercise) return null;
+                      
+                      return (
+                        <div 
+                          key={exerciseId}
+                          className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-200 transition-colors duration-200"
+                        >
+                          <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">
+                            {index + 1}
+                          </div>
+                          
+                          <ExerciseIcon 
+                            iconName={exercise.images.start}
+                            exercise={exercise}
+                            size="sm"
+                            animated={false}
+                          />
+                          
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-gray-800 text-sm truncate">
+                              {exercise.name}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              {exercise.muscleGroup} • {exercise.defaultDuration}s
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Difficulté */}
+                <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">Difficulté</span>
+                    <div className={`
+                      px-3 py-1 rounded-lg text-xs font-bold
+                      ${configState.difficulty === 'débutant' ? 'bg-green-100 text-green-700' :
+                        configState.difficulty === 'intermédiaire' ? 'bg-blue-100 text-blue-700' :
+                        'bg-red-100 text-red-700'}
+                    `}>
+                      {configState.difficulty}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="mt-2 p-2 bg-green-100 rounded text-xs">
-                🎯 Performance: {benchmarkResults.durationBenchmark?.performanceRating}
+
+              {/* Actions principales */}
+              <div className="mt-6 space-y-3">
+                <button className="w-full btn-secondary flex items-center justify-center gap-2 py-3">
+                  <Play className="w-4 h-4" />
+                  <span className="font-semibold">Démarrer le workout</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <button className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium transition-colors duration-200">
+                    <Settings className="w-4 h-4" />
+                    Sauvegarder
+                  </button>
+                  
+                  <button className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium transition-colors duration-200">
+                    <RotateCcw className="w-4 h-4" />
+                    Réinitialiser
+                  </button>
+                </div>
+              </div>
+            </PremiumCard>
+          </div>
+        </div>
+
+        {/* Footer avec call-to-action premium */}
+        <div className="mt-12 text-center">
+          <PremiumCard className="p-8 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200" glow>
+            <div className="max-w-2xl mx-auto">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                🚀 Prêt à révolutionner votre fitness ?
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Cette interface premium utilise une architecture de hooks avancée pour vous offrir 
+                une expérience de configuration inégalée dans l'industrie du fitness.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button className="btn-secondary flex items-center gap-2 px-8 py-4 text-lg font-semibold">
+                  <Sparkles className="w-5 h-5" />
+                  Découvrir les fonctionnalités
+                </button>
+                
+                <button className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold text-lg hover:scale-105 transition-transform duration-200">
+                  <TrendingUp className="w-5 h-5" />
+                  Commencer maintenant
+                </button>
               </div>
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Intégration complète - Preuve que tout fonctionne */}
-      <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-        <h4 className="font-semibold text-green-800 mb-2">✅ INTÉGRATION RÉUSSIE - Tous les hooks WA-013</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-          <div>
-            <h5 className="font-medium text-green-700 mb-2">🏗️ WA-013.1 - Configuration</h5>
-            <ul className="space-y-1 text-green-600">
-              <li>✅ useReducer pour état complexe</li>
-              <li>✅ useCallback pour actions</li>
-              <li>✅ Validation multi-étapes</li>
-              <li>✅ Navigation intelligente</li>
-            </ul>
-          </div>
-          
-          <div>
-            <h5 className="font-medium text-green-700 mb-2">🔍 WA-013.2 - Validation</h5>
-            <ul className="space-y-1 text-green-600">
-              <li>✅ useCallback optimisé</li>
-              <li>✅ Debouncing intelligent</li>
-              <li>✅ Feedback temps réel</li>
-              <li>✅ {validationResults?.results?.length || 0} règles actives</li>
-            </ul>
-          </div>
-          
-          <div>
-            <h5 className="font-medium text-green-700 mb-2">⚡ WA-013.3 - Calculs</h5>
-            <ul className="space-y-1 text-green-600">
-              <li>✅ useMemo pour performance</li>
-              <li>✅ calculationUtils intégrés</li>
-              <li>✅ Cache intelligent</li>
-              <li>✅ Score: {calculations.performanceMetrics.qualityScore}%</li>
-            </ul>
-          </div>
-        </div>
-        
-        <div className="mt-4 p-3 bg-white rounded border text-center">
-          <div className="text-lg font-bold text-green-600">
-            🎯 ARCHITECTURE COMPLÈTE ET FONCTIONNELLE
-          </div>
-          <div className="text-sm text-gray-600">
-            Tous les hooks s'intègrent parfaitement avec leurs utilitaires respectifs
-          </div>
+          </PremiumCard>
         </div>
       </div>
     </div>
   );
 };
 
-export default WorkoutCalculationsDemo;
+// PropTypes
+PremiumCard.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  gradient: PropTypes.bool,
+  glow: PropTypes.bool
+};
+
+StatCard.propTypes = {
+  icon: PropTypes.elementType.isRequired,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  color: PropTypes.string,
+  trend: PropTypes.number,
+  onClick: PropTypes.func,
+  animated: PropTypes.bool
+};
+
+SliderInput.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  step: PropTypes.number,
+  unit: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  icon: PropTypes.elementType,
+  color: PropTypes.string
+};
+
+ExerciseSelector.propTypes = {
+  exercises: PropTypes.object.isRequired,
+  selectedExercises: PropTypes.array.isRequired,
+  onToggle: PropTypes.func.isRequired
+};
+
+export default WorkoutConfigView;
